@@ -4,21 +4,43 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test:dev": "vitest run --coverage"
   },
   "dependencies": {
+    "@iconify-json/mdi": "^1.1.64",
+    "@nuxt/content": "^2.12.1",
     "@pinia/nuxt": "^0.5.1",
-    "@vueuse/nuxt": "^10.9.0",
-    "nuxt": "^3.10.3",
+    "@vueuse/core": "^10.9.0",
+    "nuxt": "^3.11.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@nuxt/eslint": "0.3.0-beta.3",
+    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/test-utils": "^3.12.0",
+    "@nuxtjs/color-mode": "^3.3.3",
+    "@nuxtjs/eslint-module": "^4.1.0",
+    "@nuxtjs/i18n": "^8.2.0",
     "@nuxtjs/seo": "2.0.0-rc.9",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "@unocss/nuxt": "^0.58.8",
+    "@vitest/coverage-v8": "^1.4.0",
+    "@vue/test-utils": "^2.4.5",
+    "@vueuse/nuxt": "^10.9.0",
+    "dayjs": "^1.11.10",
     "dayjs-nuxt": "^2.1.9",
+    "eslint": "^8.57.0",
+    "happy-dom": "^14.3.9",
+    "playwright-core": "^1.42.1",
+    "vite-plugin-eslint2": "^4.4.0",
+    "vitest": "^1.4.0",
     "vuetify-nuxt-module": "^0.12.0"
   }
 }

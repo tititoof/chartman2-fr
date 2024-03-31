@@ -68,6 +68,9 @@ const chartman2frLightTheme = {
   }
 
 export default defineVuetifyConfiguration({
+    icons: {
+      defaultSet: 'unocss-mdi'
+    },
     theme: {
         defaultTheme: 'chartman2frLightTheme',
         themes: {

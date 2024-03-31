@@ -1,9 +1,6 @@
 <template>
   <v-layout>
-    <menu-top />
-    <client-only>
-      <navigation-left />
-    </client-only>
+    <bar-top />
 
     <v-app>
       <v-main
@@ -13,26 +10,25 @@
       >
         <slot /> 
 
-        <NuxtSnackbar />
         <page-snackbar />
         <button-back-to-top />
       </v-main>
     </v-app>
 
-    <menu-bottom />
+    <bar-bottom />
   </v-layout>
 </template>
 
 <script setup lang="ts">
-  import { useTheme, useDisplay } from 'vuetify'
-  import { useUsersStore } from '~/store/usersStore'
+  import { useApplicationStore } from '~/stores/application'
 
   const config = useRuntimeConfig()
-  const usersStore = useUsersStore()
+  const applicationStore = useApplicationStore()
   const nuxtApp = useNuxtApp()
   const theme = useTheme()
   const { locale } = useI18n()
   const { mobile } = useDisplay()
+  const router = useRouter()
 
   useHead({
     title: config.public.appName as string,
@@ -48,19 +44,20 @@
     ],
   })
 
-  const storeThemeDark = computed(() => usersStore.isDarkTheme)
+  const storeThemeDark = computed(() => applicationStore.isDarkTheme)
 
   nuxtApp.hook('page:finish', () => {
+    theme.global.name.value = setTheme()
 
-    theme.global.name.value = setUserTheme()
-
-    usersStore.setIsPhone(mobile.value)
-    usersStore.setDarkTheme(theme.global.name.value === 'sharHubDarkTheme')
+    applicationStore.setIsPhone(mobile.value)
+    applicationStore.setIsDarkTheme(theme.global.name.value === 'chartman2frDarkTheme')
   })
 
   watch(storeThemeDark, (value) => {
+    console.log(value)
+    console.log(theme.global.name.value)
     theme.global.name.value =
-      value === false ? 'sharHubLightTheme' : 'sharHubDarkTheme'
+      value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme'
   })
 </script>
 

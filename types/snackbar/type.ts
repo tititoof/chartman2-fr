@@ -1,0 +1,1 @@
+export type IStatus = 'success' | 'error' | 'warning' | 'info'

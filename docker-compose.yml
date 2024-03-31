@@ -20,29 +20,29 @@ services:
       - "traefik.enable=true"
       
       # HTTP
-      - "traefik.http.routers.chartman2-fr.rule=Host(`chartman2-fr.traefik.me`)"
-      - "traefik.http.routers.chartman2-fr.entrypoints=http"
+      - "traefik.http.routers.${APP_NAME}.rule=Host(`${APP_URL}`)"
+      - "traefik.http.routers.${APP_NAME}.entrypoints=http"
 
       # HTTPS
-      - "traefik.http.routers.chartman2-fr-secure.service=chartman2-fr-secure"
-      - "traefik.http.routers.chartman2-fr-secure.rule=Host(`chartman2-fr.traefik.me`)"
-      - "traefik.http.routers.chartman2-fr-secure.entrypoints=https"
-      - "traefik.http.routers.chartman2-fr-secure.tls=true"
+      - "traefik.http.routers.${APP_NAME}-secure.service=chartman2-fr-secure"
+      - "traefik.http.routers.${APP_NAME}-secure.rule=Host(`${APP_URL}`)"
+      - "traefik.http.routers.${APP_NAME}-secure.entrypoints=https"
+      - "traefik.http.routers.${APP_NAME}-secure.tls=true"
 
       # WSS
-      - "traefik.http.routers.chartman2-fr-wss.service=chartman2-fr-wss"
-      - "traefik.http.routers.chartman2-fr-wss.rule=Host(`chartman2-fr-wss.traefik.me`)"
-      - "traefik.http.routers.chartman2-fr-wss.entrypoints=https"
-      - "traefik.http.routers.chartman2-fr-wss.tls=true"
+      - "traefik.http.routers.${APP_NAME}-wss.service=chartman2-fr-wss"
+      - "traefik.http.routers.${APP_NAME}-wss.rule=Host(`${APP_WS_URL}`)"
+      - "traefik.http.routers.${APP_NAME}-wss.entrypoints=https"
+      - "traefik.http.routers.${APP_NAME}-wss.tls=true"
       
       # Redirection
-      - "traefik.http.middlewares.chartman2-fr-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.chartman2-fr-redirect.redirectscheme.permanent=true"
-      - "traefik.http.routers.chartman2-fr.middlewares=chartman2-fr-redirect"
+      - "traefik.http.middlewares.${APP_NAME}-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.${APP_NAME}-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.${APP_NAME}.middlewares=chartman2-fr-redirect"
 
       # Port interne
-      - "traefik.http.services.chartman2-fr-secure.loadbalancer.server.port=3000"
-      - "traefik.http.services.chartman2-fr-wss.loadbalancer.server.port=24678"
+      - "traefik.http.services.${APP_NAME}-secure.loadbalancer.server.port=3000"
+      - "traefik.http.services.${APP_NAME}-wss.loadbalancer.server.port=24678"
     expose:
       - 3000
       - 24678
