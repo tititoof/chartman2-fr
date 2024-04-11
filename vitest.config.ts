@@ -29,7 +29,7 @@ export default defineVitestConfig({
     coverage: {
         reporter: 'lcov',
         provider: 'v8',
-        include: ['components', 'store', 'pages', 'app'],
+        include: ['components', 'composables', 'stores', 'pages', 'app'],
         all: true
     }
   },

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>104/104</span>
+                <span class='fraction'>107/107</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>104/104</span>
+                <span class='fraction'>107/107</span>
             </div>
         
             
@@ -166,7 +166,13 @@
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -270,69 +276,72 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template&gt;
-  &lt;v-footer
-    app
-    min-height="72"
-    color="background"
-  &gt;
-    &lt;v-container&gt;
-      &lt;v-row&gt;
-        &lt;v-col
-          cols="4"
-          class="d-flex flex-wrap justify-start"
-        &gt;
-          &lt;v-btn-group
-            v-for="(s, i) in social"
-            :key="i"
+  &lt;ClientOnly&gt;
+&nbsp;
+    &lt;v-footer
+      app
+      min-height="72"
+      color="background"
+    &gt;
+      &lt;v-container&gt;
+        &lt;v-row&gt;
+          &lt;v-col
+            cols="4"
+            class="d-flex flex-wrap justify-start"
           &gt;
-            &lt;v-btn
-              :href="s.route"
-              color="background"
-              variant="flat"
-              target="_blank"
-              size="small"
-              class="px-0"
+            &lt;v-btn-group
+              v-for="(s, i) in social"
+              :key="i"
             &gt;
-              &lt;v-icon
-                size="large"
-                :icon="s.icon"
-              /&gt;
-            &lt;/v-btn&gt;
-          &lt;/v-btn-group&gt;
-        &lt;/v-col&gt;
-        &lt;v-col
-          cols="4"
-          class="align-self-center text-center"
-        &gt;
-          {{ currentRangeYears }}
-        &lt;/v-col&gt;
-        &lt;v-col
-          v-if="!mobile"
-          class="d-flex flex-wrap justify-end align-center flex-shrink-1 text-white"
-          cols="4"
-        &gt;
-          &lt;v-btn-group
-            v-for="(s, i) in links"
-            :key="i"
+              &lt;v-btn
+                :href="s.route"
+                color="background"
+                variant="flat"
+                target="_blank"
+                size="small"
+                class="px-0"
+              &gt;
+                &lt;v-icon
+                  size="large"
+                  :icon="s.icon"
+                /&gt;
+              &lt;/v-btn&gt;
+            &lt;/v-btn-group&gt;
+          &lt;/v-col&gt;
+          &lt;v-col
+            cols="4"
+            class="align-self-center text-center"
           &gt;
-            &lt;v-btn
-              :href="s.href"
-              color="background"
-              variant="flat"
-              target="_blank"
-              size="small"
-              class="px-0"
+            {{ currentRangeYears }}
+          &lt;/v-col&gt;
+          &lt;v-col
+            v-if="!mobile"
+            class="d-flex flex-wrap justify-end align-center flex-shrink-1 text-white"
+            cols="4"
+          &gt;
+            &lt;v-btn-group
+              v-for="(s, i) in links"
+              :key="i"
             &gt;
-              &lt;v-icon
-                size="large"
-                :icon="s.icon"
-              /&gt;
-            &lt;/v-btn&gt;
-          &lt;/v-btn-group&gt;
-        &lt;/v-col&gt;
-      &lt;/v-row&gt;
-    &lt;/v-container&gt;
-  &lt;/v-footer&gt;
+              &lt;v-btn
+                :href="s.href"
+                color="background"
+                variant="flat"
+                target="_blank"
+                size="small"
+                class="px-0"
+              &gt;
+                &lt;v-icon
+                  size="large"
+                  :icon="s.icon"
+                /&gt;
+              &lt;/v-btn&gt;
+            &lt;/v-btn-group&gt;
+          &lt;/v-col&gt;
+        &lt;/v-row&gt;
+      &lt;/v-container&gt;
+    &lt;/v-footer&gt;
+  &lt;/ClientOnly&gt;
 &lt;/template&gt;
 &nbsp;
 &lt;script setup lang="ts"&gt;
@@ -340,9 +349,9 @@ const { mobile } = useDisplay()
 const dayjs = useDayjs()
 &nbsp;
 const currentYear = ref(dayjs().year())
-const currentRangeYears = ref(currentYear.value === <span class="branch-0 cbranch-no" title="branch not covered" >2022 ? "2022" : `</span>2022-${currentYear.value}`)
+const currentRangeYears = ref(currentYear.value === 2022 ? "2022" : `2022-${currentYear.value}`)
 &nbsp;
-const social = reactive([
+const social = reactive(<span class="branch-0 cbranch-no" title="branch not covered" >[</span>
   {
     name: "Facebook",
     route: "https://www.facebook.com/christophe.hartmann1/",
@@ -379,7 +388,7 @@ const links = reactive([
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-31T07:07:38.673Z
+                at 2024-04-07T05:54:04.562Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

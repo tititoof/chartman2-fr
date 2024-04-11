@@ -54,6 +54,7 @@
     </v-responsive>
 
     <v-avatar
+      v-aos="['animate__fadeInDown']"
       class="elevation-12 mb-12"
       size="128"
     >

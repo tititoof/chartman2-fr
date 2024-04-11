@@ -64,17 +64,13 @@
 import { useApplicationStore } from '~/stores/application'
 
 const applicationStore = useApplicationStore()
+const router = useRouter()
 const src = ref('/img/android-chrome-192x192.png')
 const menuItems = reactive([
   {
     name: 'legal_notices.title',
     icon: 'i-mdi:scale-balance',
     to: '/legal_notices',
-  },
-  {
-    name: 'auth.log_in',
-    icon: 'i-mdi:login-variant',
-    to: '/auth/log_in',
   }
 ])
 

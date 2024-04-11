@@ -20,6 +20,8 @@
                 :rules="nameRules"
               />
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="12">
               <v-text-field
                 v-model="email"
@@ -28,6 +30,8 @@
                 :rules="emailRules"
               />
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="12">
               <v-text-field
                 v-model="subject"
@@ -36,6 +40,8 @@
                 :rules="subjectRules"
               />
             </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="12">
               <v-textarea
                 v-model="message"
@@ -44,7 +50,9 @@
                 :rules="messageRules"
               />
             </v-col>
-            <v-col 
+          </v-row>
+          <v-row>
+            <v-col
               class="mx-auto py-4" 
               cols="12"
             >

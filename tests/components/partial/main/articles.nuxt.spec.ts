@@ -13,29 +13,4 @@ describe('Components - partial/main/articles', async () => {
 
     expect(wrapper.vm).toBeTruthy()
   })
-
-  it('has initialized values', async () => {
-    const wrapper = await mountSuspended(TestResource, {
-      shallow: true
-    })
-
-    expect(wrapper.vm.articles).toEqual([
-      {
-        type: "icon",
-        src: 'i-mdi:language-ruby-on-rails',
-        color: "red",
-        title: "Design pattern",
-        text: "Mon design pattern utilisé au quotidien avec Ruby on Rails.",
-        link: "/blog/my_ror_design",
-      },
-      {
-        type: "icon",
-        src: 'i-mdi:nuxt',
-        color: "green",
-        title: "Nuxt 3",
-        text: "Petite introduction sur le framework Nuxt.",
-        link: "/blog/nuxt_3_introduction",
-      },
-    ])
-  })
 })

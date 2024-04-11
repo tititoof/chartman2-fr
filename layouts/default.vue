@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <bar-top />
-
+    <page-snackbar />
     <v-app>
       <v-main
         dark="isDark"
@@ -10,10 +10,11 @@
       >
         <slot /> 
 
-        <page-snackbar />
+        
         <button-back-to-top />
       </v-main>
     </v-app>
+    <CookieControl locale="fr" />
 
     <bar-bottom />
   </v-layout>
@@ -28,7 +29,6 @@
   const theme = useTheme()
   const { locale } = useI18n()
   const { mobile } = useDisplay()
-  const router = useRouter()
 
   useHead({
     title: config.public.appName as string,
@@ -45,6 +45,8 @@
   })
 
   const storeThemeDark = computed(() => applicationStore.isDarkTheme)
+  
+  applicationStore.setIsPhone(mobile.value)
 
   nuxtApp.hook('page:finish', () => {
     theme.global.name.value = setTheme()
@@ -54,8 +56,6 @@
   })
 
   watch(storeThemeDark, (value) => {
-    console.log(value)
-    console.log(theme.global.name.value)
     theme.global.name.value =
       value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme'
   })

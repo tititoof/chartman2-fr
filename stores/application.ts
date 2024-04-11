@@ -17,6 +17,7 @@ export const useApplicationStore = defineStore('application', {
         getCategory: (state) => state.category,
         getMessage: (state) => state.message,
         getShow: (state) => state.show,
+        getIsPhone: (state) => state.isPhone
     },
     actions: {
         setIsPhone(isPhone: boolean) {

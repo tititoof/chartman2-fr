@@ -24,11 +24,6 @@ describe('Components - bar/top', async () => {
         name: 'legal_notices.title',
         icon: 'i-mdi:scale-balance',
         to: '/legal_notices',
-      },
-      {
-        name: 'auth.log_in',
-        icon: 'i-mdi:login-variant',
-        to: '/auth/log_in',
       }
     ])
   })

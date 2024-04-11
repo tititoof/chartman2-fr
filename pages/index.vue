@@ -11,6 +11,11 @@
   </template>
   
   <script setup>
+  import { useApplicationStore } from '~/stores/application'
+
+  const applicationStore = useApplicationStore()
+  const { mobile } = useDisplay()
+
   useHead({
     charset: 'UTF-8',
     author: 'Christophe Hartmann',
@@ -20,6 +25,9 @@
     keywords:
       'Christophe Hartmann, ruby, ruby on rails, nuxt, framework, ci/cd, gitea, sonarsource, openproject, jenkins',
   })
+
+  applicationStore.setIsPhone(mobile.value)
+  
   </script>
   
   <style>

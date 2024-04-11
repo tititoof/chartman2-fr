@@ -14,10 +14,11 @@
         <h3 class="font-weight-bold mb-3 align-justify">
           {{ title }}
         </h3>
+        
         <span class="subtitle-1">
           {{ text }}
         </span>
-        <v-row class="d-flex justify-space-around">
+        <v-row class="d-flex justify-space-around mt-2">
           <v-col
             v-for="({ type, src, title: skillTitle, text: skillText }, iSkill) in skill"
             :key="iSkill"
@@ -25,6 +26,8 @@
             md="3"
           >
             <v-card
+              v-aos="['animate__flipInY']"
+              :data-aos-delay="`0.` + ((iSkills + 1) * (iSkill + 1) * 5) + `s`"
               class="py-12 px-4"
               color="secondary-container"
               flat
@@ -65,6 +68,13 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-responsive
+          class="mx-auto"
+          width="112"
+        >
+          <v-divider class="mt-4" />
+
+        </v-responsive>
       </section>
     </v-container>
   </v-card>
