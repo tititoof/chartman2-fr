@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    command:  sh -c "pnpm run dev"
+    working_dir: '/app'
+    user: node
+    tty: true
+    volumes:
+      - './:/app'
+    environment:
+      - PUID="${UID}"
+      - PGID="${GID}"
+      - UMASK="${USMAK}"
+    labels:
+      # Ajout dans traefik
+      - "traefik.enable=true"
+      
+      # HTTP
+      - "traefik.http.routers.chartman2-fr.rule=Host(`chartman2-fr.traefik.me`)"
+      - "traefik.http.routers.chartman2-fr.entrypoints=http"
+
+      # HTTPS
+      - "traefik.http.routers.chartman2-fr-secure.service=chartman2-fr-secure"
+      - "traefik.http.routers.chartman2-fr-secure.rule=Host(`chartman2-fr.traefik.me`)"
+      - "traefik.http.routers.chartman2-fr-secure.entrypoints=https"
+      - "traefik.http.routers.chartman2-fr-secure.tls=true"
+
+      # WSS
+      - "traefik.http.routers.chartman2-fr-wss.service=chartman2-fr-wss"
+      - "traefik.http.routers.chartman2-fr-wss.rule=Host(`chartman2-fr-wss.traefik.me`)"
+      - "traefik.http.routers.chartman2-fr-wss.entrypoints=https"
+      - "traefik.http.routers.chartman2-fr-wss.tls=true"
+      
+      # Redirection
+      - "traefik.http.middlewares.chartman2-fr-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.chartman2-fr-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.chartman2-fr.middlewares=chartman2-fr-redirect"
+
+      # Port interne
+      - "traefik.http.services.chartman2-fr-secure.loadbalancer.server.port=3000"
+      - "traefik.http.services.chartman2-fr-wss.loadbalancer.server.port=24678"
+    expose:
+      - 3000
+      - 24678
+    networks:
+      - chartman2-fr-network
+
+networks:
+  chartman2-fr-network:
+    name: projects_local_dev
+    external: true
