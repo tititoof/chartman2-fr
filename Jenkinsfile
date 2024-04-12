@@ -37,16 +37,16 @@ pipeline {
                 echo 'Check quality..'
                 script {
                     def scannerHome = tool 'sonarqube-scanner';
-                    def sonarqubeBranch = 'sharehub-frontend-dev';
+                    def sonarqubeBranch = 'chartman2.fr-dev';
                     withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_CREDENTIALS')]) {
                             withSonarQubeEnv() {
                                 if (env.BRANCH_NAME == 'main') {
-                                    sonarqubeBranch = 'sharehub-frontend'
+                                    sonarqubeBranch = 'chartman2.fr'
                                 }
                                 sh "${scannerHome}/bin/sonar-scanner \
                                         -Dsonar.projectKey=$sonarqubeBranch \
-                                        -Dsonar.sources='pages, layouts, components, store' \
+                                        -Dsonar.sources='pages, layouts, components, stores, composables' \
                                         -Dsonar.exclusions=public/**/* \
                                         -Dsonar.host.url=$SONAR_URL \
                                         -Dsonar.login=$SONAR_CREDENTIALS \
@@ -89,7 +89,7 @@ pipeline {
                                     then
                                         sudo rm ../.ssh/id_ed25519.pub
                                     fi
-                                    git remote add github https://$GITHUB_CREDENTIALS@github.com/tititoof/chartman2-frontend-v3.git
+                                    git remote add github https://$GITHUB_CREDENTIALS@github.com/tititoof/chartman2-fr.git
                                 '''
                                 sh """
                                     git config --global user.email "chartmann.35@gmail.com"
@@ -122,7 +122,7 @@ pipeline {
                                     if git remote | grep github > /dev/null; then
                                         git remote rm github
                                     fi
-                                    git remote add github https://$GITHUB_CREDENTIALS@github.com/tititoof/chartman2-frontend-v3.git
+                                    git remote add github https://$GITHUB_CREDENTIALS@github.com/tititoof/chartman2-fr.git
                                 '''
                                 sh """
                                     git config --global user.email "chartmann.35@gmail.com"
