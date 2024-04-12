@@ -1,3 +1,7 @@
 {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "sonarlint.connectedMode.project": {
+        "connectionId": "https://sonarqube.traefik.me",
+        "projectKey": "chartman2.fr"
+    }
 }
