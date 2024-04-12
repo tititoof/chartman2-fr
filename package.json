@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test:dev": "vitest run --coverage",
-    "test:ci-cd": "vitest run --coverage"
+    "test:ci-cd": "vitest run -c ./vitest.ci-cd.config.mjs --coverage"
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.1.64",
