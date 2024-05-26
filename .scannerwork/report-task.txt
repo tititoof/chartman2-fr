@@ -1,0 +1,6 @@
+projectKey=chartman2.fr-dev
+serverUrl=http://sonarqube:9000
+serverVersion=9.9.5.90363
+dashboardUrl=http://sonarqube:9000/dashboard?id=chartman2.fr-dev
+ceTaskId=AY-0N5e_aqRcsgTdqjTu
+ceTaskUrl=http://sonarqube:9000/api/ce/task?id=AY-0N5e_aqRcsgTdqjTu
