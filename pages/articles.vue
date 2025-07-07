@@ -1,10 +1,9 @@
 <template>
   <v-row class="d-flex align-self-start py-12">
-    <v-container >
-      <button-article />
+    <v-container>
+      <button-article class="my-4" />
 
       <page-title
-        class="py-12"
         :title="$t('global.articles')"
         icon="i-mdi:book-open-variant-outline"
       />

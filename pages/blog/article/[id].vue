@@ -1,50 +1,38 @@
 <template>
   <v-row class="d-flex align-self-start py-12">
     <v-container class="text-center">
-      <button-article />
-  
+      <button-article class="my-4" />
       <page-title
-        class="py-12"
-        :title="article.title"
+        :title="article.title ?? $t('article.unknow')"
         icon="i-mdi:book-open-variant-outline"
       />
-      <v-responsive class="text-left">
-        <v-sheet
-          class="d-flex align-center mx-auto py-2 px-3 mb-2"
-          elevation="4"
-          min-height="30"
-          rounded
-          color="on-primary-container"
-          width="100%"
-        >
-            <!DOCTYPE html>
-            <html
-              :class="storeThemeDark === false ? 'light' : 'dark'"
-              style="overflow-y: initial"
-              lang="fr"
-              xml:lang="fr"
-            >
-              <ContentDoc
-                :path="article._path"
-                unwrap="p"
-                style="width: 85vw;overflow-x: auto; white-space: nowrap"
+      <section class="py-12">
+        <v-responsive class="text-left">
+          <v-sheet
+            class="d-flex align-center mx-auto py-2 px-3 mb-2 no-scroll"
+            elevation="4"
+            min-height="30"
+            rounded
+            color="background"
+            width="100%"
+          >
+            <ClientOnly>
+              <ContentRenderer
+                v-if="article"
+                class="w-100"
+                :value="article"
               />
-            </html>
-        </v-sheet>
-      </v-responsive>
+            </ClientOnly>
+          </v-sheet>
+        </v-responsive>
+      </section>
     </v-container>
   </v-row>
 </template>
 <script setup lang="ts">
-import { useApplicationStore } from '~/stores/application'
-
 const route = useRoute()
-const applicationStore = useApplicationStore()
-const storeThemeDark = computed(() => applicationStore.isDarkTheme)
-const { data: article } = await useAsyncData('home', () => queryContent()
-  .where({
-    article_id: route.params.id
-  })
-  .only(['_path', 'title'])
-  .findOne())
+console.log(route.params.id)
+const { data: article } = await useAsyncData('content-' + route.params.id, () => queryCollection('content')
+  .where('article_id', '=', route.params.id)
+  .first())
 </script>

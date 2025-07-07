@@ -26,16 +26,14 @@
       'Christophe Hartmann, ruby, ruby on rails, nuxt, framework, ci/cd, gitea, sonarsource, openproject, jenkins',
   })
 
-  applicationStore.setIsPhone(mobile.value)
-  
-  </script>
-  
-  <style>
-  .v-card--reveal {
-    bottom: 0;
-    opacity: 1 !important;
-    position: absolute;
-    width: 100%;
-  }
-  </style>
-  
+applicationStore.setIsPhone(mobile.value)
+</script>
+
+<style>
+.v-card--reveal {
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
+}
+</style>

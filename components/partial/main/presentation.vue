@@ -34,7 +34,7 @@
                 :class="[mobile ? 'display-3' : 'display-4']"
                 class="font-weight-black"
               >
-                chartman2.fr
+                {{ appUrl }}
               </span>
             </v-col>
   
@@ -52,6 +52,55 @@
   </ClientOnly>
 </template>
 
-<script setup>
+<script setup lang="ts">
+const runtimeConfig = useRuntimeConfig()
 const { mobile } = useDisplay()
+const appUrl = runtimeConfig.public.appUrl
+const options = {
+  fullScreen: false,
+  fpsLimit: 60,
+  particles: {
+    number: {
+      value: 15,
+      density: {
+        enable: true,
+        value_area: mobile ? '40vh' : '65vh',
+      },
+    },
+    shape: {
+      type: 'circle',
+    },
+    preset: 'firefly',
+    color: {
+      value: '#CCCC66',
+    },
+    life: {
+      duration: {
+        value: 12,
+        sync: false,
+      },
+      count: 105,
+    },
+    opacity: {
+      value: { min: 0.1, max: 2 },
+      animation: {
+        enable: true,
+        speed: 3,
+      },
+    },
+    size: {
+      value: {
+        min: 1,
+        max: 4,
+      },
+    },
+    move: {
+      enable: true,
+      speed: 7,
+      random: true,
+      size: true,
+    },
+    retina_detect: true,
+  },
+}
 </script>

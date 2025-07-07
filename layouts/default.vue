@@ -10,13 +10,13 @@
       >
         <slot /> 
 
-        
         <button-back-to-top />
       </v-main>
     </v-app>
     <CookieControl locale="fr" />
 
     <bar-bottom />
+    <NuxtSnackbar />
   </v-layout>
 </template>
 

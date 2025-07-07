@@ -2,7 +2,8 @@
   <section id="stats">
     <v-parallax
       :height="!mobile ? 500 : ''"
-      src="https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"
+      scale="1"
+      src="/backgrounds/background.webp"
     >
       <v-container>
         <v-row class="d-flex justify-space-evenly">

@@ -1,0 +1,101 @@
+services:
+  frontend-dev:
+    container_name: frontend-${APP_NAME}
+    build: 
+      context: ./
+      dockerfile: Dockerfile.nuxt
+    command:  sh -c "pnpm install && pnpm run dev"
+    # command:  sh -c "pnpm install && pnpm run build && pnpm run production"
+    working_dir: '/app'
+    user: node
+    tty: true
+    volumes:
+      - './:/app'
+    environment:
+      - PUID="${UID}"
+      - PGID="${GID}"
+      - UMASK="${USMAK}"
+    ports:
+      - 3000
+      - 24678
+    labels:
+      # Ajout dans traefik
+      - "traefik.enable=true"
+      
+      # HTTP
+      - "traefik.http.routers.${APP_NAME}.service=${APP_NAME}"
+      - "traefik.http.routers.${APP_NAME}.rule=Host(`${APP_URL}`)"
+      - "traefik.http.routers.${APP_NAME}.entrypoints=http"
+
+      # HTTPS
+      - "traefik.http.routers.${APP_NAME}-secure.service=${APP_NAME}-secure"
+      - "traefik.http.routers.${APP_NAME}-secure.rule=Host(`${APP_URL}`)"
+      - "traefik.http.routers.${APP_NAME}-secure.entrypoints=https"
+      - "traefik.http.routers.${APP_NAME}-secure.tls=true"
+
+      # WSS
+      - "traefik.http.routers.${APP_NAME}-wss.service=${APP_NAME}-wss"
+      - "traefik.http.routers.${APP_NAME}-wss.rule=Host(`${APP_WS_URL}`)"
+      - "traefik.http.routers.${APP_NAME}-wss.entrypoints=https"
+      - "traefik.http.routers.${APP_NAME}-wss.tls=true"
+      
+      # Redirection
+      - "traefik.http.middlewares.${APP_NAME}-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.${APP_NAME}-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.${APP_NAME}.middlewares=${APP_NAME}-redirect"
+
+      # Port interne
+      - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=3000"
+      - "traefik.http.services.${APP_NAME}-secure.loadbalancer.server.port=3000"
+      - "traefik.http.services.${APP_NAME}-wss.loadbalancer.server.port=24678"
+    expose:
+      - 3000
+      - 24678
+    networks:
+      - chartman2-fr-network
+
+  vscode:
+    container_name: vscode-${APP_NAME}
+    # image: codercom/code-server
+    build: 
+      context: ./
+      dockerfile: Dockerfile.vscode
+    depends_on:
+      - frontend-dev
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "$PWD/.local:/home/coder/.local"
+      - "$PWD/.config:/home/coder/.config"
+      - "$PWD/.continue:/home/coder/.continue"
+      - "$PWD:/home/coder/project"
+    environment:
+      - "DOCKER_USER=${USER}"
+    user: ${UID_GID}
+    labels:
+      # Ajout dans traefik
+      - "traefik.enable=true"
+      
+      # HTTP
+      - "traefik.http.routers.${APP_VSCODE_NAME}.rule=Host(`${APP_VSCODE_URL}`)"
+      - "traefik.http.routers.${APP_VSCODE_NAME}.entrypoints=http"
+
+      # HTTPS
+      - "traefik.http.routers.${APP_VSCODE_NAME}-secure.service=${APP_VSCODE_NAME}-secure"
+      - "traefik.http.routers.${APP_VSCODE_NAME}-secure.rule=Host(`${APP_VSCODE_URL}`)"
+      - "traefik.http.routers.${APP_VSCODE_NAME}-secure.entrypoints=https"
+      - "traefik.http.routers.${APP_VSCODE_NAME}-secure.tls=true"
+      
+      # Redirection
+      - "traefik.http.middlewares.${APP_VSCODE_NAME}-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.${APP_VSCODE_NAME}-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.${APP_VSCODE_NAME}.middlewares=${APP_VSCODE_NAME}-redirect"
+
+      # Port interne
+      - "traefik.http.services.${APP_VSCODE_NAME}-secure.loadbalancer.server.port=8080"
+    networks:
+      - chartman2-fr-network
+
+networks:
+  chartman2-fr-network:
+    name: projects_local_dev
+    external: true

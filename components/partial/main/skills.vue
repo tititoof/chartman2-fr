@@ -22,6 +22,7 @@
           <v-col
             v-for="({ type, src, title: skillTitle, text: skillText }, iSkill) in skill"
             :key="iSkill"
+            v-aos="['animate__fadeIn']"
             cols="12"
             md="3"
           >

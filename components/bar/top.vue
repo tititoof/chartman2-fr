@@ -4,11 +4,11 @@
     density="compact"
   >
     <template #prepend>
-      <v-avatar
-        color="primary-container"
-        size="42"
-        rounded="0"
-        :image="src"
+      <v-img
+        :width="60"
+        aspect-ratio="16/9"
+        :src="src"
+        cover
         @click="backToHomePage"
       />
     </template>
@@ -65,13 +65,18 @@ import { useApplicationStore } from '~/stores/application'
 
 const applicationStore = useApplicationStore()
 const router = useRouter()
-const src = ref('/img/android-chrome-192x192.png')
+const src = ref('/img/logo.webp')
 const menuItems = reactive([
   {
     name: 'legal_notices.title',
     icon: 'i-mdi:scale-balance',
     to: '/legal_notices',
-  }
+  },
+  {
+    name: 'default.auth.sign_in.title',
+    icon: 'i-mdi:login-variant',
+    to: '/auth/sign-in',
+  },
 ])
 
 const toggleTheme = () => {

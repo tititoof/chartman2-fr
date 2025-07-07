@@ -1,0 +1,62 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Construction des services Docker
+    cmds:
+      - UID_GID="$(id -u):$(id -g)" docker compose -f docker-compose.dev.yml build
+  up:
+    desc: Démarrage des services Docker
+    cmds:
+      - UID_GID="$(id -u):$(id -g)" docker compose -f docker-compose.dev.yml up -d
+      - cat ./.config/code-server/config.yaml
+  down:
+    desc: Arrêt des services Docker
+    cmds:
+      - docker compose -f docker-compose.dev.yml down
+  logs:
+    desc: Logs des services
+    cmds:
+      - docker compose -f docker-compose.dev.yml logs -f
+  ps:
+    desc: PS des services
+    cmds:
+      - docker compose -f docker-compose.dev.yml ps
+  f-build:
+    desc: Construction du services frontend Docker
+    cmds:
+      - UID_GID="$(id -u):$(id -g)" docker compose -f docker-compose.dev.yml build frontend-dev
+  f-restart:
+    desc: Redémarrage du service frontend-dev
+    cmds:
+      - docker compose -f docker-compose.dev.yml down frontend-dev
+      - docker compose -f docker-compose.dev.yml up -d frontend-dev
+  f-ssh:
+    desc: Connexion SSH au frontend
+    cmds:
+      - docker compose -f docker-compose.dev.yml exec frontend-dev sh
+  prod-build:
+    desc: Build du frontend de production
+    cmds:
+      - docker compose --env-file .env.production build
+  prod-up:
+    desc: Démarrage du frontend de production
+    cmds:
+      - docker compose --env-file .env.production up -d
+  prod-down:
+    desc: Démarrage du frontend de production
+    cmds:
+      - docker compose --env-file .env.production up -d
+  prod-tag:
+    desc: Tag prod image
+    cmds:
+      - docker compose --env-file .env.production build
+  prod-push:
+    desc: Push to registry
+    cmds:
+      - docker run -it --net=host ringingmountain/podman podman --env-file .env.production build && docker push --tls-verify=false registryserver-192-168-1-223.traefik.me/chartman2fr:0.1
+  prod-registry:
+    desc: Build - Tag - Push to local registry
+    cmds:
+      - task: prod-build
+      - task: prod-push

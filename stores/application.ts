@@ -36,6 +36,11 @@ export const useApplicationStore = defineStore('application', {
         setShow(show: boolean) {
             this.show = show
         },
+        showSnackbar(category: IStatus, message: string) {
+            this.category = category
+            this.message = message
+            this.show = true
+        },
         toggleDarkTheme() {
             this.isDarkTheme = !this.isDarkTheme
             this.isThemeDefined = true
