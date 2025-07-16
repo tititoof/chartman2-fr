@@ -21,14 +21,6 @@
           v-for="link in props.links"
           :key="link.label"
         >
-          <!-- <v-btn
-            :color="link.color || 'success'"
-            variant="outlined"
-            :prepend-icon="link.icon || 'i-mdi:eye'"
-            :to="link.to"
-          >
-            {{ $t(link.label) || $t('default.show') }}
-          </v-btn> -->
           <buttons-navigate
             :color="link.color"
             :label="$t(link.label)"
@@ -57,7 +49,7 @@ const props = defineProps({
   },
 })
 
-  const icon = computed(() => {
-    return props.icon
-  })
+const icon = computed(() => {
+  return props.icon
+})
 </script>

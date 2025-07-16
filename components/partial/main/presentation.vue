@@ -4,11 +4,14 @@
       id="hero"
       color="blue lighten-1"
     >
+     
       <v-img
         :min-height="mobile ? '45vh' : '70vh'"
-        src="/backgrounds/hero-2.svg"
-        contain
+        :max-height="mobile ? '45vh' : '70vh'"
+        src="/backgrounds/background.jpeg"
+        cover
       >
+        
         <v-container
           class="d-flex align-self-center pt-12"
           fluid
@@ -47,6 +50,12 @@
             />
           </v-row>
         </v-container>
+        <section>
+          <NuxtParticles
+            id="tsparticles"
+            :options="options"
+          />
+        </section>
       </v-img>
     </v-card>
   </ClientOnly>

@@ -35,7 +35,7 @@
           bg-color="primary-container"
         >
           <v-list-item
-            v-for="(item, i) in menuItems"
+            v-for="(item, i) in visibleMenuItems"
             :key="i"
           >
             <template #prepend>
@@ -61,11 +61,12 @@
   </v-app-bar>
 </template>
 <script setup>
+import { useCookies } from '@vueuse/integrations/useCookies'
 import { useApplicationStore } from '~/stores/application'
 
 const applicationStore = useApplicationStore()
 const router = useRouter()
-const src = ref('/img/logo.webp')
+const src = ref('/img/logo.png')
 const menuItems = reactive([
   {
     name: 'legal_notices.title',
@@ -77,7 +78,29 @@ const menuItems = reactive([
     icon: 'i-mdi:login-variant',
     to: '/auth/sign-in',
   },
+  {
+    name: 'default.auth.sign_out.title',
+    icon: 'i-mdi:logout-variant',
+    to: '/auth/sign-out',
+  },
 ])
+
+const token = useCookie('token')
+
+const visibleMenuItems = computed(() => {
+  const isLoggedIn = !!token.value
+
+  return menuItems.filter(item => {
+    if (item.to === '/auth/sign-in') {
+      return !isLoggedIn
+    }
+    if (item.to === '/auth/sign-out') {
+      return isLoggedIn
+    }
+    // Les autres (legal notices) toujours visibles
+    return true
+  })
+})
 
 const toggleTheme = () => {
   applicationStore.toggleDarkTheme()

@@ -59,6 +59,7 @@
               <v-btn
                 color="primary"
                 block
+                variant="outlined"
                 dark
                 @click="sendEmail"
               >

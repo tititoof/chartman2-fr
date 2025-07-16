@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@nuxt/content": "^3.6.3",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@sentry/nuxt": "^9.35.0",
     "@vueuse/core": "^13.5.0",
     "@vueuse/integrations": "^13.5.0",
+    "better-sqlite3": "^12.2.0",
     "dotenv": "^17.0.1",
     "import-in-the-middle": "^1.14.2",
     "nuxt": "^3.17.6",

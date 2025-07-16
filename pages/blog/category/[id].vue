@@ -71,13 +71,5 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const { data: articles } = await useAsyncData('home', () => queryContent()
-  .where({
-    _path: {
-      $contains: '/articles/' + route.params.id
-    }
-  })
-  .only(['_path', '_id', 'title', 'icon', 'description', 'color', 'article_id'])
-  .find()
-)
+const { data: articles } = await useAsyncData('content', () => queryCollection(route.params.id).all())
 </script>

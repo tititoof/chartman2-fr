@@ -22,6 +22,7 @@ Pour cela, j'ai créé un dépôt afin de commencer avec une configuration déj�
 
 ##### Installation
 
+
 * La première chose que nous allons faire et de créer un dépôt sur [GitHub](https://github.com/) ou autre [GitLab](https://about.gitlab.com/), nommons le 'todo-frontend', puis clonons le sur notre ordinateur.
 
 
@@ -44,7 +45,7 @@ git clone git@github.com:chartman2/nuxt-frontend-template.git
 
 
 ```shell
-rsync -r --exclude '.git' ~/projects/nuxt-frontend-template/* ~/projects/todo-frontend
+rsync -r --exclude '.git' ~/projects/nuxt-frontend-template ~/projects/todo-frontend
 ```
 
 * On se place dans l'application **todo-frontend**.
@@ -60,6 +61,7 @@ cd ~/projects/todo-frontend
 ```shell
 cp .env.example .env
 ```
+
 
 
 ```yml

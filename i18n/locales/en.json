@@ -1,0 +1,290 @@
+{
+  "global": {
+    "name": "chartman2.fr",
+    "charter": "Charte",
+    "disconnect": "Déconnexion",
+    "home": "Accueil",
+    "legal_notices": "Mentions légales",
+    "login": "Connexion",
+    "register": "Inscription",
+    "articles": "Articles"
+  },
+  "legal_notices": {
+    "title": "Mentions Légales",
+    "name": "EIRL chartman2.fr",
+    "fields": {
+      "name": "Nom",
+      "address": "Adresse",
+      "siren": "SIRET",
+      "website": "Site web",
+      "contact": "Contact",
+      "hosting": "Hébergement"
+    },
+    "texts": {
+      "name": "Christophe Hartmann",
+      "address1": "1 route de Cormery",
+      "address2": "37320 Saint Branchs",
+      "address3": "France",
+      "siren": "752 332 742 00028",
+      "website": "https://chartman2.fr",
+      "contact": "chartman2.fr[at]gmail[dot]com",
+      "hosting": "OVHcloud - SAS",
+      "hosting_address": "2 rue Kellermann - 59100 Roubaix - France",
+      "hosting_website": "https://www.ovh.com",
+      "hosting_name": "OVH"
+    }
+  },
+  "articles": {
+    "title": "Articles",
+    "unknow": "Inconnu"
+  },
+  "pages": {
+    "tests": {
+      "list": {
+        "title": "Liste des tests"
+      },
+      "new": {
+        "title": "Création d'un tests"
+      },
+      "edit": {
+        "title": "Modification d'un tests"
+      },
+      "show": {
+        "title": "Visualisation d'un tests"
+      },
+      "destroy": {
+        "title": "Suppression d'un tests",
+        "confirm": "Êtes vous sûr de vouloir supprimer '{ name }'"
+      },
+      "form": {
+        "fields": {
+          "name": "Nom"
+        }
+      }
+    },
+    "courses": {
+      "list": {
+        "title": "Liste des cours"
+      },
+      "new": {
+        "title": "Création d'un cours",
+        "success": "Création du cours effectuée",
+        "fail": "Erreur lors de la création du cours"
+      },
+      "edit": {
+        "title": "Modification d'un cours",
+        "success": "Modification du cours effectuée",
+        "fail": "Erreur lors de la modification du cours"
+      },
+      "show": {
+        "title": "Visualisation d'un cours"
+      },
+      "destroy": {
+        "title": "Suppression d'un cours",
+        "confirm": "Êtes vous sûr de vouloir supprimer '{ name }'",
+        "success": "Suppression du cours effectuée",
+        "fail": "Erreur lors de la suppression du cours"
+      },
+      "form": {
+        "fields": {
+          "name": "Nom"
+        }
+      }
+    },
+    "ages": {
+      "list": {
+        "title": "Liste des age"
+      },
+      "new": {
+        "title": "Création d'un age",
+        "success": "Création du age effectuée",
+        "fail": "Erreur lors de la création du age"
+      },
+      "edit": {
+        "title": "Modification d'un age",
+        "success": "Modification du age effectuée",
+        "fail": "Erreur lors de la modification du age"
+      },
+      "show": {
+        "title": "Visualisation d'un age"
+      },
+      "destroy": {
+        "title": "Suppression d'un age",
+        "confirm": "Êtes vous sûr de vouloir supprimer '{ name }'",
+        "success": "Suppression du age effectuée",
+        "fail": "Erreur lors de la suppression du age"
+      },
+      "form": {
+        "fields": {
+          "name": "Nom",
+          "minimum": "Minimum",
+          "maximum": "Maximum"
+        }
+      }
+    }
+  },
+  "default": {
+    "unknow": "Inconnu",
+    "form": {
+      "save": "Enregistrer",
+      "back": "Retour",
+      "cancel": "Annuler",
+      "create": "Créer",
+      "show": "Visualiser",
+      "destroy": "Supprimer",
+      "error": {
+        "string": {
+          "email": "Adresse e-mail invalide.",
+          "min": "Longueur minimale : 3 caractères.",
+          "min_6": "Longueur minimale : 6 caractères.",
+          "max": "Longueur maximale : 255 caractères."
+        }
+      }
+    },
+    "buttons": {
+      "create": "Créer",
+      "show": "Visualiser",
+      "edit": "Modifier",
+      "destroy": "Supprimer"
+    },
+    "auth": {
+      "sign_in": {
+        "title": "Connexion",
+        "success": "Connexion effectuée avec succès.",
+        "fail": "Une erreur s'est produite lors de la tentative de connexion.",
+        "email": "Email",
+        "password": "Mot de passe",
+        "submit": "S'identifier"
+      },
+      "sign_out": {
+        "title": "Déconnexion",
+        "text": "Déconnexion en cours, veuillez patienter.",
+        "success": "Déconnexion effectuée avec succès.",
+        "fail": "Une erreur s'est produite lors de la tentative de déconnexion."
+      }
+    },
+    "lists": {
+      "per": "Nombre par page"
+    }
+  },
+  "$vuetify": {
+    "badge": "Badge",
+    "open": "Ouvrir",
+    "close": "Fermer",
+    "dismiss": "Ignorer",
+    "confirmEdit": {
+      "ok": "OK",
+      "cancel": "Annuler"
+    },
+    "dataIterator": {
+      "noResultsText": "Aucun enregistrement correspondant trouvé",
+      "loadingText": "Chargement de l'élément..."
+    },
+    "dataTable": {
+      "itemsPerPageText": "Lignes par page :",
+      "ariaLabel": {
+        "sortDescending": "Tri décroissant.",
+        "sortAscending": "Tri croissant.",
+        "sortNone": "Non trié.",
+        "activateNone": "Activer pour supprimer le tri.",
+        "activateDescending": "Activer pour trier par ordre décroissant.",
+        "activateAscending": "Activer pour trier par ordre croissant."
+      },
+      "sortBy": "Trier par"
+    },
+    "dataFooter": {
+      "itemsPerPageText": "Éléments par page :",
+      "itemsPerPageAll": "Tous",
+      "nextPage": "Page suivante",
+      "prevPage": "Page précédente",
+      "firstPage": "Première page",
+      "lastPage": "Dernière page",
+      "pageText": "{0}-{1} de {2}"
+    },
+    "dateRangeInput": {
+      "divider": "à"
+    },
+    "datePicker": {
+      "itemsSelected": "{0} sélectionné(s)",
+      "range": {
+        "title": "Sélectionner des dates",
+        "header": "Entrer des dates"
+      },
+      "title": "Sélectionner une date",
+      "header": "Entrer une date",
+      "input": {
+        "placeholder": "Entrer une date"
+      }
+    },
+    "noDataText": "Aucune donnée disponible",
+    "carousel": {
+      "prev": "Visuel précédent",
+      "next": "Visuel suivant",
+      "ariaLabel": {
+        "delimiter": "Diapositive {0} de {1}"
+      }
+    },
+    "calendar": {
+      "moreEvents": "{0} de plus",
+      "today": "Aujourd'hui"
+    },
+    "input": {
+      "clear": "Vider {0}",
+      "prependAction": "{0} action avant",
+      "appendAction": "{0} action après",
+      "otp": "Caractère {0} du mot de passe à usage unique"
+    },
+    "fileInput": {
+      "counter": "{0} fichier(s)",
+      "counterSize": "{0} fichier(s) ({1} au total)"
+    },
+    "fileUpload": {
+      "title": "Glissez-déposez des fichiers ici",
+      "divider": "ou",
+      "browse": "Parcourir les fichiers"
+    },
+    "timePicker": {
+      "am": "AM",
+      "pm": "PM",
+      "title": "Sélectionner une heure"
+    },
+    "pagination": {
+      "ariaLabel": {
+        "root": "Navigation de pagination",
+        "next": "Page suivante",
+        "previous": "Page précédente",
+        "page": "Aller à la page {0}",
+        "currentPage": "Page actuelle, Page {0}",
+        "first": "Première page",
+        "last": "Dernière page"
+      }
+    },
+    "stepper": {
+      "next": "Suivant",
+      "prev": "Précédent"
+    },
+    "rating": {
+      "ariaLabel": {
+        "item": "Note de {0} sur {1}"
+      }
+    },
+    "loading": "Chargement...",
+    "infiniteScroll": {
+      "loadMore": "Charger plus",
+      "empty": "Aucune donnée supplémentaire"
+    },
+    "rules": {
+      "required": "Ce champ est requis",
+      "email": "Veuillez entrer une adresse email valide",
+      "number": "Ce champ ne peut contenir que des chiffres",
+      "integer": "Ce champ ne peut contenir que des valeurs entières",
+      "capital": "Ce champ ne peut contenir que des lettres majuscules",
+      "maxLength": "Vous devez entrer un maximum de {0} caractères",
+      "minLength": "Vous devez entrer un minimum de {0} caractères",
+      "strictLength": "La longueur du champ entré est invalide",
+      "exclude": "Le caractère {0} n’est pas autorisé",
+      "notEmpty": "Veuillez choisir au moins une valeur",
+      "pattern": "Format invalide"
+    }
+  }
+}
