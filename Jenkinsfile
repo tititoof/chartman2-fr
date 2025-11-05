@@ -23,11 +23,13 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                 echo 'Testing..'
                 script {
-                    sh('''
-                        pnpm run test:ci-cd
-                    ''')
+                    def status = sh(
+                        script: 'pnpm run test:ci-cd',
+                        returnStatus: true
+                    )
+                    echo "Code de sortie : ${status}"
                     echo 'Finished tests!'
                 }
             }
