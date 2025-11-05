@@ -8,7 +8,7 @@ article_id: '3-to-do-list-refactor'
 
 Dans cet articles, nous allons refactoriser la partie ToDo.
 
-#### Store
+#### 💾 Store
 
 Créons un store pour les tâches (comme un panier sur les sites d'ecommerce)
 
@@ -76,11 +76,11 @@ La dernière partie du code vérifie si HMR (Hot Module Replacement) est activé
 Si oui, il appelle la méthode accept avec la fonction acceptHMRUpdate.
 
 
-#### Refactor
+#### 🔄 Refactor
 
 Divisons la gestion du todo list en 2, la liste et le formulaire d'ajout.
 
-##### Liste
+##### 📋 Liste
 
 
 ```vue [components/partial/todo/list.vue]
@@ -124,7 +124,7 @@ const performTask = (key: number) => {
 </script>
 ```
 
-##### Formulaire d'ajout
+##### ✏️ Formulaire d'ajout
 
 ```vue [components/partial/todo/new.vue]
 <template>

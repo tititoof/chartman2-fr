@@ -49,15 +49,14 @@
   applicationStore.setIsPhone(mobile.value)
 
   nuxtApp.hook('page:finish', () => {
-    theme.global.name.value = setTheme()
+    theme.change(setTheme())
 
     applicationStore.setIsPhone(mobile.value)
     applicationStore.setIsDarkTheme(theme.global.name.value === 'chartman2frDarkTheme')
   })
 
   watch(storeThemeDark, (value) => {
-    theme.global.name.value =
-      value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme'
+    theme.change(value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme')
   })
 </script>
 
@@ -65,7 +64,7 @@
   .page-enter-active,
   .page-leave-active,
   .component-fade-in {
-    transition: all 0.4s;
+    transition: all 0.2s;
   }
   .page-enter-from,
   .page-leave-to,

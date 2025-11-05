@@ -1,89 +1,188 @@
 ---
 title: 'Docker compose'
-description: 'Description'
+description: 'Introduction à Docker compose'
 icon: 'i-mdi:docker'
 article_id: '2-docker-compose-description'
 ---
 
-Docker Compose est un excellent outil open-source inclus avec Docker qui facilite la définition et l'exécution d'applications multi-conteneurs sur une seule machine. Grâce à lui, les développeurs peuvent décrire leur application dans un simple fichier YAML, en regroupant tous les services interconnectés, et lancer l'ensemble de l'application en une seule commande.
+#### 📌 Docker Compose : la façon la plus simple d'orchestrer vos conteneurs
 
-Voici quelques-unes des raisons pour lesquelles Docker Compose est si pratique :
 
-- **Configuration simplifiée** : Avec Docker Compose, vous pouvez tout définir dans un seul fichier YAML, rendant la configuration plus simple et vous permettant de réutiliser facilement ces configurations d'un environnement à l'autre.
-  
-- **Isolation des services** : Chaque service de votre application fonctionne dans son propre conteneur, garantissant une isolation totale entre les composants et évitant les problèmes de dépendances.
+Vous cherchez à gérer facilement plusieurs conteneurs pour votre application ? Docker Compose est fait pour vous ! Cet outil open-source intégré à Docker Engine vous permet de définir et de lancer toute votre stack en une seule commande.
 
-- **Gestion simplifiée** : Des commandes simples vous permettent de démarrer, arrêter et gérer facilement l'ensemble de votre application. Vous gagnez ainsi du temps et augmentez votre productivité.
 
-- **Gestion des dépendances** : Docker Compose vous aide à spécifier comment les différents services interagissent, en assurant que tout démarre dans le bon ordre et que chaque service a accès à ses ressources nécessaires.
+Docker Compose est un excellent outil open-source inclus avec Docker qui facilite la définition et l'exécution d'applications multi-conteneurs sur une seule machine.
 
-- **Un écosystème riche** : Vous profitez d'un large éventail d'outils, de bibliothèques et de services tiers pour déployer facilement des applications multi-conteneurs dans divers environnements.
 
-Pour résumer, Docker Compose est l'outil parfait pour simplifier la configuration et la gestion de vos applications multi-conteneurs. Il vous permet de définir chaque service dans un fichier YAML clair, de gérer des dépendances, et de lancer votre application d'un simple clic.
+Grâce à lui, les développeurs peuvent décrire leur application dans un simple fichier YAML, en regroupant tous les services interconnectés, et lancer l'ensemble de l'application en une seule commande.
 
-Le fichier docker-compose.yml est votre configuration pour orchestrer toutes ces merveilles. Voici un petit aperçu de sa structure :
 
-```yml
-version: "3.9"
+Avec un fichier simple, appelé *docker-compose.yml*, vous composez toutes vos dépendances, réseaux et volumes. Résultat : démarrer, arrêter ou ajuster la taille de votre environnement devient un jeu d’enfant.
 
+
+#### 🚀 Pourquoi adopter Docker Compose ?
+
+
+Voici quelques avantages qui vont vous convaincre :  
+
+
+- **Configuration unique et claire**
+Un seul fichier YAML pour décrire tous vos services, réseaux et volumes. Facile à partager entre collègues, utiliser dans vos pipelines CI/CD ou même en production.  
+
+
+- **Isolation des services**
+Chaque composant fonctionne dans son propre conteneur, évitant ainsi les conflits de dépendances (par exemple, différentes versions de PHP, MySQL ou Redis) et assurant une stabilité optimale.  
+
+
+- **Démarrage dans le bon ordre**
+Grâce à la directive depends_on, vos services se lancent dans le bon ordre, et avec les health‑checks, vous êtes sûr qu’ils sont prêts à recevoir du trafic.  
+
+
+- **Gestion ultra simple**
+Les commandes comme docker compose up, down, ps, logs ou exec sont intuitives. En quelques secondes, vous avez tout sous contrôle.  
+
+
+- **Résilience et persistance**
+Les volumes montés sur votre machine permettent de conserver vos données (bases, fichiers téléchargés…) même si vous supprimez un conteneur.  
+
+
+- **Un écosystème complet**
+Compose s’intègre facilement avec Docker Swarm, Kubernetes (via Kompose) ou dans vos pipelines CI/CD pour des tests d’intégration fiables et répétables.  
+
+
+#### ⚙️ Structure d’un docker-compose.yml
+
+```yml [./docker-compose.yml]
 services:
-  frontend:
-    build: 
-      context: ./
-      dockerfile: Dockerfile.nuxt
-    command:  sh -c "pnpm run dev"
-    working_dir: '/app'
-    user: node
-    tty: true
+  db:
+    image: mysql:5.7
     volumes:
-      - './:/app'
+      - db_data:/var/lib/mysql
+    restart: always
     environment:
-      - PUID="${UID}"
-      - PGID="${GID}"
-      - UMASK="${USMAK}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${APP_NAME}.rule=Host(`${APP_URL}`)"
-      - "traefik.http.routers.${APP_NAME}.entrypoints=http"
-      - "traefik.http.routers.${APP_NAME}-secure.service=${APP_NAME}-secure"
-      - "traefik.http.routers.${APP_NAME}-secure.rule=Host(`${APP_URL}`)"
-      - "traefik.http.routers.${APP_NAME}-secure.entrypoints=https"
-      - "traefik.http.routers.${APP_NAME}-secure.tls=true"
-      - "traefik.http.routers.${APP_NAME}-wss.service=${APP_NAME}-wss"
-      - "traefik.http.routers.${APP_NAME}-wss.rule=Host(`${APP_WS_URL}`)"
-      - "traefik.http.routers.${APP_NAME}-wss.entrypoints=https"
-      - "traefik.http.routers.${APP_NAME}-wss.tls=true"
-      - "traefik.http.middlewares.${APP_NAME}-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.${APP_NAME}-redirect.redirectscheme.permanent=true"
-      - "traefik.http.routers.${APP_NAME}.middlewares=${APP_NAME}-redirect"
-      - "traefik.http.services.${APP_NAME}-secure.loadbalancer.server.port=3000"
-      - "traefik.http.services.${APP_NAME}-wss.loadbalancer.server.port=24678"
-    expose:
-      - 3000
-      - 24678
-    networks:
-      - app-network
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
 
-  vscode:
-    container_name: vscode-${APP_NAME}
-    build: 
-      context: ./
-      dockerfile: Dockerfile.vscode
+  wordpress:
     depends_on:
-      - frontend
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - "$HOME/.local:/home/coder/.local"
-      - "$HOME/.config:/home/coder/.config"
-      - "$PWD:/home/coder/project"
+      - db
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    restart: always
     environment:
-      - TZ=Europe/Paris
-      - DOCKER_USER=${USER}
-      - USER_PASSWORD=1234
-    user: ${UID_GID}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${APP_VSCODE_NAME}.rule=Host(`${APP_VSCODE_URL}`)"
-      - "traefik.http.routers.${APP_VSCODE_NAME}.entrypoints=http"
-      - "traefik.http.routers.${APP_VSCODE_NAME}-secure.service=${APP_VSCODE
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+volumes:
+  db_data: {}
 ```
+
+##### 🛢️ Service db (la base de données)
+
+
+```yaml [./docker-compose.yml]
+db:
+  image: mysql:5.7
+```
+
+On utilise l’image officielle de MySQL version 5.7, disponible sur [Docker Hub](https://hub.docker.com/). Ce conteneur servira de base de données pour notre site.
+
+```yaml [./docker-compose.yml]
+  volumes:
+    - db_data:/var/lib/mysql
+```
+
+Le volume appelé **db_data** est connecté dans le conteneur à l’endroit `/var/lib/mysql`.  
+
+
+Ainsi, toutes vos données restent en sécurité, même si vous supprimez ou redémarrez le conteneur.
+
+
+```yaml [./docker-compose.yml]
+  restart: always
+```
+
+Le conteneur se relancera automatiquement s’il s’arrête tout seul, sauf si vous le stoppez manuellement.
+
+```yaml [./docker-compose.yml]
+  environment:
+    MYSQL_ROOT_PASSWORD: somewordpress
+    MYSQL_DATABASE: wordpress
+    MYSQL_USER: wordpress
+    MYSQL_PASSWORD: wordpress
+```
+
+Ici, on défini quelques variables d’environnement essentielles :  
+
+- **MYSQL_ROOT_PASSWORD** est le mot de passe pour l’utilisateur root.  
+- **MYSQL_DATABASE** : le nom de la base qu’on créer lors du lancement.  
+- **MYSQL_USER / MYSQL_PASSWORD** ce sont les identifiants d’un utilisateur supplémentaire ayant accès à la base.
+
+
+##### 📰 Service WordPress
+
+```yaml [./docker-compose.yml]
+wordpress:
+  depends_on:
+    - db
+```
+
+Ce paramètre indique que WordPress doit démarrer après la base de données, pour s’assurer que MySQL est bien en route. 
+Cependant, ça ne garantit pas que la base est totalement prête à accepter des connexions.
+
+```yaml [./docker-compose.yml]
+  image: wordpress:latest
+```
+
+On utilise la dernière version officielle de WordPress, pour avoir toutes les nouveautés.
+
+```yaml [./docker-compose.yml]
+  ports:
+    - "8000:80"
+```
+
+Le port 80 (le port standard de WordPress) dans le conteneur est mappé sur le port 8000 de votre ordinateur. 
+
+on peut accéder à votre site WordPress via [http://localhost:8000](http://localhost:8000).
+
+```yaml [./docker-compose.yml]
+  restart: always
+```
+
+Idem, WordPress se relancera automatiquement si jamais il s’arrête.
+
+```yaml [./docker-compose.yml]
+  environment:
+    WORDPRESS_DB_HOST: db:3306
+    WORDPRESS_DB_USER: wordpress
+    WORDPRESS_DB_PASSWORD: wordpress
+    WORDPRESS_DB_NAME: wordpress
+```
+
+On configure WordPress pour qu’il se connecte à la base de données.  
+- **WORDPRESS_DB_HOST** indique le nom du service (db) et le port MySQL (3306).  
+- Les autres paramètres correspondent aux identifiants que l’on a définis dans la section de la base.
+
+
+##### 🗂️ Définition du volume pour la base de données
+
+```yaml [./docker-compose.yml]
+volumes:
+  db_data: {}
+```
+
+Ce volume nommé **db_data** est utilisé pour stocker de façon durable toutes vos données MySQL. La syntaxe `{}` indique qu’il est créé avec la configuration par défaut, sans réglages particuliers.
+
+##### 📋 Résumé 
+
+Ce fichier `docker-compose.yml` met en place un environnement WordPress complet :  
+- La base de données MySQL est persistante grâce à un volume dédié.  
+- WordPress est accessible sur votre navigateur via [http://localhost:8000](http://localhost:8000).  
+- Les deux services communiquent via le réseau interne Docker, sans besoin de configurations complexes d’IP.  
+- Même si vous supprimez ou redémarrez les conteneurs, vos données restent sauvegardées dans le volume.
+
+C’est une façon simple et efficace de faire fonctionner un WordPress localement avec sa base de données, prête à l’emploi !

@@ -19,7 +19,7 @@
             <ClientOnly>
               <ContentRenderer
                 v-if="article"
-                class="w-100"
+                class="w-100 ml-2"
                 :value="article"
               />
             </ClientOnly>

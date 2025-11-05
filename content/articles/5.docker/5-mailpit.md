@@ -1,41 +1,69 @@
 ---
 title: 'Docker - Mailpit'
-description: 'Initialisation de Mailpit avec Docker'
+description: 'Utilisation de Mailpit avec Docker'
 icon: 'i-mdi:docker'
 article_id: '5-docker-mailpit-init'
 ---
 
-**Mailpit : le outil de test email moderne et sécurisé**
 
-Vous êtes développeur et vous cherchez un outil pour tester vos emails sans vous soucier des détails techniques ? Mailpit est la solution idéale ! Cet outil de test email est conçu pour être rapide, léger en mémoire et indépendant de tout framework spécifique.
+#### 📌 Mailpit ![Mailpit](/img/mailpit.png){ width=30px }
 
-**Les fonctionnalités clés**
+Découvrez [Mailpit](https://github.com/axllent/mailpit){:target="_blank"}, l’outil parfait pour les développeurs qui veulent tester leurs emails facilement ! Il vous permet d’intercepter et de simuler l’envoi d’emails lors du développement ou des tests, sans jamais envoyer de vrais messages.  
 
-* **SMTP serveur :** Mailpit agit comme un serveur SMTP, permettant aux développeurs de tester leurs emails sans avoir à configurer leur propre serveur.
-* **Interface web moderne :** l'outil fournit une interface web moderne pour visualiser et tester les emails capturés.
-* **API pour tests automatisés :** Mailpit inclut une API pour les tests d'intégration automatisés, permettant aux développeurs de vérifier facilement leur code.
+Voici ce que Mailpit peut faire pour vous :  
 
-**docker-compose.yml**
+- **Serveur SMTP intégré**
 
-```yml
+Il remplace votre serveur SMTP habituel pendant que vous travaillez, pour que votre application puisse envoyer des mails vers Mailpit (ex. SMTP_HOST=mailpit), et tout sera intercepté sans souci.  
+
+- **Une interface web conviviale**
+
+Accédez simplement via votre navigateur pour voir tous les emails capturés : HTML, texte brut, pièces jointes, headers, et plus encore.  
+
+- **Une API REST pratique**
+
+Récupérez, analysez ou supprimez facilement les emails capturés grâce à une API simple à utiliser, idéale pour automatiser vos tests.  
+
+- **Léger et rapide**
+
+Conçu pour fonctionner sans encombre dans vos environnements Docker ou CI/CD, sans dépendances lourdes.  
+
+- **Facile à prendre en main**
+
+Pas besoin de config compliquée : Mailpit est autonome, pas besoin de Postfix, Sendmail ou autres. L’installation est simple et efficace !
+
+
+#### ⚙️ Exemple
+
+
+Voici un exemple pour vous montrer comment utiliser [Traefik](/blog/article/3-docker-traefik-introduction){:target="_blank"} avec Mailpit, c'est vraiment simple et pratique !
+
+
+```yml [docker-compose.yml]
 services:
   mailpit:
     image: 'axllent/mailpit:latest'
     container_name: mailpit
     restart: unless-stopped
     ports:
-      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-      - '${FORWARD_MAILPIT_UI_PORT:-8025}:8025'
+      - '${MAILPIT_PORT:-1025}:1025'
+      - '${MAILPIT_UI_PORT:-8025}:8025'
     labels:
       # Ajout dans traefik
       - "traefik.enable=true"
+
+      # HTTP → HTTPS redirection
+      - "traefik.http.middlewares.mailpit-redirect.redirectscheme.scheme=https"
+
       # HTTP
-      - "traefik.http.routers.mailpit.rule=Host(`mailpit.traefik.me`)"
+      - "traefik.http.routers.mailpit.rule=Host(`${MAILPIT_HOST}`)"
       - "traefik.http.routers.mailpit.entrypoints=http"
+      - "traefik.http.routers.mailpit.service=mailpit"
+      - "traefik.http.routers.mailpit.middlewares=mailpit-redirect"
 
       # HTTPS
       - "traefik.http.routers.mailpit-secure.service=mailpit-secure"
-      - "traefik.http.routers.mailpit-secure.rule=Host(`mailpit.traefik.me`)"
+      - "traefik.http.routers.mailpit-secure.rule=Host(`${MAILPIT_HOST}`)"
       - "traefik.http.routers.mailpit-secure.entrypoints=https"
       - "traefik.http.routers.mailpit-secure.tls=true"
 
@@ -44,5 +72,14 @@ services:
     networks:
       local_dev:
         aliases:
-          - mailpit.traefik.me
+          - mailpit.chartman2-fr.ovh
 ```
+
+```bash [.env]
+MAILPIT_PORT=1025
+MAILPIT_UI_PORT=8025
+MAILPIT_HOST=mailpit.chartman2-fr.ovh
+```
+
+
+Il ne reste plus qu'à configurer dans votre application l'envoi des emails vers `mailpit.chartman2-fr.ovh` sur le port `1025` 👍️

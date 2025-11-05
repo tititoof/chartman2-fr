@@ -53,6 +53,8 @@ services:
       - 24678
     networks:
       - chartman2-fr-network
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   vscode:
     container_name: vscode-${APP_NAME}

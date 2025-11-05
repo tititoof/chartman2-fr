@@ -1,0 +1,26 @@
+FROM node:lts-alpine
+
+ENV PNPM_HOME="/home/node/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+# Définir la variable HOME (souvent déjà définie)
+ENV HOME=/home/node
+
+WORKDIR /app
+
+RUN apk --no-cache add git curl bash python3 make g++ \
+  && rm -rf /var/cache/apk/* \
+  && npm install -g pnpm@${PNPM_VERSION}
+
+COPY . .
+
+RUN chown -Rf node:node /app
+
+USER node
+
+RUN pnpm config set store-dir $HOME/.local/share/pnpm/store/v3 --global \
+  && pnpm install \
+  && pnpm install vue
+
+# RUN pnpm install -g @openai/codex
+
+ENV PATH ./node_modules/.bin/:$PATH

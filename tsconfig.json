@@ -3,5 +3,9 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "target": "es2022",
+    "types": [
+      "@vueuse/core",
+      "@vueuse/integrations"
+    ]
   }
 }

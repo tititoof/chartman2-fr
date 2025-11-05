@@ -7,20 +7,21 @@ article_id: '5-to-do-list-backend'
 ---
 
 
-#### Backend 
+#### 🗄️ Backend
 
-Maintenant, nous allons créer la partie backend pour gérer les données et surtout les garder en base de données.
+Maintenant, nous allons créer la partie *backend* pour gérer les données et surtout les garder en base de données.
 
-Pour cela, nous utilisons le framework Ruby on Rails.
+nous utilisons le framework Ruby on Rails.
 
-On va faire la même chose que dans le premier article mais pour la partie backend.
-
-##### Installation
-
-* Créons un dépôt sur Github `todo-backend` et le clôner dans le répertoire `~/projects`.
+On va faire la même chose que dans le premier article mais pour gérer les données (persistance).
 
 
-```shell
+##### 📥 Installation
+
+* Créer un dépôt sur Github ou autre (Gitlab, ...) `todo-backend` et le clôner dans le répertoire `~/projects`.
+
+
+```shell [~/]
 cd ~/projects
 git clone git@github.com:<username>/todo-backend.git
 ```
@@ -28,21 +29,21 @@ git clone git@github.com:<username>/todo-backend.git
 * Clôner le dépôt `https://github.com/chartman2/rails-backend-template` pour avoir la base du backend.
 
 
-```shell
+```shell [~/projects]
 git clone git@github.com:chartman2/rails-backend-template.git
 ```
 
 * Copier les fichiers et répertoires (sauf le `.git`) dans votre dépot 'todo-frontend'
 
 
-```shell
+```shell [~/projects]
 rsync -r --exclude '.git' rails-backend-template/* todo-backend
 ```
 
 * Accéder à l'application **todo-backend**.
 
 
-```shell
+```shell [~/projects]
 cd todo-backend
 ```
 
@@ -51,15 +52,15 @@ cd todo-backend
 * Editer le fichier de credential
 
 
-```shell
+```shell [~/projects/todo-backend]
 docker compose exec backend EDITOR=vim rails credentials:edit
 ```
 
-Modifier en fonction de vos paramètres
+N'hésitez pas à adapter selon votre configuration
 
 
-```yml
-APP_URL: todo-backend.traefik.me
+```yml [~/projects/todo-backend]
+APP_URL: todo-backend.chartman2-fr.ovh
 DB_POSTGRESDB_DATABASE: todo_backend_development
 DB_POSTGRESDB_HOST: postgresql
 DB_POSTGRESDB_PORT: 5432
@@ -68,21 +69,22 @@ DB_POSTGRESDB_PASSWORD: mon_mot_de_passe
 ```
 
 
-* Installation de l'application
+#### 📥 Installation de l'application
 
 Pour plus d'information sur [Docker](/blog/article/1-docker-description){:target="_blank"}
 et [Docker compose](/blog/article/2-docker-compose-description){:target="_blank"}
 
 
-```shell
+```shell [~/projects/todo-backend]
 docker compose build 
 ```
 
-##### Lancement de l'application et de VS Code
+##### 🚀 Lancement de l'application et de VS Code
 
+De la même façon que pour le frontend, on lance l'application avec docker compose
 
-```shell
-docker compose up
+```shell [~/projects/todo-backend]
+docker compose up -d
 ```
 
 

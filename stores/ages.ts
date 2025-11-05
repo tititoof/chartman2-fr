@@ -22,9 +22,10 @@ export const useAgesStore = defineStore('agesStore', {
       this.paginateFilters = paginateFilters
     },
   },
-  persist: {
-    storage: persistedState.localStorage,
-  },
+  persist: true,
+  // persist: {
+  //   storage: persistedState.localStorage,
+  // },
 })
 
 if (Object.hasOwn(import.meta, 'hot')) {

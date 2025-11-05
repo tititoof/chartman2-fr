@@ -8,13 +8,18 @@ article_id: '4-to-do-list-scope'
 
 Maintenant que nous avons nos tâches, rajoutons un context (scope) pour les filtrer.
 
+#### 🧩 Contextes
+
 Dans un premier temps définissons nos contextes :
  - Personnel
  - Travail
  - Famille
  - Autre
 
- Pour cela, créons le type scope
+
+##### ⚙️ Type
+
+Pour cela, créons le type scope
 
  ```ts [types/scope.ts]
 export type IScope = 'personnal' | 'work' | 'family' | 'other'
@@ -39,6 +44,9 @@ export interface ITodoItem {
 }
 ```
 
+##### 🈳 Gestion des langues
+
+
 la traduction
 
 ```ts [i18n.config.ts]
@@ -53,6 +61,7 @@ la traduction
   }
 ```
 
+##### 🎨 Affichage
 
 Il nous reste à modifier l'affichage dans la liste, et dans le formulaire
 

@@ -58,7 +58,7 @@
       class="elevation-12 mb-12"
       size="128"
     >
-      <v-img src="/img/head.png" />
+      <v-img src="/img/visage.webp" />
     </v-avatar>
   </v-container>
 </template>

@@ -30,7 +30,7 @@
               v-aos="['animate__flipInY']"
               :data-aos-delay="`0.` + ((iSkills + 1) * (iSkill + 1) * 5) + `s`"
               class="py-12 px-4"
-              color="white"
+              :color="color"
               flat
               rounded="lg"
               variant="outlined"
@@ -43,8 +43,7 @@
                 size="88"
                 rounded="2"
               >
-                <v-icon size="x-large">
-                  {{ src }}
+                <v-icon size="x-large" :icon="src">
                 </v-icon>
               </v-avatar>
               <v-avatar
@@ -84,6 +83,9 @@
 </template>
 <script setup>
 import { CSkills, CSkillsCICD } from '~/utils/common'
+import { useApplicationStore } from '~/stores/application'
 
+const applicationStore = useApplicationStore()
+const color = computed(() => applicationStore.isDarkTheme ? 'white' : 'black')
 const skills = reactive([...CSkills, CSkillsCICD])
 </script>

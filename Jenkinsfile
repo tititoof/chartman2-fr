@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'agent_nuxt'
+            label 'agent_nuxt_1'
         }
     }
 

@@ -46,9 +46,10 @@ export const useApplicationStore = defineStore('application', {
             this.isThemeDefined = true
         }
     },
-    persist: {
-        storage: persistedState.localStorage,
-    },
+    persist: true,
+    // persist: {
+    //     storage: persistedState.localStorage,
+    // },
 })
 
 if (Object.hasOwn(import.meta, 'hot')) {

@@ -4,7 +4,7 @@
       @click="$router.back()"
       variant="tonal"
       color="info"
-      class="mr-2"
+      class="mr-2 ml-2"
     >
       <v-icon icon="i-mdi:arrow-left-circle" />
     </v-btn>
@@ -23,6 +23,7 @@
       to="/articles"
       variant="tonal"
       color="info"
+      class="mr-2"
     >
       <v-icon icon="i-mdi:book-open-variant-outline" />
     </v-btn>

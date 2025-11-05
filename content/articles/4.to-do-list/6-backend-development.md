@@ -6,17 +6,21 @@ color: 'secondary'
 article_id: '6-to-do-list-backend-development'
 ---
 
-#### Mise en place des utilisateurs et de la connexion api
+#### 👤 Mise en place des utilisateurs et de la connexion api
 
 
 Pour gérer les utilisateurs, nous allons utiliser Devise (https://github.com/heartcombo/devise#getting-started)
 
 Et devise-api pour la gestion Api (https://github.com/nejdetkadir/devise-api)
 
-##### Installation
+##### 📥 Installation
 
+Entrons dans le container Docker et installons Devise
 
-```bash
+Toutes les commmandes se feront dans le container
+
+```bash [~/projects/todo-backend]
+docker comppose exec backend bash
 rails generate devise:install
 ```
 
@@ -24,28 +28,39 @@ Editons la configuration de développement pour transférer les mails à [mailpi
 
 
 ```rb [config/environments/development.rb]
-config.action_mailer.default_url_options = { host: 'mailpit.traefik.me', port: 1025 }
+config.action_mailer.default_url_options = { host: 'mailpit.chartman2-fr.ovh', port: 1025 }
 ```
 
-Génération du model `User` 
+##### 🧩 Génération du model `User`
 
-```bash
+On va d'abord créer les migrations (les requêtes permettant de mettre à jour la base de données, comme la création des tables), puis les exécuter.
+
+```bash [~/projects/todo-backend]
 rails generate devise user
 ```
 
-Lancer les migrations
+Génère un modèle User avec les champs nécessaires (email, mot de passe, etc.).
 
-```bash
+Crée des migrations pour la table users.
+
+Ajoute des routes et fichiers liés à l’authentification (controllers, vues si demandé).
+
+
+```bash [~/projects/todo-backend]
 rails db:migrate
 ```
 
-```bash
+```bash [~/projects/todo-backend]
 rails generate devise_api:install
 ```
 
-Lancer les migrations
+Configure Devise pour fonctionner avec des tokens API ou JSON.
 
-```bash
+Génère les fichiers de configuration nécessaires pour gérer les authentifications via API.
+
+Prépare les routes et controllers pour l’authentification API.
+
+```bash [~/projects/todo-backend]
 rails db:migrate
 ```
 
@@ -59,15 +74,15 @@ class User < ApplicationRecord
          :recoverable,
          :rememberable,
          :validatable,
-         :api # <--- Add this module
+         :api
 end
 ```
 
-##### Routes
+##### 🗺️ Routes
 
 Affichons les routes pour voir un peu ce qu'il y a
 
-```sh
+```sh [~/projects/todo-backend]
 rails routes
 ```
  
@@ -79,7 +94,7 @@ rails routes
 | sign_in_user_tokens| POST| /users/tokens/sign_in| devise/api/tokens#sign_in |
 | info_user_tokens| GET| /users/tokens/info| devise/api/tokens#info |
 
-##### Configuration
+##### ⚙️ Configuration
 
 
 Devise crée un fichier de configuration pour nous aider, éditons le et modifions ce que nous voulons.
@@ -133,11 +148,11 @@ end
 ```
 
 
-##### Génération de la table scope
+##### 🧩 Génération de la table scope
 
 Créons le modèle et de la migration de base de données afin de gérer nos scopes
 
-```sh
+```sh [~/projects/todo-backend]
 rails generate model Todo::Scope
 rails generate migration CreateTodoScopes
 ```
@@ -208,7 +223,7 @@ end
 
 De la même manière,créons le modèle et la migation pour les items
 
-```sh
+```sh [~/projects/todo-backend]
 rails generate model Todo::Item
 rails generate migration CreateTodoItems
 ```
@@ -277,7 +292,7 @@ end
 Maintenant que nous avons nos modèles mis en place,
 Mettons les contrôleurs et services pour les gérer.
 
-###### Création du contrôleur
+###### 🧩 Création du contrôleur
 
 ```ruby [app/controllers/api/v1/todo/scopes_controller.rb]
 module Api
@@ -329,9 +344,9 @@ end
 ```
 
 
-###### Gestion des services 
+###### 🧩 Gestion des services 
 
-* Petit fichier pour la gestion des services.
+- 🛠️ **Petit fichier pour la gestion des services**
 
 ```ruby [app/services/application_callable.rb]
 # frozen_string_literal: true
@@ -348,7 +363,7 @@ class ApplicationCallable
 end
 ```
 
-* Créer le service de création
+- 🛠️ **Créer le service de création**
 
 ```ruby [app/services/v1/todo/scopes/create_service.rb]
 # frozen_string_literal: true
@@ -378,7 +393,7 @@ module V1
 end
 ```
 
- * Service de mise à jour
+- 🛠️ **Service de mise à jour**
 
 ```ruby [app/services/v1/todo/scopes/update_service.rb]
 module V1
@@ -408,7 +423,7 @@ module V1
 end
 ```
 
-* Service de destruction
+- 🛠️ **Service de destruction**
 
 ```ruby [app/services/v1/todo/scopes/destroy_service.rb]
 module V1
@@ -435,7 +450,7 @@ end
 ```
 
 
-* Contrôleur
+- 🛠️ **Contrôleur des items**
 
 ```ruby [app/controllers/api/v1/todo/items_controller.rb]
 module Api
@@ -494,7 +509,7 @@ module Api
 end
 ```
 
-Les services associés 
+- 🛠️ **Les services associés**
 
 
 ```ruby [app/services/v1/todo/items/create_service.rb]

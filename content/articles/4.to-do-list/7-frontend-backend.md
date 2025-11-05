@@ -8,15 +8,15 @@ article_id: '7-to-do-list-frontend-backend'
 
 Nous pouvons maintenant connecter le frontend avec le backend.
 
-#### Modification du frontend
+#### 🎨 Modification du frontend
 
 Nous allons ajouter des plugins pour l'ajout de la connexion au backend et les requêtes associées, des services et procédures de notre frontend.
 
-##### Création des plugins 
+##### 📦 Création des plugins
 
 Nous créons 3 plugins au chargement de Nuxt.
 
-* Un premier pour charger les fichiers d'APIs (connexion, chargement des items...)
+* **Un premier pour charger les fichiers d'APIs (connexion, chargement des items...)**
 
 ```js [plugins/appApi.ts] meta-info=val
 export default defineNuxtPlugin((nuxtApp) => {
@@ -43,7 +43,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 })
 ```
 
-* Le plugin pour le chargement des procéduures (service appelant d'autres services)
+* **Le plugin pour le chargement des procéduures (service appelant d'autres services)**
 
 ```js [plugins/appProcedure.ts]
 export default defineNuxtPlugin((nuxtApp) => {
@@ -71,7 +71,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 ```
 
 
-* Le derniers pour le chargement des services.
+* **Les derniers pour le chargement des services**
 
 
 ```js [plugins/appService.ts]
@@ -944,7 +944,7 @@ export const StatusCode5xx = {
 }
 ```
 
-##### Application des changements dans les pages
+##### ✏️ Application des changements dans les pages
 
 
 * Création du middleware pour contrôleur l'accès à notre Todo (utilisateur authentifié)

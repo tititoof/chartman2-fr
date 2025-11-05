@@ -1,0 +1,8 @@
+FROM codercom/code-server:fedora
+
+RUN sudo dnf update -y \
+  && sudo dnf install -y fira-code-fonts java-latest-openjdk.x86_64 nodejs 
+
+RUN sudo npm install -g pnpm
+
+WORKDIR /home/coder/project

@@ -6,9 +6,8 @@ color: 'secondary'
 article_id: '2-to-do-list-taches'
 ---
 
-Hello,
 
-Dans cet article, explorons la création de nos tâches.
+Explorons la création de nos tâches.
 
 
 En premier, nous allons configurer les textes en fonction de la langue, puis définir le type de nos tâches (le nom et l'état),
@@ -16,9 +15,10 @@ En premier, nous allons configurer les textes en fonction de la langue, puis dé
 
 l'affiche de la liste de nos tâches, et le formulaire nous permettant de créer une tâche.
 
-#### Tâches
 
-##### Gestion des langues
+#### 📝 Tâches
+
+##### 🈳 Gestion des langues
 
 Dans un premier temps, configurons le fichier de traduction.
 
@@ -67,7 +67,7 @@ export default defineI18nConfig(() => ({
 }))
 ```
 
-##### Gestion du type
+##### ⚙️ Gestion du type
 
 Une tâche est composée de deux attributs :
  * name : une chaîne de caractère 
@@ -83,7 +83,7 @@ export interface ITodoItem {
 ```
 
 
-##### Affichage de la liste de nos tâches
+##### ✅ Affichage de la liste de nos tâches
 
 
 Créons un composant pour le titre avec un propriété **title** de type string.
@@ -115,7 +115,7 @@ const props = defineProps({
 </script>
 ```
 
-##### Formulaire d'une nouvelle tâche
+##### ✏️ Formulaire d'une nouvelle tâche
 
 A partir de là, définissons notre composant pour gérer nos tâches.
 
@@ -198,7 +198,8 @@ const performTask = (key: number) => {
 
 </script>
 ```
-###### Template (HTML)
+
+###### 🎨 Template (HTML)
 
 
 Le template est divisé en trois parties : une section titre, un formulaire et une liste de tâches.
@@ -211,7 +212,7 @@ Le template est divisé en trois parties : une section titre, un formulaire et u
 * La liste de tâches (`<v-row v-for="(task, key) in listTasks" :key="key">`) affiche chaque tâche avec son nom et un bouton pour marquer la tâche comme terminée.
 
 
-###### Script (TS)
+###### 📄 Script (TS)
 
 
 Le script est divisé en plusieurs parties :

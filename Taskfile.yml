@@ -25,6 +25,10 @@ tasks:
   f-build:
     desc: Construction du services frontend Docker
     cmds:
+      - UID_GID="$(id -u):$(id -g)" docker compose -f docker-compose.dev.yml build vscode
+  code-build:
+    desc: Construction du services frontend Docker
+    cmds:
       - UID_GID="$(id -u):$(id -g)" docker compose -f docker-compose.dev.yml build frontend-dev
   f-restart:
     desc: Redémarrage du service frontend-dev
