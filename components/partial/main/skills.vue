@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multiline-html-element-content-newline -->
 <template>
   <v-card color="info-container">
     <v-container
@@ -14,7 +15,7 @@
         <h3 class="font-weight-bold mb-3 align-justify">
           {{ title }}
         </h3>
-        
+
         <span class="subtitle-1">
           {{ text }}
         </span>
@@ -81,6 +82,7 @@
     </v-container>
   </v-card>
 </template>
+
 <script setup>
 import { CSkills, CSkillsCICD } from '~/utils/common'
 import { useApplicationStore } from '~/stores/application'

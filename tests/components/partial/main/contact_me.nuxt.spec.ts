@@ -4,7 +4,6 @@ import { describe, it, expect } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 
 import TestResource from '~~/components/partial/main/contact_me.vue'
-import { mount } from '@vue/test-utils'
 
 global.fetch = vi.fn()
 
@@ -15,7 +14,7 @@ function createFetchResponse(data) {
 describe('Components - partial/main/contact_me', async () => {
   it('is a Vue instance', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
     expect(wrapper.vm).toBeTruthy()
@@ -23,27 +22,27 @@ describe('Components - partial/main/contact_me', async () => {
 
   it('has initialized values', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
-    expect(wrapper.vm.valid.value).toEqual(false)
-    expect(wrapper.vm.name.value).toEqual('')
-    expect(wrapper.vm.email.value).toEqual('')
-    expect(wrapper.vm.subject.value).toEqual('')
-    expect(wrapper.vm.message.value).toEqual('')
+    expect(wrapper.vm.valid).toEqual(false)
+    expect(wrapper.vm.name).toEqual('')
+    expect(wrapper.vm.email).toEqual('')
+    expect(wrapper.vm.subject).toEqual('')
+    expect(wrapper.vm.message).toEqual('')
     expect(wrapper.vm.nameRules).toBeDefined()
     expect(wrapper.vm.nameRules).toHaveLength(2)
   })
 
   it('cannot send email', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
     fetch.mockResolvedValue(createFetchResponse(true))
-    
+
     wrapper.vm.sendEmail()
-    
+
     expect(fetch).toHaveBeenCalledTimes(0)
   })
 
@@ -54,14 +53,14 @@ describe('Components - partial/main/contact_me', async () => {
 
     fetch.mockResolvedValue(createFetchResponse(true))
 
-    wrapper.vm.name.value = 'test name'
-    wrapper.vm.email.value = 'test@ŧest.com'
-    wrapper.vm.subject.value = 'subject'
-    wrapper.vm.message.value = 'This is a message test'
-    wrapper.vm.valid.value = true
-    
+    wrapper.vm.name = 'test name'
+    wrapper.vm.email = 'test@ŧest.com'
+    wrapper.vm.subject = 'subject'
+    wrapper.vm.message = 'This is a message test'
+    wrapper.vm.valid = true
+
     wrapper.vm.sendEmail()
-    
+
     expect(fetch).toHaveBeenCalledTimes(1)
   })
 })

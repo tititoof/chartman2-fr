@@ -8,7 +8,7 @@ import TestResource from '~~/components/bar/bottom.vue'
 describe('Components - bar/bottom', async () => {
   it('is a Vue instance', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
     expect(wrapper.vm).toBeTruthy()
@@ -16,22 +16,22 @@ describe('Components - bar/bottom', async () => {
 
   it('has initialized values', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
     const dayjs = useDayjs()
 
-    expect(wrapper.vm.currentYear.value).toEqual(dayjs().year())
-    expect(wrapper.vm.currentRangeYears.value).toEqual('2022-' + dayjs().year())
+    expect(wrapper.vm.currentYear).toEqual(dayjs().year())
+    expect(wrapper.vm.currentRangeYears).toEqual('2022-' + dayjs().year())
 
     expect(wrapper.vm.social).toEqual([
       {
-        name: "Facebook",
-        route: "https://www.facebook.com/christophe.hartmann1/",
+        name: 'Facebook',
+        route: 'https://www.facebook.com/christophe.hartmann1/',
         icon: 'i-mdi:facebook',
       },
       {
-        name: "Linkedin",
-        route: "https://www.linkedin.com/in/christophe-hartmann-3a297a42/",
+        name: 'Linkedin',
+        route: 'https://www.linkedin.com/in/christophe-hartmann-3a297a42/',
         icon: 'i-mdi:linkedin',
       },
     ])

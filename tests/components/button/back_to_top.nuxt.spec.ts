@@ -7,21 +7,27 @@ import TestResource from '~~/components/button/back_to_top.vue'
 
 describe('Components - button/back_to_top', async () => {
   it('is a Vue instance', async () => {
-    const wrapper = await mountSuspended(TestResource, {})
+    const wrapper = await mountSuspended(TestResource, {
+      shallow: true,
+    })
 
     expect(wrapper.vm).toBeTruthy()
   })
 
   it('has initialized values', async () => {
-    const wrapper = await mountSuspended(TestResource, {})
+    const wrapper = await mountSuspended(TestResource, {
+      shallow: true,
+    })
 
-    expect(wrapper.vm.showBackToTop.value).toEqual(false)
+    expect(wrapper.vm.showBackToTop).toEqual(false)
   })
 
   it('has functions worked', async () => {
-    const wrapper = await mountSuspended(TestResource, {})
+    const wrapper = await mountSuspended(TestResource, {
+      shallow: true,
+    })
 
-    expect(wrapper.vm.showBackToTop.value).toEqual(false)
+    expect(wrapper.vm.showBackToTop).toEqual(false)
 
     vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
 
@@ -29,12 +35,12 @@ describe('Components - button/back_to_top', async () => {
 
     expect(window.scrollTo).toHaveBeenCalled()
 
-    wrapper.vm.showBackToTop.value = true
+    wrapper.vm.showBackToTop = true
 
-    expect(wrapper.vm.showBackToTop.value).toEqual(true)
+    expect(wrapper.vm.showBackToTop).toEqual(true)
 
     wrapper.vm.handleScroll()
 
-    expect(wrapper.vm.showBackToTop.value).toEqual(false)
+    expect(wrapper.vm.showBackToTop).toEqual(false)
   })
 })

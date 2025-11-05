@@ -72,36 +72,37 @@
     </v-container>
   </v-card>
 </template>
+
 <script setup>
 const valid = ref(false)
 const name = ref('')
-const email = ref("")
-const subject = ref("")
-const message = ref("")
+const email = ref('')
+const subject = ref('')
+const message = ref('')
 
 const nameRules = [
-  (v) => !!v || "Votre nom est requis",
-  (v) => v.length <= 30 || "Votre nom doit faire moins de 30 caractères",
+  (v) => !!v || 'Votre nom est requis',
+  (v) => v.length <= 30 || 'Votre nom doit faire moins de 30 caractères',
 ];
 const emailRules = [
-  (v) => !!v || "Votre courriel (e-mail) est requis",
-  (v) => /.+@.+\..+/.test(v) || "Votre courriel (e-mail) doit être valide",
+  (v) => !!v || 'Votre courriel (e-mail) est requis',
+  (v) => /.+@.+\..+/.test(v) || 'Votre courriel (e-mail) doit être valide',
 ];
 const subjectRules = [
-  (v) => !!v || "Le sujet est requis",
-  (v) => v.length >= 5 || "Le sujet doit faire au moins de 5 caractères",
+  (v) => !!v || 'Le sujet est requis',
+  (v) => v.length >= 5 || 'Le sujet doit faire au moins de 5 caractères',
 ];
 const messageRules = [
-  (v) => !!v || "Le message est requis",
-  (v) => v.length >= 15 || "Le message doit faire au moins de 15 caractères",
+  (v) => !!v || 'Le message est requis',
+  (v) => v.length >= 15 || 'Le message doit faire au moins de 15 caractères',
 ];
 
 const sendEmail = async () => {
   if (valid.value === true) {
-    fetch("https://api.chartman2.fr/contacts/send", {
-      method: "POST",
+    fetch('https://api.chartman2.fr/contacts/send', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         contact: {
@@ -115,14 +116,14 @@ const sendEmail = async () => {
       // .then((response) => response.json())
       .then((response) => {
         valid.value = false
-        name.value = ""
-        email.value = ""
-        subject.value = ""
-        message.value = ""
+        name.value = ''
+        email.value = ''
+        subject.value = ''
+        message.value = ''
       })
       .catch((error) => {
-        console.error("Error:", error);
-      });
+        console.error('Error:', error)
+      })
   }
-};
+}
 </script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -137,15 +137,7 @@
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -222,65 +214,69 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template&gt;
   &lt;v-row class="d-flex align-self-start py-12"&gt;
     &lt;v-container&gt;
-      
-      &lt;button-article /&gt;
+      &lt;button-article class="my-4" /&gt;
 &nbsp;
       &lt;page-title
-        class="py-12"
+&nbsp;
         :title="$t('articles.title')"
         icon="i-mdi:book-open-variant-outline"
       /&gt;
-&nbsp;
-      &lt;v-row class="d-flex justify-space-around"&gt;
-        &lt;v-col
-          v-for="({title, description, icon, color, article_id}, i) in articles"
-          :key="i"
-          cols="12"
-          md="4"
+      &lt;section class="py-12"&gt;
+        &lt;v-row
+          v-if="articles"
+          class="d-flex justify-space-around"
         &gt;
-          &lt;v-card
-            class="mx-auto"
-            max-width="300"
-            min-height="480"
-            max-height="480"
-            color="secondary-container"
+          &lt;v-col
+            v-for="({ title, description, icon, color, article_id }, i) in articles"
+            :key="i"
+            cols="12"
+            md="4"
           &gt;
-            &lt;v-icon
-              role="img"
-              size="280"
-              :icon="icon"
-              :color="color"
-            /&gt;
-            &lt;v-card-title&gt;
-              &lt;div class="font-weight-black text-uppercase"&gt;
-                {{ title }}
-              &lt;/div&gt;
-            &lt;/v-card-title&gt;
-            &lt;v-card-text class="title font-weight-light mb-5"&gt;
-              &lt;v-sheet
-                :height="30"
-                color="secondary-container"
-              &gt;
-                {{ description }}
-              &lt;/v-sheet&gt;
-            &lt;/v-card-text&gt;
-            &lt;v-card-actions class="d-flex align-end"&gt;
-              &lt;v-btn
-                class="font-weight-black"
-                color="info"
-                :nuxt="true"
-                :to="`/blog/article/` + article_id"
-                variant="outlined"
-                block
-              &gt;
-                &lt;span class="font-weight-bold"&gt;
-                  Lire
-                &lt;/span&gt;
-              &lt;/v-btn&gt;
-            &lt;/v-card-actions&gt;
-          &lt;/v-card&gt;
-        &lt;/v-col&gt;
-      &lt;/v-row&gt;
+            &lt;v-card
+              v-aos="['animate__flipInX']"
+              class="mx-auto"
+              max-width="400"
+              min-height="480"
+              max-height="480"
+              color="secondary-container"
+              variant="outlined"
+            &gt;
+              &lt;v-icon
+                size="280"
+                :icon="icon"
+                :color="color"
+              /&gt;
+              &lt;v-card-title&gt;
+                &lt;div class="font-weight-black text-uppercase text-secondary"&gt;
+                  {{ title }}
+                &lt;/div&gt;
+              &lt;/v-card-title&gt;
+              &lt;v-card-text class="title font-weight-light mb-5"&gt;
+                &lt;v-sheet
+                  :height="30"
+                  color="background"
+                &gt;
+                  {{ description }}
+                &lt;/v-sheet&gt;
+              &lt;/v-card-text&gt;
+              &lt;v-card-actions class="d-flex align-end"&gt;
+                &lt;v-btn
+                  class="font-weight-black"
+                  color="info"
+                  :nuxt="true"
+                  :to="`/blog/article/` + article_id"
+                  variant="outlined"
+                  block
+                &gt;
+                  &lt;span class="font-weight-bold"&gt;
+                    Lire
+                  &lt;/span&gt;
+                &lt;/v-btn&gt;
+              &lt;/v-card-actions&gt;
+            &lt;/v-card&gt;
+          &lt;/v-col&gt;
+        &lt;/v-row&gt;
+      &lt;/section&gt;
     &lt;/v-container&gt;
   &lt;/v-row&gt;
 &lt;/template&gt;
@@ -288,15 +284,7 @@
 &lt;script setup lang="ts"&gt;
 const route = useRoute()
 &nbsp;
-const { data: articles } = await useAsyncData('home', () =&gt; queryContent()
-  .where({
-    _path: {
-      $contains: '/articles/' + route.params.id
-    }
-  })
-  .only(['_path', '_id', 'title', 'icon', 'description', 'color', 'article_id'])
-  .find()
-)
+const { data: articles } = await useAsyncData('content', () =&gt; queryCollection(route.params.id).all())
 &lt;/script&gt;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -304,7 +292,7 @@ const { data: articles } = await useAsyncData('home', () =&gt; queryContent()
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-04-07T05:54:04.562Z
+                at 2025-11-05T10:56:48.872Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

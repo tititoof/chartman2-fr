@@ -8,7 +8,7 @@ import TestResource from '~~/components/bar/top.vue'
 describe('Components - bar/top', async () => {
   it('is a Vue instance', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
     expect(wrapper.vm).toBeTruthy()
@@ -16,7 +16,7 @@ describe('Components - bar/top', async () => {
 
   it('has initialized values', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
     expect(wrapper.vm.menuItems).toEqual([
@@ -24,7 +24,17 @@ describe('Components - bar/top', async () => {
         name: 'legal_notices.title',
         icon: 'i-mdi:scale-balance',
         to: '/legal_notices',
-      }
+      },
+      {
+        icon: 'i-mdi:login-variant',
+        name: 'default.auth.sign_in.title',
+        to: '/auth/sign-in',
+      },
+      {
+        icon: 'i-mdi:logout-variant',
+        name: 'default.auth.sign_out.title',
+        to: '/auth/sign-out',
+      },
     ])
   })
 })
