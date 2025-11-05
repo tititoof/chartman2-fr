@@ -39,12 +39,12 @@ pipeline {
                 echo 'Check quality..'
                 script {
                     def scannerHome = tool 'sonarqube-scanner';
-                    def sonarqubeBranch = 'chartman2.fr-dev';
+                    def sonarqubeBranch = 'frontend-chartman2-fr.ovh';
                     withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
                         withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_CREDENTIALS')]) {
                             withSonarQubeEnv() {
                                 if (env.BRANCH_NAME == 'main') {
-                                    sonarqubeBranch = 'chartman2.fr'
+                                    sonarqubeBranch = 'frontend-chartman2-fr.ovh'
                                 }
                                 sh "${scannerHome}/bin/sonar-scanner \
                                         -Dsonar.projectKey=$sonarqubeBranch \
