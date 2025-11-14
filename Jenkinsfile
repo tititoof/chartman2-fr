@@ -148,28 +148,30 @@ pipeline {
         }
         stage('Build HomeLab') {
             steps {
-                if (env.BRANCH_NAME == 'develop') {
-                    docker.withRegistry('https://registry.chartman2-fr.ovh/') {
-                        def newAppHomLab = docker.build "registry.chartman2-fr.ovh/frontend-chartman2fr:staging"
-                        
-                        newApp.push()
+                script {
+                    if (env.BRANCH_NAME == 'develop') {
+                        docker.withRegistry('https://registry.chartman2-fr.ovh/') {
+                            def newAppHomLab = docker.build "registry.chartman2-fr.ovh/frontend-chartman2fr:staging"
+                            
+                            newApp.push()
+                        }
+                        docker.withRegistry('https://ghcr.io/tititoof/frontend-chartman2fr', 'ghcr-token') {
+                            def newAppHomLab = docker.build "ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:staging"
+                            
+                            newApp.push()
+                        }
                     }
-                    docker.withRegistry('https://ghcr.io/tititoof/frontend-chartman2fr', 'ghcr-token') {
-                        def newAppHomLab = docker.build "ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:staging"
-                        
-                        newApp.push()
-                    }
-                }
-                if (env.BRANCH_NAME == 'main') {
-                    docker.withRegistry('https://registry.chartman2-fr.ovh/') {
-                        def newAppHomLab = docker.build "registry.chartman2-fr.ovh/frontend-chartman2fr:latest"
-                        
-                        newApp.push()
-                    }
-                    docker.withRegistry('https://ghcr.io/tititoof/frontend-chartman2fr', 'ghcr-token') {
-                        def newAppHomLab = docker.build "ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:latest"
-                        
-                        newApp.push()
+                    if (env.BRANCH_NAME == 'main') {
+                        docker.withRegistry('https://registry.chartman2-fr.ovh/') {
+                            def newAppHomLab = docker.build "registry.chartman2-fr.ovh/frontend-chartman2fr:latest"
+                            
+                            newApp.push()
+                        }
+                        docker.withRegistry('https://ghcr.io/tititoof/frontend-chartman2fr', 'ghcr-token') {
+                            def newAppHomLab = docker.build "ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:latest"
+                            
+                            newApp.push()
+                        }
                     }
                 }
             }
