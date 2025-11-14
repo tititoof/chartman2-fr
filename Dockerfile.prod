@@ -1,5 +1,5 @@
 # Use the Node.js image as the base image
-FROM node:22-slim AS build
+FROM node:lts-alpine AS build
 # Set the working directory
 WORKDIR /app
 
@@ -9,10 +9,25 @@ ARG NUXT_RESEND_API_KEY
 ARG SENTRY_DSN
 ARG SENTRY_AUTH_TOKEN
 
+# RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
+
 # Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
+COPY .env.production ./.env
+
+ENV npm_config_platform=linux
+ENV npm_config_libc=glibc
+
+RUN apk --no-cache add --virtual native-deps \
+  g++ gcc libgcc libstdc++ linux-headers make python3 libc6-compat && \
+  npm install --quiet node-gyp -g
+
+
 # Install pnpm
 RUN npm install -g pnpm
+RUN pnpm config set store-dir $HOME/.local/share/pnpm/store/v3 --global
+RUN pnpm install
+RUN pnpm install vue
 
 # Install dependencies
 RUN pnpm install
@@ -20,11 +35,13 @@ RUN pnpm install
 # Copy the rest of the application code
 COPY . .
 
+ENV PATH ./node_modules/.bin/:$PATH
+
 # Build the Nuxt app
 RUN pnpm run build
 
 # Use a smaller base image for the runtime stage
-FROM node:22-slim
+FROM node:lts-alpine
 
 # Set the working directory
 WORKDIR /app
@@ -35,6 +52,8 @@ RUN echo ${SENTRY_AUTH_TOKEN} > .env.sentry-build-plugin && \
 # Copy only the necessary files from the build stage
 COPY --from=build /app/.output /app/.output
 COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/
+COPY --from=build /app/.env.production  /app/.env
+
 # Expose the port the app runs on
 EXPOSE 3000
 # Start the Nuxt app in production mode

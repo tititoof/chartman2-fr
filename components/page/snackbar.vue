@@ -17,6 +17,7 @@
     </template>
   </v-snackbar>
 </template>
+
 <script setup>
 import { useApplicationStore } from '~/stores/application'
 

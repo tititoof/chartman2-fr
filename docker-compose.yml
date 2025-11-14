@@ -4,7 +4,9 @@ services:
   frontend:
     build: 
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
+      tags:
+        - registry.chartman2-fr.ovh/frontend-chartman2fr:0.1
     command:  sh -c "pnpm run dev"
     working_dir: '/app'
     user: node

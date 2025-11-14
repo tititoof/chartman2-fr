@@ -74,6 +74,9 @@
 </template>
 
 <script setup>
+import { useApplicationStore } from '~/stores/application'
+
+const applicationStore = useApplicationStore()
 const valid = ref(false)
 const name = ref('')
 const email = ref('')
@@ -99,31 +102,21 @@ const messageRules = [
 
 const sendEmail = async () => {
   if (valid.value === true) {
-    fetch('https://api.chartman2.fr/contacts/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contact: {
-          name,
-          email,
-          subject,
-          message,
-        },
-      }),
+    const result = await $fetch('/api/email', {
+      method: 'post',
+      body: {
+        name: name.value,
+        email: email.value,
+        subject: subject.value,
+        message: message.value
+      }
     })
-      // .then((response) => response.json())
-      .then((response) => {
-        valid.value = false
-        name.value = ''
-        email.value = ''
-        subject.value = ''
-        message.value = ''
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
+
+    if (result.error === null) {
+      applicationStore.showSnackbar('success', 'Courriel envoyé.')
+    } else {
+      applicationStore.showSnackbar('error', `Impossible d'envoyer le courriel.` )
+    }
   }
 }
 </script>

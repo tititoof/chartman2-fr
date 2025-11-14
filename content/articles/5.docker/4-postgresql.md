@@ -1,10 +1,9 @@
 ---
-title: 'Docker - PostgreSQL'
-description: 'Utilisation de PostgreSQL avec Docker'
-icon: 'i-mdi:docker'
-article_id: '4-docker-postgresql-init'
+title: "Docker - PostgreSQL"
+description: "Utilisation de PostgreSQL avec Docker"
+icon: "i-mdi:docker"
+article_id: "4-docker-postgresql-init"
 ---
-
 
 #### 📌 Le SGBD idéal pour vos projets : PostgreSQL ![PostgreSQL](/img/Postgresql_elephant.svg.png){ width=30px }
 
@@ -12,15 +11,15 @@ Vous êtes développeur, responsable informatique ou entrepreneur ? Vous cherche
 
 **Pourquoi choisir PostgreSQL ?**
 
-- **Sécurité** 
+- **Sécurité**
 
 PostgreSQL offre un niveau de sécurité élevé avec des fonctionnalités de cryptage et d'autorisation.
 
-- **Flexibilité** 
+- **Flexibilité**
 
 il supporte une grande variété de langages de programmation, y compris Java, Python et Ruby.
 
-- **Scalabilité** 
+- **Scalabilité**
 
 PostgreSQL peut gérer des volumes de données importants et des charges de travail élevées.
 
@@ -34,11 +33,7 @@ PostgreSQL est gratuit, open-source et bénéficie d'une communauté active et s
 - **Bases de données grand public**
 - **Systèmes de gestion de la chaîne d'approvisionnement**
 
-
-
-
 Si vous cherchez une base de données robuste et scalable, PostgreSQL est l'excellente option. Découvrez pourquoi les développeurs et les entreprises le choisissent pour leurs projets !
-
 
 #### ⚙️ Exemple
 
@@ -58,14 +53,18 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=false
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
     networks:
       local_dev:
         aliases:
-          - postgresql.chartman2-fr.ovh
+          - postgresql.domain.tld
 ```
 
 ```bash [.env]
@@ -74,5 +73,4 @@ POSTGRES_PASSWORD=mypassword
 POSTGRES_DB=mydb
 ```
 
-
-Il ne reste plus qu'à configurer dans votre application pour utiliser PostgreSQL avec les informations `postgresql.chartman2-fr.ovh` sur le port `5432` et les informations de connexion 👍️
+Il ne reste plus qu'à configurer dans votre application pour utiliser PostgreSQL avec les informations `postgresql.domain.tld` sur le port `5432` et les informations de connexion 👍️

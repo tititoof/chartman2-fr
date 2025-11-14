@@ -51,7 +51,8 @@ describe('Components - partial/main/contact_me', async () => {
       shallow: true
     })
 
-    fetch.mockResolvedValue(createFetchResponse(true))
+    const mockFetch = vi.fn().mockResolvedValue(createFetchResponse(true))
+    vi.stubGlobal('$fetch', mockFetch)
 
     wrapper.vm.name = 'test name'
     wrapper.vm.email = 'test@ŧest.com'
@@ -61,6 +62,15 @@ describe('Components - partial/main/contact_me', async () => {
 
     wrapper.vm.sendEmail()
 
-    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(mockFetch).toHaveBeenCalledWith('/api/email', {
+      method: 'post',
+      body: {
+        name: 'test name',
+        email: 'test@ŧest.com',
+        subject: 'subject',
+        message: 'This is a message test'
+      }
+    })
   })
 })

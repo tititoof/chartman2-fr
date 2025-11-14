@@ -17,6 +17,7 @@
 import { tryOnMounted, tryOnUnmounted } from '@vueuse/core'
 
 const showBackToTop = ref(false)
+const isClient = typeof window !== "undefined" && typeof document !== "undefined";
 
 const handleScroll = () => {
   const scrollTop = window.scrollY || document.documentElement.scrollTop
@@ -25,18 +26,24 @@ const handleScroll = () => {
 }
 
 const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  })
+  if (isClient) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
 }
 
 tryOnMounted(() => {
-  window.addEventListener('scroll', handleScroll)
+  if (isClient) {
+    window.addEventListener('scroll', handleScroll)
+  }
 })
 
 tryOnUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
+  if (isClient) {
+    window.removeEventListener('scroll', handleScroll)
+  }
 })
 </script>
 <style>

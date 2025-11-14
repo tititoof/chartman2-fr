@@ -41,9 +41,9 @@
         CI / CD
       </v-btn>, j'ai mis en place le mien avec Gitea, Jenkins, SonarQube et
       Openproject.<br>
-      Devenu professeur de judo, j'applique ce que m'ont transmis mes senseïs
-      dans mon travail et mes cours de Judo. Une question ? envoyez moi un
-      message
+      Judoka, j'applique ce que m'ont transmis mes senseïs
+      dans mon travail.
+      Une question ? envoyez moi un message
       <v-btn
         variant="plain"
         class="text-decoration-none font-italic mx-0 px-0"

@@ -2,22 +2,21 @@ import type { NuxtPage } from "nuxt/schema"
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: {
+    enabled: process.env.DEBUG
+  },
   app: {
     head: {
       meta: [
         // <meta name="viewport" content="width=device-width, initial-scale=1">
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'title', content: '[title]' },
-        { name: 'description', content: '[description]' },
-        { name: 'og:title', content: '[og:title]' },
-        { name: 'og:description', content: '[og:description]' },
-        { name: 'og:image', content: '[og:image]' },
-        { name: 'og:url', content: '[og:url]' },
-        { name: 'twitter:title', content: '[twitter:title]' },
-        { name: 'twitter:description', content: '[twitter:description]' },
-        { name: 'twitter:image', content: '[twitter:image]' },
-        { name: 'twitter:card', content: 'summary' },
+        { name: 'title', content: 'chartman2.fr' },
+        { name: 'description', content: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality' },
+        { name: 'image', content: process.env.APP_URL + '/logo.webp' },
+        { name: 'og:title', content: 'chartman2.fr' },
+        { name: 'og:description', content: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality' },
+        { name: 'og:image', content: process.env.APP_URL + '/logo.webp' },
+        { name: 'og:url', content: process.env.APP_URL },
       ],
       noscript: [
         // <noscript>JavaScript is required</noscript>
@@ -26,12 +25,6 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: 'page', mode: 'out-in' },
     layoutTransition: { name: 'layout', mode: 'out-in' },
-  },
-  site: {
-    url: 'https://chartman2.fr',
-    name: 'chartman2.fr',
-    description: 'Mon site personnel',
-    defaultLocale: 'fr', // not needed if you have @nuxtjs/i18n installed
   },
   modules: [
     'vuetify-nuxt-module',
@@ -60,22 +53,6 @@ export default defineNuxtConfig({
       /* module specific options */
     },
     vuetifyOptions: './vuetify.config.ts'
-  },
-  app: {
-    head: {
-      meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'title', content: 'chartman2.fr' },
-        { name: 'description', content: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality' },
-        { name: 'image', content: process.env.APP_URL + '/logo.webp' },
-        { name: 'og:title', content: 'chartman2.fr' },
-        { name: 'og:description', content: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality' },
-        { name: 'og:image', content: process.env.APP_URL + '/logo.webp' },
-        { name: 'og:url', content: process.env.APP_URL },
-      ],
-    },
-    pageTransition: { name: 'page', mode: 'out-in' },
-    layoutTransition: { name: 'layout', mode: 'out-in' },
   },
   site: {
     url: process.env.APP_URL,
@@ -207,12 +184,6 @@ export default defineNuxtConfig({
   },
   sentry: {
     autoInjectServerSentry: 'experimental_dynamic-import',
-  },
-  vuetify: {
-    moduleOptions: {
-      /* module specific options */
-    },
-    vuetifyOptions: './vuetify.config.ts',
   },
   components: [
     '~/components', {
