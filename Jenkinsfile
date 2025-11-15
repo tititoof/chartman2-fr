@@ -198,55 +198,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    if (env.BRANCH_NAME == 'develop') {
+                        sh """
+                            curl 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=chartman2-fr-staging&uuid=frontend-chartman2-fr.ovh' \
+                            --header 'Authorization: Bearer frontend-chartman2-fr.ovh'
+                        """
+                    }
                     echo 'Deploy finished'
-                    // withCredentials([string(credentialsId: 'home-dev-staging-ip', variable: 'HomeStagingIp')]) {
-                    //     withCredentials([string(credentialsId: 'production-ip-1', variable: 'ProductionIp')]) {
-                    //         withCredentials([string(credentialsId: 'production-port', variable: 'ProductionPort')]) {
-                    //             withCredentials([file(credentialsId: 'staging-ssh-id-file', variable: 'sshId')]) {
-                    //                 withCredentials([file(credentialsId: 'chartman2-fr-frontend-env', variable: 'envFile')]) {
-                    //                     writeFile file: './.env', text: readFile(envFile)
-                    //                     sh '''
-                    //                         if [ ! -d ~/.ssh ]
-                    //                         then
-                    //                             mkdir ~/.ssh
-                    //                         fi
-                    //                         if [ -f ../.ssh/id_ed25519.pub ]
-                    //                         then
-                    //                             sudo rm ../.ssh/id_ed25519.pub
-                    //                         fi
-                    //                     '''
-                    //                     writeFile file: '../.ssh/id_ed25519.pub', text: readFile(sshId)
-                    //                     sh '''
-                    //                         if [ -f ../.ssh/id_ed25519.pub ]
-                    //                         then
-                    //                             chmod 400 ../.ssh/id_ed25519.pub
-                    //                         fi
-
-                    //                         if [ -f "~/.ssh/known_hosts" ]
-                    //                         then
-                    //                             sudo rm ~/.ssh/known_hosts
-                    //                         fi
-
-                    //                         touch ~/.ssh/known_hosts
-                    //                         ssh-keyscan -t rsa $HomeStagingIp >> ~/.ssh/known_hosts
-                    //                         ssh-keyscan -t rsa -p $ProductionPort $ProductionIp >> ~/.ssh/known_hosts
-                    //                     '''
-                    //                     if (env.BRANCH_NAME == 'main') {
-                    //                         sh '''
-                    //                             pm2 deploy production
-                    //                         '''
-                    //                     }
-                    //                     // if (env.BRANCH_NAME == 'develop') {
-                    //                     //     sh '''
-                    //                     //         pm2 deploy staging
-                    //                     //     '''
-                    //                     // }
-                    //                 }
-                    //             }
-                    //             echo "PR branch"
-                    //         }
-                    //     }
-                    // }
                 }
             }
         }
