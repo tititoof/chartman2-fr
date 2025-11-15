@@ -199,10 +199,12 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'develop') {
-                        sh """
-                            curl 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=chartman2-fr-staging&uuid=frontend-chartman2-fr.ovh' \
-                            --header 'Authorization: Bearer frontend-chartman2-fr.ovh'
-                        """
+                        withCredentials([string(credentialsId: 'coolify-token', variable: 'TOKEN')]) {
+                            sh """
+                                curl 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=chartman2-fr-staging&uuid=frontend-chartman2-fr.ovh' \
+                                --header 'Authorization: Bearer ${TOKEN}'
+                            """
+                        }
                     }
                     echo 'Deploy finished'
                 }
