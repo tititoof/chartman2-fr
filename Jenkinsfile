@@ -148,7 +148,7 @@ pipeline {
         }
         stage('Build HomeLab') {
             steps {
-                withCredentials([file(credentialsId: 'frontend-env', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE')]) {
                     script {
                         if (env.BRANCH_NAME == 'develop') {
                              env.BUILD_ARGS = sh(
