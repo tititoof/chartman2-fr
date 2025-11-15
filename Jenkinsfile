@@ -151,7 +151,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE')]) {
                     script {
                         if (env.BRANCH_NAME == 'develop') {
-                            def buildArgs = sh "$(grep -vE '^\s*#|^\s*$' $ENV_FILE | sed 's/^/--build-arg /')"
+                            def buildArgs = sh(
+                                script: "$(grep -vE '^\s*#|^\s*$' $ENV_FILE | sed 's/^/--build-arg /')"
+                                returnStdout: true
+                            )
                              
                             sh """
                                 echo ${buildArgs}
