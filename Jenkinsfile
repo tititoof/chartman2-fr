@@ -167,34 +167,27 @@ pipeline {
                             withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
                                 sh """
                                     echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
-                                    docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
+                                    docker push ghcr.io/tititoof/frontend-chartman2fr:staging
                                 """
                             }
                         }
                         if (env.BRANCH_NAME == 'main') {
-                            env.BUILD_ARGS = sh(
-                                script: """
-                                    grep -v '^#' $ENV_FILE | xargs -I {} echo --build-arg {}
-                                """,
+                            def buildArgs = sh(
+                                script: "grep -vE '^[[:space:]]*#|^[[:space:]]*\$' ${ENV_FILE} | sed 's/^/--build-arg /' | tr '\\n' ' '",
                                 returnStdout: true
-                            ).trim()
+                            )
 
                             sh """
-                                docker build \
-                                ${env.BUILD_ARGS} \
-                                -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest \
-                                -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:latest \
-                                -f Dockerfile.prod \
-                                .
+                                echo ${buildArgs}
+                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:latest -f Dockerfile.prod .
                             """
-                            docker.withRegistry('https://registry.chartman2-fr.ovh/') {
+                            sh """
+                                docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
+                            """
+                            withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
                                 sh """
-                                    docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
-                                """
-                            }
-                            docker.withRegistry('https://ghcr.io/tititoof/frontend-chartman2fr', 'ghcr-token') {
-                                sh """
-                                    docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
+                                    echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
+                                    docker push ghcr.io/tititoof/frontend-chartman2fr:latest
                                 """
                             }
                         }
