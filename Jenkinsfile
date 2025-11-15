@@ -152,7 +152,7 @@ pipeline {
                     script {
                         if (env.BRANCH_NAME == 'develop') {
                             def buildArgs = sh(
-                                script: "$(grep -vE '^\s*#|^\s*$' $ENV_FILE | sed 's/^/--build-arg /')"
+                                script: "grep -vE '^\s*#|^\s*$' $ENV_FILE | sed 's/^/--build-arg /'"
                                 returnStdout: true
                             )
                              
