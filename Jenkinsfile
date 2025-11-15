@@ -160,13 +160,13 @@ pipeline {
                                 echo ${buildArgs}
                                 docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:staging -f Dockerfile.prod .
                             """
-                            docker.withRegistry('https://registry.chartman2-fr.ovh/') {
+                            sh """
+                                docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
+                            """
+
+                            withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
                                 sh """
-                                    docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
-                                """
-                            }
-                            docker.withRegistry('https://ghcr.io/tititoof/frontend-chartman2fr', 'ghcr-token') {
-                                sh """
+                                    echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
                                     docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
                                 """
                             }
