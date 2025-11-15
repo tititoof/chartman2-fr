@@ -13,7 +13,6 @@ ARG SENTRY_AUTH_TOKEN
 
 # Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
-COPY .env.production ./.env
 
 ENV npm_config_platform=linux
 ENV npm_config_libc=glibc
