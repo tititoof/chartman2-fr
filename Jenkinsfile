@@ -151,20 +151,11 @@ pipeline {
                 withCredentials([file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE')]) {
                     script {
                         if (env.BRANCH_NAME == 'develop') {
-                             env.BUILD_ARGS = sh(
-                                script: """
-                                    grep -v '^#' $ENV_FILE | xargs -I {} echo --build-arg {}
-                                """,
-                                returnStdout: true
-                            ).trim()
-
+                            def buildArgs = sh "$(grep -vE '^\s*#|^\s*$' $ENV_FILE | sed 's/^/--build-arg /')"
+                             
                             sh """
-                                docker build \
-                                ${env.BUILD_ARGS} \
-                                -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging \
-                                -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:staging \
-                                -f Dockerfile.prod \
-                                .
+                                echo ${buildArgs}
+                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:staging -f Dockerfile.prod .
                             """
                             docker.withRegistry('https://registry.chartman2-fr.ovh/') {
                                 sh """
