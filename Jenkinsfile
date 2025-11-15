@@ -158,7 +158,7 @@ pipeline {
                              
                             sh """
                                 echo ${buildArgs}
-                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:staging -f Dockerfile.prod .
+                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
                             """
                             sh """
                                 docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
@@ -179,7 +179,7 @@ pipeline {
 
                             sh """
                                 echo ${buildArgs}
-                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr/frontend-chartman2fr:latest -f Dockerfile.prod .
+                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
                             """
                             sh """
                                 docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
