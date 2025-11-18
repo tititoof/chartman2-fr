@@ -37,3 +37,6 @@ coverage
 .local
 .vscode
 .config
+
+# Sonar
+.scannerwork

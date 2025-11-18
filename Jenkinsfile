@@ -205,6 +205,12 @@ pipeline {
                                 --header 'Authorization: Bearer ${COOLIFY_TOKEN}'
                             """
                         }
+                        if (env.BRANCH_NAME == 'main') {
+                            sh """
+                                curl 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-production' \
+                                --header 'Authorization: Bearer ${COOLIFY_TOKEN}'
+                            """
+                        }
                     }
                     echo 'Deploy finished'
                 }
