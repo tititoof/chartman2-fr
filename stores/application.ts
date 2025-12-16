@@ -9,7 +9,9 @@ export const useApplicationStore = defineStore('application', {
         isPhone: false,
         category: '' as IStatus,
         message: '' as string,
-        show: false as boolean
+        show: false as boolean,
+        isLoading: true as boolean,
+        componentsLoading: 1 as number
     }),
     getters: {
         getIsDarkTheme: state => state.isDarkTheme,
@@ -17,7 +19,9 @@ export const useApplicationStore = defineStore('application', {
         getCategory: (state) => state.category,
         getMessage: (state) => state.message,
         getShow: (state) => state.show,
-        getIsPhone: (state) => state.isPhone
+        getIsPhone: (state) => state.isPhone,
+        getIsLoading: (state) => state.isLoading,
+        getComponentsLoading: (state) => state.componentsLoading
     },
     actions: {
         setIsPhone(isPhone: boolean) {
@@ -44,6 +48,15 @@ export const useApplicationStore = defineStore('application', {
         toggleDarkTheme() {
             this.isDarkTheme = !this.isDarkTheme
             this.isThemeDefined = true
+        },
+        stopLoading() {
+            this.isLoading = false
+        },
+        addComponentsLoading() {
+            this.componentsLoading++
+        },
+        removeComponentsLoading() {
+            this.componentsLoading--
         }
     },
     persist: true,

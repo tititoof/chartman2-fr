@@ -90,4 +90,13 @@ import { useApplicationStore } from '~/stores/application'
 const applicationStore = useApplicationStore()
 const color = computed(() => applicationStore.isDarkTheme ? 'white' : 'black')
 const skills = reactive([...CSkills, CSkillsCICD])
+const emit = defineEmits(['addLoading', 'removeLoading'])
+
+onBeforeMount(() => {
+  emit('addLoading')
+})
+
+onMounted(() => {
+  emit('removeLoading')
+})
 </script>

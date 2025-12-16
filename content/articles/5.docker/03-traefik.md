@@ -5,11 +5,11 @@ icon: "i-mdi:docker"
 article_id: "3-docker-traefik-introduction"
 ---
 
-#### 📌 Qu’est-ce que Traefik ? ![Traefik](/img/traefik.webp){height=40px}
+#### 📌 Qu’est-ce que Traefik ? ![Traefik](img/traefik.webp){ width=30px }
 
 C’est comme un gentil veilleur qui se place entre tes invités (les utilisateurs) et tes applications. Lorsqu’une personne tape une URL, Traefik reçoit la demande et sait exactement vers quel conteneur l’envoyer, pour que tout fonctionne sans souci.
 
-Et en plus, c’est open-source — c’est-à-dire gratuit et animé par une grande communauté super active qui l’améliore tous les jours, donc tu peux l’utiliser en toute liberté.
+Et en plus, c’est open-source, gratuit et animé par une grande communauté super active qui l’améliore tous les jours, donc tu peux l’utiliser en toute liberté.
 
 #### 🧰 Ce qu’il fait concrètement :
 

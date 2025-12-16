@@ -3,6 +3,7 @@
     <bar-top />
     <page-snackbar />
     <v-app>
+      <NuxtLoadingIndicator color="primary" :height="4" />
       <v-main
         dark="isDark"
         class="d-flex align-center fill-height pb-24"

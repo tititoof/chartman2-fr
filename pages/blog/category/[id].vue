@@ -4,14 +4,13 @@
       <button-article class="my-4" />
 
       <page-title
-
         :title="$t('articles.title')"
         icon="i-mdi:book-open-variant-outline"
       />
       <section class="py-12">
         <v-row
           v-if="articles"
-          class="d-flex justify-space-around"
+          class="d-flex justify-space-around text-center"
         >
           <v-col
             v-for="({ title, description, icon, color, article_id }, i) in articles"
@@ -27,8 +26,10 @@
               max-height="480"
               color="secondary-container"
               variant="outlined"
+              rounded="xl"
             >
               <v-icon
+                role="img"
                 size="280"
                 :icon="icon"
                 :color="color"

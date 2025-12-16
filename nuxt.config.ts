@@ -46,6 +46,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-particles',
     'nuxt-snackbar',
+    '@nuxt/image',
     process.env.APP_ENVIRONMENT === 'production' && '@sentry/nuxt/module',
   ],
   vuetify: {
@@ -63,7 +64,7 @@ export default defineNuxtConfig({
   },
   content: {
     watch: {
-      enabled: false,
+      enabled: true,
     },
     build: {
       markdown: {
@@ -92,6 +93,11 @@ export default defineNuxtConfig({
             'css',
             'vue',
           ],
+        },
+        rehypePlugins: {
+          'rehype-mermaid': {
+            simple: true
+          }
         },
       },
     },

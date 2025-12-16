@@ -31,7 +31,7 @@
 </template>
 <script setup lang="ts">
 const route = useRoute()
-console.log(route.params.id)
+
 const { data: article } = await useAsyncData('content-' + route.params.id, () => queryCollection('content')
   .where('article_id', '=', route.params.id)
   .first())

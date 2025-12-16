@@ -77,6 +77,7 @@
 import { useApplicationStore } from '~/stores/application'
 
 const applicationStore = useApplicationStore()
+const emit = defineEmits(['addLoading', 'removeLoading'])
 const valid = ref(false)
 const name = ref('')
 const email = ref('')
@@ -119,4 +120,12 @@ const sendEmail = async () => {
     }
   }
 }
+
+onBeforeMount(() => {
+  emit('addLoading')
+})
+
+onMounted(() => {
+  emit('removeLoading')
+})
 </script>
