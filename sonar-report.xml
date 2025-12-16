@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="tests/components/articles/categories.nuxt.spec.ts">
+    <testCase name="Components - articles/categories - is a Vue instance" duration="138" />
+    <testCase name="Components - articles/categories - has initialized values" duration="11" />
+  </file>
+  <file path="tests/components/bar/bottom.nuxt.spec.ts">
+    <testCase name="Components - bar/bottom - is a Vue instance" duration="119" />
+    <testCase name="Components - bar/bottom - has initialized values" duration="10" />
+  </file>
+  <file path="tests/components/bar/top.nuxt.spec.ts">
+    <testCase name="Components - bar/top - is a Vue instance" duration="210" />
+    <testCase name="Components - bar/top - has initialized values" duration="20" />
+  </file>
+  <file path="tests/components/button/article.nuxt.spec.ts">
+    <testCase name="Components - button/article - is a Vue instance" duration="142" />
+  </file>
+  <file path="tests/components/button/back_to_top.nuxt.spec.ts">
+    <testCase name="Components - button/back_to_top - is a Vue instance" duration="129" />
+    <testCase name="Components - button/back_to_top - has initialized values" duration="16" />
+    <testCase name="Components - button/back_to_top - has functions worked" duration="21" />
+  </file>
+  <file path="tests/components/page/snackbar.nuxt.spec.ts">
+    <testCase name="Components - page/snackbar - is a Vue instance" duration="158" />
+  </file>
+  <file path="tests/components/page/title.nuxt.spec.ts">
+    <testCase name="Components - page/title - is a Vue instance" duration="145" />
+  </file>
+  <file path="tests/components/partial/main/about_me.nuxt.spec.ts">
+    <testCase name="Components - partial/main/about_me - is a Vue instance" duration="123" />
+  </file>
+  <file path="tests/components/partial/main/articles.nuxt.spec.ts">
+    <testCase name="Components - partial/main/articles - is a Vue instance" duration="103" />
+  </file>
+  <file path="tests/components/partial/main/contact_me.nuxt.spec.ts">
+    <testCase name="Components - partial/main/contact_me - is a Vue instance" duration="169" />
+    <testCase name="Components - partial/main/contact_me - has initialized values" duration="13" />
+    <testCase name="Components - partial/main/contact_me - cannot send email" duration="14" />
+    <testCase name="Components - partial/main/contact_me - can send email" duration="16" />
+  </file>
+  <file path="tests/components/partial/main/legal_notices.nuxt.spec.ts">
+    <testCase name="Components - partial/legal_notices - is a Vue instance" duration="158" />
+  </file>
+  <file path="tests/components/partial/main/presentation.nuxt.spec.ts">
+    <testCase name="Components - partial/main/presentation - is a Vue instance" duration="147" />
+  </file>
+  <file path="tests/components/partial/main/skills.nuxt.spec.ts">
+    <testCase name="Components - partial/main/skills - is a Vue instance" duration="152" />
+    <testCase name="Components - partial/main/skills - has initialized values" duration="15" />
+  </file>
+  <file path="tests/components/partial/main/technologies.nuxt.spec.ts">
+    <testCase name="Components - partial/main/technologies - is a Vue instance" duration="175" />
+    <testCase name="Components - partial/main/technologies - has initialized values" duration="26" />
+  </file>
+  <file path="tests/composables/numberFormat.nuxt.spec.ts">
+    <testCase name="Composable: numberFormat - return 1k" duration="4" />
+  </file>
+  <file path="tests/composables/setTheme.nuxt.spec.ts">
+    <testCase name="Composable: SetTheme - set theme dark" duration="11" />
+    <testCase name="Composable: SetTheme - set theme dark" duration="2" />
+    <testCase name="Composable: SetTheme - set theme light" duration="2" />
+    <testCase name="Composable: SetTheme - set theme light" duration="2" />
+  </file>
+  <file path="tests/stores/application.nuxt.spec.ts">
+    <testCase name="Store: User - initializes with correct values" duration="15" />
+    <testCase name="Store: User - can change isPhone value" duration="3" />
+    <testCase name="Store: User - can change isDarkTheme value" duration="2" />
+    <testCase name="Store: User - can change category value" duration="2" />
+    <testCase name="Store: User - can change message value" duration="2" />
+    <testCase name="Store: User - can change show value" duration="2" />
+    <testCase name="Store: User - can toggle isDarkTheme value" duration="2" />
+  </file>
+  <file path="tests/unit/components/bar/top.nuxt.spec.ts">
+    <testCase name="Components - bar/top - is a Vue instance" duration="200" />
+    <testCase name="Components - bar/top - has initialized values" duration="19" />
+  </file>
+</testExecutions>
