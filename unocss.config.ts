@@ -11,7 +11,8 @@ export default defineConfig({
     'i-mdi:nuxt',
     'i-mdi:vuetify',
     'i-mdi:language-ruby-on-rails',
-    'i-mdi:vuejs'
+    'i-mdi:vuejs',
+    'i-mdi:docker'
   ],
   presets: [
     presetIcons({

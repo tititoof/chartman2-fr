@@ -8,10 +8,10 @@ article_id: '2-docker-compose-description'
 #### 📌 Docker Compose : la façon la plus simple d'orchestrer vos conteneurs
 
 
-Vous cherchez à gérer facilement plusieurs conteneurs pour votre application ? Docker Compose est fait pour vous ! Cet outil open-source intégré à Docker Engine vous permet de définir et de lancer toute votre stack en une seule commande.
+Vous cherchez à gérer facilement plusieurs conteneurs pour votre application ? Docker Compose est fait pour vous ! Cet outil vous permet de définir et de lancer toute votre stack en une seule commande.
 
 
-Docker Compose est un excellent outil open-source inclus avec Docker qui facilite la définition et l'exécution d'applications multi-conteneurs sur une seule machine.
+Docker Compose est un excellent outil inclus avec Docker qui facilite la définition et l'exécution d'applications multi-conteneurs sur une seule machine.
 
 
 Grâce à lui, les développeurs peuvent décrire leur application dans un simple fichier YAML, en regroupant tous les services interconnectés, et lancer l'ensemble de l'application en une seule commande.
@@ -27,27 +27,77 @@ Voici quelques avantages qui vont vous convaincre :
 
 
 - **Configuration unique et claire**
+
 Un seul fichier YAML pour décrire tous vos services, réseaux et volumes. Facile à partager entre collègues, utiliser dans vos pipelines CI/CD ou même en production.  
 
 
 - **Isolation des services**
+
 Chaque composant fonctionne dans son propre conteneur, évitant ainsi les conflits de dépendances (par exemple, différentes versions de PHP, MySQL ou Redis) et assurant une stabilité optimale.  
 
 
 - **Démarrage dans le bon ordre**
-Grâce à la directive depends_on, vos services se lancent dans le bon ordre, et avec les health‑checks, vous êtes sûr qu’ils sont prêts à recevoir du trafic.  
+
+Grâce à la directive *depends_on*, vos services se lancent dans le bon ordre, et avec les health‑checks, vous êtes sûr qu’ils sont prêts à recevoir du trafic.  
 
 
 - **Gestion ultra simple**
-Les commandes comme docker compose up, down, ps, logs ou exec sont intuitives. En quelques secondes, vous avez tout sous contrôle.  
+
+Les commandes comme *docker compose up*, *down*, *ps*, *logs* ou *exec* sont intuitives. En quelques secondes, vous avez tout sous contrôle.  
 
 
 - **Résilience et persistance**
+
 Les volumes montés sur votre machine permettent de conserver vos données (bases, fichiers téléchargés…) même si vous supprimez un conteneur.  
 
 
 - **Un écosystème complet**
-Compose s’intègre facilement avec Docker Swarm, Kubernetes (via Kompose) ou dans vos pipelines CI/CD pour des tests d’intégration fiables et répétables.  
+
+Docker Compose s’intègre facilement avec Docker Swarm, Kubernetes (via Kompose) ou dans vos pipelines CI/CD pour des tests d’intégration fiables et répétables.  
+
+<mermaid>
+flowchart LR
+  subgraph DockerCompose
+    compose["docker‑compose CLI"]
+  end
+  subgraph Docker Engine
+    demon["Docker Engine (démon)"]
+  end
+  subgraph Registry
+    reg["Registry (Hub / Private)"]
+  end
+  subgraph Images
+    img["Images (layered tarballs)"]
+  end
+  subgraph Containers
+    c1["Container 1 - service A"]
+    c2["Container 2 - service B"]
+    c3["Container 3 - service C"]
+  end
+  subgraph Net
+    net["Network"]
+  end
+  subgraph Volumes
+    vol1["Volume 1 - service A"]
+    vol2["Volume 2 - service B"]
+    vol3["Volume 3 - service C"]
+  end
+  compose -->|up / build| demon
+  compose -->|down| demon
+  reg -->|download images| demon
+  img -->|push| reg
+  demon -->|build| img
+  demon -->|create| c1
+  demon -->|create| c2
+  img -->|launch service| c1
+  img -->|launch service| c2
+  compose -->|creates| net
+  compose -->|mounts| vol1
+  c1 -->|connects| net
+  c2 -->|connects| net
+  c1 -->|mounts| vol1
+  c2 -->|mounts| vol1
+</mermaid>
 
 
 #### ⚙️ Structure d’un docker-compose.yml
@@ -118,9 +168,17 @@ Le conteneur se relancera automatiquement s’il s’arrête tout seul, sauf si 
 
 Ici, on défini quelques variables d’environnement essentielles :  
 
-- **MYSQL_ROOT_PASSWORD** est le mot de passe pour l’utilisateur root.  
-- **MYSQL_DATABASE** : le nom de la base qu’on créer lors du lancement.  
-- **MYSQL_USER / MYSQL_PASSWORD** ce sont les identifiants d’un utilisateur supplémentaire ayant accès à la base.
+- **MYSQL_ROOT_PASSWORD**
+
+Mot de passe pour l’utilisateur root.
+
+- **MYSQL_DATABASE**
+
+Nom de la base qu’on créer lors du lancement.
+
+- **MYSQL_USER / MYSQL_PASSWORD** 
+
+Identifiants d’un utilisateur supplémentaire ayant accès à la base.
 
 
 ##### 📰 Service WordPress
@@ -164,7 +222,10 @@ Idem, WordPress se relancera automatiquement si jamais il s’arrête.
 ```
 
 On configure WordPress pour qu’il se connecte à la base de données.  
-- **WORDPRESS_DB_HOST** indique le nom du service (db) et le port MySQL (3306).  
+- **WORDPRESS_DB_HOST** 
+
+Nom du service (db) et le port MySQL (3306).
+
 - Les autres paramètres correspondent aux identifiants que l’on a définis dans la section de la base.
 
 

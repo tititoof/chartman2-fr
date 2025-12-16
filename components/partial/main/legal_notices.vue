@@ -145,4 +145,14 @@
   </v-row>
 </template>
 
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+const emit = defineEmits(['addLoading', 'removeLoading'])
+
+onBeforeMount(() => {
+  emit('addLoading')
+})
+
+onMounted(() => {
+  emit('removeLoading')
+})
+</script>

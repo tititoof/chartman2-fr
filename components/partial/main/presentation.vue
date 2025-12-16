@@ -112,4 +112,13 @@ const options = {
     retina_detect: true,
   },
 }
+
+const emit = defineEmits(['addLoading', 'removeLoading'])
+onBeforeMount(() => {
+  emit('addLoading')
+})
+
+onMounted(() => {
+  emit('removeLoading')
+})
 </script>

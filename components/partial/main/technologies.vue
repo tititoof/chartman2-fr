@@ -51,6 +51,7 @@
 import { CStats } from '~/utils/common'
 
 const { mobile } = useDisplay()
+const emit = defineEmits(['addLoading', 'removeLoading'])
 
 const stats = reactive(CStats)
 const getStars = async (url, star_count) => {
@@ -67,5 +68,13 @@ const getStars = async (url, star_count) => {
 
 stats.forEach(async (stat) => {
   stat.value = await getStars(stat.star_url, stat.value)
+})
+
+onBeforeMount(() => {
+  emit('addLoading')
+})
+
+onMounted(() => {
+  emit('removeLoading')
 })
 </script>

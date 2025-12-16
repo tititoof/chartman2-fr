@@ -27,15 +27,71 @@ Et le mieux, c’est que ces conteneurs sont très légers : ils ne comprennent 
 
 Chaque conteneur fonctionne dans son propre espace, séparé des autres. Deux conteneurs ne partagent pas leurs bibliothèques sauf si vous le décidez, ce qui évite les conflits de versions et facilite la gestion.
 
+<mermaid>
+flowchart LR
+  subgraph Client
+    subgraph entrypointClient [" "]
+      direction LR
+      cli["CLI"]
+      api["API"]
+      dockerdesktop["Docker Desktop"]
+    end
+  end
+  subgraph "Moteur Docker"
+    direction TB
+    demon(["Démon"])
+    subgraph images
+      direction TB
+      image2["Image 1"]
+      image3["Image 2"]
+      image1["Image 3"]
+    end
+    subgraph containers
+      direction TB
+      container1["Conteneur 1"]
+      container3["Conteneur 2"]
+      container2["Conteneur 3"]
+    end
+  end
+  subgraph registries["Registres"]
+    private["registry privé"]
+    ghrc["ghrc.io"]
+    hubdocker["hub.docker.com"]
+  end
+  entrypointClient e01@-->|build| demon
+  entrypointClient e02@-->|run| demon
+  entrypointClient e03@-->|pull| demon
+  entrypointClient e04@-->|push| demon
+  demon -->|build| image2
+  demon -->|run| image3
+  image3 -->|run| container3
+  registries -->|pull| image1
+  demon -->|pull| registries
+  image1 --> |push| registries
+  demon --> |push| image1
+  linkStyle 0,4 stroke:blue;
+  linkStyle 1,5,6 stroke:green;
+  linkStyle 2,7,8 stroke:red;
+  linkStyle 3,9,10 stroke:orange;
+</mermaid>
+
 #### 🚀 Pourquoi adopter Docker ?
 
-- **Une isolation parfaite des applications** : chaque conteneur fonctionne de manière indépendante. Vous pouvez donc gérer plusieurs projets sans risque de conflits de dépendances.
+- **Une isolation parfaite des applications**
 
-- **Une portabilité sans souci** : vos conteneurs fonctionnent partout où Docker est installé. Idéal pour passer facilement du poste de développement au serveur de production.
+Chaque conteneur fonctionne de manière indépendante. Vous pouvez donc gérer plusieurs projets sans risque de conflits de dépendances.
 
-- **Une utilisation efficace des ressources** : en partageant le noyau de l’ordinateur hôte, les conteneurs évitent la lourdeur des machines virtuelles et boostent la performance.
+- **Une portabilité sans souci** 
 
-- **Un écosystème dynamique** : avec Docker Hub et une communauté active, des milliers d’images sont à votre disposition pour accélérer vos projets.
+Vos conteneurs fonctionnent partout où Docker est installé. Idéal pour passer facilement du poste de développement au serveur de production.
+
+- **Une utilisation efficace des ressources** 
+
+En partageant le noyau de l’ordinateur hôte, les conteneurs évitent la lourdeur des machines virtuelles et boostent la performance.
+
+- **Un écosystème dynamique** 
+
+Avec Docker Hub et une communauté active, des milliers d’images sont à votre disposition pour accélérer vos projets.
 
 #### 🧰 Pourquoi c’est génial pour les développeurs ?
 
