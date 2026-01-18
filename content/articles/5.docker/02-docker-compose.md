@@ -17,7 +17,7 @@ Docker Compose est un excellent outil inclus avec Docker qui facilite la défini
 Grâce à lui, les développeurs peuvent décrire leur application dans un simple fichier YAML, en regroupant tous les services interconnectés, et lancer l'ensemble de l'application en une seule commande.
 
 
-Avec un fichier simple, appelé *docker-compose.yml*, vous composez toutes vos dépendances, réseaux et volumes. Résultat : démarrer, arrêter ou ajuster la taille de votre environnement devient un jeu d’enfant.
+Avec un fichier simple, appelé *docker-compose.yml*, vous composez toutes vos dépendances, réseaux et volumes. 
 
 
 #### 🚀 Pourquoi adopter Docker Compose ?
@@ -74,15 +74,17 @@ flowchart LR
     c2["Container 2 - service B"]
     c3["Container 3 - service C"]
   end
-  subgraph Net
-    net["Network"]
+  subgraph Networks
+    net["Network 1"]
+    net2["Network 2"]
   end
   subgraph Volumes
     vol1["Volume 1 - service A"]
     vol2["Volume 2 - service B"]
     vol3["Volume 3 - service C"]
   end
-  compose -->|up / build| demon
+  compose -->|build| demon
+  compose -->|up| demon
   compose -->|down| demon
   reg -->|download images| demon
   img -->|push| reg
@@ -93,8 +95,8 @@ flowchart LR
   img -->|launch service| c2
   compose -->|creates| net
   compose -->|mounts| vol1
-  c1 -->|connects| net
-  c2 -->|connects| net
+  c1 -->|connects| net2
+  c2 -->|connects| net2
   c1 -->|mounts| vol1
   c2 -->|mounts| vol1
 </mermaid>

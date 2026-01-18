@@ -8,18 +8,18 @@
 
   const storeThemeDark = computed(() => applicationStore.isDarkTheme)
 
-  theme.global.name.value = storeThemeDark.value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme'
+  theme.change(storeThemeDark.value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme')
 
   nuxtApp.hook('page:finish', () => {
-    theme.global.name.value = setTheme()
+    theme.change(storeThemeDark.value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme')
+    // theme.global.name.value = setTheme()
 
     applicationStore.setIsPhone(mobile.value)
     applicationStore.setIsDarkTheme(theme.global.name.value === 'chartman2frDarkTheme')
   })
 
   watch(storeThemeDark, (value) => {
-    theme.global.name.value =
-      value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme'
+    theme.change(value === false ? 'chartman2frLightTheme' : 'chartman2frDarkTheme')
   })
 
   const props = defineProps({

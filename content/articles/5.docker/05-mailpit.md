@@ -77,4 +77,4 @@ MAILPIT_UI_PORT=8025
 MAILPIT_HOST=mailpit.domain.tld
 ```
 
-Il ne reste plus qu'à configurer dans votre application l'envoi des emails vers `mailpit.domain.tld` sur le port `1025` 👍️
+Il ne reste plus qu'à configurer dans votre application l'envoi des emails vers `mailpit.domain.tld` - toujours à remplacer par le votre - sur le port `1025` 👍️

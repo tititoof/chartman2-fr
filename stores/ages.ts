@@ -23,9 +23,6 @@ export const useAgesStore = defineStore('agesStore', {
     },
   },
   persist: true,
-  // persist: {
-  //   storage: persistedState.localStorage,
-  // },
 })
 
 if (Object.hasOwn(import.meta, 'hot')) {

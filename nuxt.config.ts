@@ -109,6 +109,7 @@ export default defineNuxtConfig({
       apiBaseUrl: process.env.API_BASE_URL,
       appName: process.env.APP_NAME,
       environment: process.env.APP_ENVIRONMENT,
+      appVersion: process.env.APP_VERSION,
     },
   },
   sourcemap: { client: 'hidden' },

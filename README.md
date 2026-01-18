@@ -4,7 +4,7 @@ Bienvenue sur **Chartman2-fr**, le dépôt du site web personnel de Christophe H
 
 ## 🎯 Objectifs du site
 
-* Présenter mon profil, mes compétences et mon parcours professionnel.
+* Présenter mon profil, mes compétences.
 * Publier des articles détaillés sur divers sujets techniques : développement, infrastructures, DevOps, et autres domaines liés au numérique.
 * Proposer des guides, tutoriels et notes pratiques basés sur mes expériences.
 

@@ -20,7 +20,7 @@
       </span>
     </template>
     <template v-slot:text>
-      <pre :class="$props.class"><slot /></pre>
+      <pre :class="$props.class" style="overflow-x:auto;"><slot /></pre>
     </template>
   </v-card>
 </template>

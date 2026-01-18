@@ -37,6 +37,8 @@ Si vous cherchez une base de données robuste et scalable, PostgreSQL est l'exce
 
 #### ⚙️ Exemple
 
+Et voilà un petit exemple d'un service `Postgresql` dans un fichier *docker-compose.yml*
+
 ```yml [docker-compose.yml]
 services:
   postgresql:
@@ -73,4 +75,4 @@ POSTGRES_PASSWORD=mypassword
 POSTGRES_DB=mydb
 ```
 
-Il ne reste plus qu'à configurer dans votre application pour utiliser PostgreSQL avec les informations `postgresql.domain.tld` sur le port `5432` et les informations de connexion 👍️
+Il ne reste plus qu'à configurer dans votre application (laravel, symfony, rails, django ...) pour utiliser PostgreSQL avec l'url `postgresql.domain.tld` sur le port `5432` ainsi que les informations de connexion 👍️
