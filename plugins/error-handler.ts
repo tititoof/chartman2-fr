@@ -1,7 +1,6 @@
 export default defineNuxtPlugin((nuxtApp) => {
-  // Also possible
   nuxtApp.hook('vue:error', (error, instance, info) => {
-    console.log(error)
+    console.log(error, instance, info)
     throw new Error("Nuxt Button Error")
   })
 })

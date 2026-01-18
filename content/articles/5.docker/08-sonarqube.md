@@ -75,10 +75,10 @@ volumes:
 ```
 
 ```yml
-SONARQUBE_HOST=sonarqube.example.com
+SONARQUBE_HOST=sonarqube.domain.tld
 SONARQUBE_PORT=9000
 ```
 
-Avec ce conteneur, votre instance SonarQube est disponible sur https://sonarqube.example.com.
+Avec ce conteneur, votre instance SonarQube est disponible sur https://sonarqube.domain.tld.
 Activez les webhooks depuis Forgejo / Jenkins pour lancer automatiquement les analyses ; consultez le tableau de bord pour suivre l’évolution de la qualité.
 Bonne analyse !

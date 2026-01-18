@@ -8,6 +8,7 @@ tasks:
   up:
     desc: Démarrage des services Docker
     cmds:
+      - rm -Rf ./node_modules
       - UID_GID="$(id -u):$(id -g)" docker compose -f docker-compose.dev.yml up -d
       - cat ./.config/code-server/config.yaml
   down:
@@ -34,6 +35,7 @@ tasks:
     desc: Redémarrage du service frontend-dev
     cmds:
       - docker compose -f docker-compose.dev.yml down frontend-dev
+      - rm -Rf ./node_modules
       - docker compose -f docker-compose.dev.yml up -d frontend-dev
   f-ssh:
     desc: Connexion SSH au frontend

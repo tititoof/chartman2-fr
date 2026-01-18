@@ -54,7 +54,7 @@ docker network create \
 ##### 🔑 Création des token api OVH
 
 Tout est dans l'article de [Rémi Flandrois](https://remiflandrois.fr/2020/03/26/creation-certificat-wildcard-ovh/), la partie de configuration du Token API OVH.
-IL suffit de sauvegarder le fichier dans ./docker/ovh/.ovh-api
+Il suffit de sauvegarder le fichier dans ./docker/ovh/.ovh-api
 
 ##### 📝 Configuration
 
@@ -157,7 +157,7 @@ providers:
 
 ---
 
-On execute le service `certbot-init` la première fois pour récupérer les certificats
+On execute le service `certbot-init` la première fois pour récupérer les certificats - sans oublier de remplacer *<domaine.tld>* par votre domaine 😊
 
 ```sh
 docker compose run -rm certbot-init

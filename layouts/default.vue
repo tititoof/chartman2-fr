@@ -4,6 +4,7 @@
     <page-snackbar />
     <v-app>
       <NuxtLoadingIndicator color="primary" :height="4" />
+      <!-- <AppVersionModal /> -->
       <v-main
         dark="isDark"
         class="d-flex align-center fill-height pb-24"
@@ -13,6 +14,7 @@
 
         <button-back-to-top />
       </v-main>
+      
     </v-app>
     <CookieControl locale="fr" />
 
@@ -23,13 +25,17 @@
 
 <script setup lang="ts">
   import { useApplicationStore } from '~/stores/application'
+  import { useAppVersionStore } from '~/stores/appVersion'
 
   const config = useRuntimeConfig()
   const applicationStore = useApplicationStore()
+  const appVersionStore = useAppVersionStore()
   const nuxtApp = useNuxtApp()
   const theme = useTheme()
   const { locale } = useI18n()
   const { mobile } = useDisplay()
+
+  let currentVersion: string | null = null
 
   useHead({
     title: config.public.appName as string,
@@ -46,6 +52,7 @@
   })
 
   const storeThemeDark = computed(() => applicationStore.isDarkTheme)
+  const appVersion = computed(() => appVersionStore.getVersion)
   
   applicationStore.setIsPhone(mobile.value)
 
@@ -54,6 +61,37 @@
 
     applicationStore.setIsPhone(mobile.value)
     applicationStore.setIsDarkTheme(theme.global.name.value === 'chartman2frDarkTheme')
+
+    window.addEventListener('app:version-changed', (event: any) => {
+      appVersionStore.markOutdated(event.detail)
+    })
+
+    if (config.public.appVersion) {
+      currentVersion = config.public.appVersion
+    }
+
+    if (appVersion.value !== currentVersion) {
+      window.dispatchEvent(
+        new CustomEvent('app:version-changed', {
+          detail: currentVersion
+        })
+      )
+    }
+
+    if (!currentVersion) return
+
+    window.addEventListener('error', (e) => {
+      if (
+        e.message?.includes('Loading chunk') ||
+        e.message?.includes('Failed to fetch dynamically imported module')
+      ) {
+        window.dispatchEvent(
+          new CustomEvent('app:version-changed', {
+            detail: currentVersion
+          })
+        )
+      }
+    })
   })
 
   watch(storeThemeDark, (value) => {

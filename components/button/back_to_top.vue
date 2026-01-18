@@ -8,6 +8,7 @@
       color="info"
       icon="i-mdi:chevron-up"
       transition="fade-transition"
+      :style="{ zIndex: 2147483647 }"
       @click="scrollToTop"
     />
   </transition>

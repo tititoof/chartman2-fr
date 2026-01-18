@@ -17,43 +17,143 @@ Vous avez besoin d’un **pipeline d’automatisation** robuste, configurable et
 En quelques lignes de configuration Docker, Jenkins devient votre moteur CI/CD, prêt à se connecter à Forgejo, SonarQube, OpenProject, ou Coolify.
 
 #### ⚙️ Exemple
-Voici un `docker‑compose.yml` qui lance Jenkins derrière Traefik — idéal pour un homelab ou un pipeline CI/CD intégré :
+
+Voici un `docker‑compose.yml` qui lance Jenkins derrière Traefik — idéal pour un homelab ou un pipeline CI/CD.
 
 ```yml [docker-compose.yml]
 services:
-  jenkins:
-    image: "jenkins/jenkins:lts"
-    container_name: jenkins
+  traefik:
     restart: unless-stopped
-    user: "1000:1000"        # UID/GID du compte Jenkins dans le conteneur
-    environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
-      - JENKINS_OPTS=--httpPort=8080
-      - JENKINS_ADMIN_ID=admin
-      - JENKINS_ADMIN_PASSWORD=${JENKINS_ADMIN_PASSWORD}
+    image: traefik:v3.2.1
     ports:
-      - "${JENKINS_PORT:-8080}:8080"
-      - "${JENKINS_SLAVE_PORT:-50000}:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
     labels:
-      # Traefik integration
-      - "traefik.enable=true"
-      - "traefik.http.routers.jenkins.rule=Host(`${JENKINS_HOST}`)"
-      - "traefik.http.routers.jenkins.entrypoints=http"
-      - "traefik.http.middlewares.jenkins-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.jenkins.middlewares=jenkins-redirect"
-      - "traefik.http.routers.jenkins-secure.entrypoints=https"
-      - "traefik.http.routers.jenkins-secure.rule=Host(`${JENKINS_HOST}`)"
-      - "traefik.http.routers.jenkins-secure.tls=true"
-      - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+    volumes:
+      - ./.docker/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./.docker/traefik/tls.yml:/etc/traefik/tls.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.docker/ovh/etc/letsencrypt/archive/<domain.tld>:/etc/ssl/traefik
+    command:
+      - "--global.sendAnonymousUsage"
+      - "--log.level=INFO"
+      - "--api.insecure=true"
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
     networks:
-      - local_dev
+      - devops
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+      - 8081:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - ${PWD}/.docker/jenkins/data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
+    labels:
+      # Ajout dans traefik
+      - "traefik.enable=true"
+      # HTTP
+      - "traefik.http.routers.jenkins.rule=Host(`${URL_JENKINS}`)"
+      - "traefik.http.routers.jenkins.entrypoints=http"
+
+      # HTTPS
+      - "traefik.http.routers.jenkins-secure.service=jenkins-secure"
+      - "traefik.http.routers.jenkins-secure.rule=Host(`${URL_JENKINS}`)"
+      - "traefik.http.routers.jenkins-secure.entrypoints=https"
+      - "traefik.http.routers.jenkins-secure.tls=true"
+
+      # Port interne
+      - "traefik.http.services.jenkins-secure.loadbalancer.server.port=8080"
+    networks:
+      homelab:
+        aliases:
+          - ${URL_JENKINS}
+
+    jenkins_agent_rails:
+      image: ghcr.io/tititoof/jenkins-agent-rails:latest
+      restart: unless-stopped
+      privileged: true
+      ports:
+        - 8082:8080
+        - 50001:50000
+        - 8422:22
+      container_name: jenkins_agent_rails
+      command: -url http://<mon_ip>:8081 e95b5085555f57a5b364cb162465ef7a811cc2c5438d6aed9ed30239b50c3506 agent_rails_1
+      environment:
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMapu5IAvz0VW6bQCkTXRDmbxLfhfZSyMPlHhu6PoUxT toofytroll@ilmater
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/bin/docker:/usr/bin/docker
+        - ${PWD}/.docker/rails_agent_jenkins/home:/var/jenkins_home
+        - ${PWD}/.docker/rails_agent_jenkins/agent:/home/jenkins/agent
+        - ${PWD}/.ssh:/home/jenkins/.ssh
+        - /var/run/docker.sock:/var/run/docker.sock
+      group_add:
+        - 989
+      networks:
+        homelab:
+          aliases:
+            - jenkins_agent_rails
+  
+  jenkins_agent_vuejs:
+    image: ghcr.io/tititoof/jenkins-agent-vuejs
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 8083:8080
+      - 50002:50000
+      - 8522:22
+    container_name: jenkins_agent_vuejs
+    command: -url http://<mon_ip>:8081 69e30c1bf1d12a506ba75ce7feda850c6a1b2f1d85e6e1de84df44c975dc0b96 agent_vuejs_1
+    environment:
+     - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMapu5IAvz0VW6bQCkTXRDmbxLfhfZSyMPlHhu6PoUxT toofytroll@ilmater
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - ${PWD}/.docker/vuejs_agent_jenkins/home:/var/jenkins_home
+      - ${PWD}/.docker/vuejs_agent_jenkins/agent:/home/jenkins/agent
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - homelab
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - homelab
 
 networks:
-  local_dev:
+  devops:
     driver: bridge
 
 volumes:
   jenkins_home:
+```
+
+```bash [.env]
+UID=1000
+GID=1000
+
+DB_DATABASE_FORGEJO=forgejo
+DB_USERNAME=forgejo_user
+DB_PASSWORD=superSecretPwd
+
+URL_FORGEJO=forgejo.domaine.tld
+URL_POSTGRESQL=postgresql.domaine.tld
 ```
