@@ -57,52 +57,79 @@ Docker Compose s’intègre facilement avec Docker Swarm, Kubernetes (via Kompos
 
 <mermaid>
 flowchart LR
-  subgraph DockerCompose
-    compose["docker‑compose CLI"]
+  subgraph DC[Docker Compose]
+    compose["CLI"]
   end
-  subgraph Docker Engine
-    demon["Docker Engine (démon)"]
+  subgraph DE[Docker Engine]
+    engine(["démon"])
   end
-  subgraph Registry
-    reg["Registry (Hub / Private)"]
+  subgraph IM[Images]
+    direction TB
+    imageA["Image A"]
+    imageB["Image B"]
   end
-  subgraph Images
-    img["Images (layered tarballs)"]
+  subgraph CNT[Containers]
+    direction TB
+    cA[<b>Container 1</b><br/> service A]
+    cB[<b>Container 2</b><br/> service B]
   end
-  subgraph Containers
-    c1["Container 1 - service A"]
-    c2["Container 2 - service B"]
-    c3["Container 3 - service C"]
+  subgraph NET[Networks]
+    direction LR
+    net1[<b>Network 1</b>]
+    net2[<b>Network 2</b>]
   end
-  subgraph Networks
-    net["Network 1"]
-    net2["Network 2"]
+  subgraph VOL[Volumes]
+    volA[<b>Volume A</b>]
+    volB[<b>Volume B</b>]
   end
-  subgraph Volumes
-    vol1["Volume 1 - service A"]
-    vol2["Volume 2 - service B"]
-    vol3["Volume 3 - service C"]
-  end
-  compose -->|build| demon
-  compose -->|up| demon
-  compose -->|down| demon
-  reg -->|download images| demon
-  img -->|push| reg
-  demon -->|build| img
-  demon -->|create| c1
-  demon -->|create| c2
-  img -->|launch service| c1
-  img -->|launch service| c2
-  compose -->|creates| net
-  compose -->|mounts| vol1
-  c1 -->|connects| net2
-  c2 -->|connects| net2
-  c1 -->|mounts| vol1
-  c2 -->|mounts| vol1
+  compose -->|build| engine
+  compose -->|up| engine
+  compose -->|down| engine
+  engine -->|build| IM
+  engine -->|up| imageA
+  engine -->|up| imageB
+  engine -->|create| NET
+  engine -->|mount| VOL
+  imageA -->|up| cA
+  imageB -->|up| cB
+  cA -->|connect| net2
+  cB -->|connect| net1
+  cA -->|connect| volA
+  cB -->|connect| volB
+  engine -->|down| imageA
+  engine -->|down| imageB
+  imageA -->|down| cA
+  imageB -->|down| cB
+  cA -->|disconnect| net1
+  cB -->|disconnect| net2
+  cA -->|unmount| volA
+  cB -->|unmount| volB
+  class DC,DE,REG,IM,CNT,NET,VOL cluster;
+  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
+  classDef composeStyle fill:#fdd,stroke:#d00,stroke-width:2px;
+  class compose composeStyle;
+  classDef engineStyle fill:#dff,stroke:#00d,stroke-width:2px;
+  class engine engineStyle;
+  classDef registryStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class registry registryStyle;
+  classDef imageStyle fill:#dfd,stroke:#0d0,stroke-width:2px;
+  class image imageStyle;
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class cA,cB,cC containerStyle;
+  classDef networkStyle fill:#fdd,stroke:#d00,stroke-width:2px;
+  class net1,net2 networkStyle;
+  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class volA,volB,volC volumeStyle;
+  linkStyle 0,3 stroke:blue;
+  linkStyle 1,4,5,6,7,8,9,10,11,12,13 stroke:green;
+  linkStyle 2,14,15,16,17,18,19,20,21 stroke:red;
 </mermaid>
 
 
 #### ⚙️ Structure d’un docker-compose.yml
+
+On va prendre un cas simple, un site [Wordpress](https://wordpress.com/fr/){:target="_blank"} avec sa base de données (MySQL)
+
 
 ```yml [./docker-compose.yml]
 services:
@@ -110,7 +137,7 @@ services:
     image: mysql:5.7
     volumes:
       - db_data:/var/lib/mysql
-    restart: always
+    restart: unless-stop
     environment:
       MYSQL_ROOT_PASSWORD: somewordpress
       MYSQL_DATABASE: wordpress
@@ -123,7 +150,7 @@ services:
     image: wordpress:latest
     ports:
       - "8000:80"
-    restart: always
+    restart: unless-stop
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wordpress
@@ -132,6 +159,59 @@ services:
 volumes:
   db_data: {}
 ```
+
+#### 🧩 Schéma
+
+Voici le schéma d'intéraction (simplifié) correspondant au fichier docker-compose ci-dessus.
+
+<mermaid>
+flowchart LR
+  subgraph DC[Docker Compose]
+    compose["CLI"]
+  end
+  subgraph DE[Docker Engine]
+    engine(["démon"])
+  end
+  subgraph CNT[Containers]
+    direction TB
+    wordpress[wordpress]
+    db[db]
+  end
+  subgraph VOL[Volumes]
+    db_data["<b>db_data</b>"]
+  end
+  compose -->|up| engine
+  compose -->|down| engine
+  engine -->|up| db
+  engine -->|down| db
+  engine -->|up| wordpress
+  engine -->|down| wordpress
+  engine -->|mount| db_data
+  engine -->|unmount| db_data
+  db -->|connect| db_data
+  db -->|disconnect| db_data
+  wordpress -->|depends on| db
+  wordpress -->|connect| db
+  wordpress -->|disconnect| db
+  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
+  class DC,DE,REG,IM,CNT,VOL cluster;
+  classDef composeStyle fill:#fdd,stroke:#d00,stroke-width:2px;
+  class compose composeStyle;
+  classDef engineStyle fill:#dff,stroke:#00d,stroke-width:2px;
+  class engine engineStyle;
+  classDef registryStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class registry registryStyle;
+  classDef imageStyle fill:#dfd,stroke:#0d0,stroke-width:2px;
+  class mysqlImg,wpImg imageStyle;
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class db,wordpress containerStyle;
+  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class db_data volumeStyle;
+  linkStyle 0,2,4,6,8,11 stroke:green;
+  linkStyle 1,3,5,7,9,12 stroke:red;
+</mermaid>
+
+Explorons les différents services décris dans le fichier docker-compose.yml
 
 ##### 🛢️ Service db (la base de données)
 
@@ -155,7 +235,7 @@ Ainsi, toutes vos données restent en sécurité, même si vous supprimez ou red
 
 
 ```yaml [./docker-compose.yml]
-  restart: always
+  restart: unless-stop
 ```
 
 Le conteneur se relancera automatiquement s’il s’arrête tout seul, sauf si vous le stoppez manuellement.
@@ -210,7 +290,7 @@ Le port 80 (le port standard de WordPress) dans le conteneur est mappé sur le p
 on peut accéder à votre site WordPress via [http://localhost:8000](http://localhost:8000).
 
 ```yaml [./docker-compose.yml]
-  restart: always
+  restart: unless-stop
 ```
 
 Idem, WordPress se relancera automatiquement si jamais il s’arrête.
@@ -244,7 +324,7 @@ Ce volume nommé **db_data** est utilisé pour stocker de façon durable toutes 
 
 Ce fichier `docker-compose.yml` met en place un environnement WordPress complet :  
 - La base de données MySQL est persistante grâce à un volume dédié.  
-- WordPress est accessible sur votre navigateur via [http://localhost:8000](http://localhost:8000).  
+- WordPress est accessible sur votre navigateur via [http://localhost:8000](http://localhost:8000){:target="_blank"}.
 - Les deux services communiquent via le réseau interne Docker, sans besoin de configurations complexes d’IP.  
 - Même si vous supprimez ou redémarrez les conteneurs, vos données restent sauvegardées dans le volume.
 

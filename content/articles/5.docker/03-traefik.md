@@ -31,7 +31,7 @@ Et en plus, c’est open-source, gratuit et animé par une grande communauté su
 
 #### ⚙️ Exemple
 
-Pour intégrer Traefik à notre projet [Todo-list](/blog/article/1-to-do-list-initialisation), voici comment nous pouvons le mettre en place :
+Pour intégrer Traefik à notre projet [Todo-list](/blog/article/1-to-do-list-initialisation){:target="_blank"}, voici comment nous pouvons le mettre en place :
 
 ##### 🗂️ Répertoires
 
@@ -53,16 +53,24 @@ docker network create \
 
 ##### 🔑 Création des token api OVH
 
-Tout est dans l'article de [Rémi Flandrois](https://remiflandrois.fr/2020/03/26/creation-certificat-wildcard-ovh/), la partie de configuration du Token API OVH.
-Il suffit de sauvegarder le fichier dans ./docker/ovh/.ovh-api
+Tout est dans l'article de [Rémi Flandrois](https://remiflandrois.fr/2020/03/26/creation-certificat-wildcard-ovh/){:target="_blank"}, la partie de configuration du Token API OVH.
+
+
+On sauvegarde le fichier dans `./docker/ovh/.ovh-api`
+
+
+On utilisera l'image `certbot/dns-ovh` pour générer nos certificats
+
 
 ##### 📝 Configuration
+
+On créer notre fichier docker-compose.yml comme ci-dessous (en adaptant à vos besoins)
 
 ```yml [./docker-compose.yml]
 services:
   traefik:
     restart: unless-stopped
-    image: traefik:v3.2.1
+    image: traefik:v3.6.7
     ports:
       - "80:80"
       - "443:443"
@@ -90,21 +98,9 @@ services:
       - local_dev
 
   certbot-init:
-    container_name: certbot
+    container_name: certbot-init
     image: certbot/dns-ovh:latest
     command: certonly --dns-ovh --dns-ovh-credentials /var/www/certbot/.ovh-api --non-interactive --agree-tos --email <email> --cert-name <domain.tld> -d <domain.tld> -d *.<domain.tld>
-    profiles:
-      - init
-    volumes:
-      - ./.docker/ovh/.ovh-api:/var/www/certbot/.ovh-api
-      - ./.docker/ovh/etc/letsencrypt:/etc/letsencrypt
-      - ./.docker/ovh/certs:/etc/letsencrypt/live
-      - ./.docker/ovh/certbot/data:/var/www/certbot
-
-  certbot:
-    container_name: certbot
-    image: certbot/dns-ovh:latest
-    command: renew --dns-ovh --dns-ovh-credentials /var/www/certbot/.ovh-api --non-interactive --agree-tos --email <email> --cert-name <domain.tld> -d <domain.tld> -d *.<domain.tld>
     volumes:
       - ./.docker/ovh/.ovh-api:/var/www/certbot/.ovh-api
       - ./.docker/ovh/etc/letsencrypt:/etc/letsencrypt
@@ -117,6 +113,9 @@ networks:
     driver: bridge
     external: true
 ```
+
+Ensuite on crée les fichiers de configuration de traefik dont on a besoin pour la gestion des certificats (OVH) et les ports des points d'entrée (http, https, etc...)
+
 
 ```yml [~/Projects/.docker/traefik/tls.yml]
 tls:
@@ -155,6 +154,32 @@ providers:
     defaultRule: 'HostRegexp(`{{ index .Labels "com.docker.compose.service"}}.<domain.tld>`,`{{ index .Labels "com.docker.compose.service"}}-{dashed-ip:.*}.<domain.tld>`)'
 ```
 
+<mermaid>
+graph TD
+  Navigateur["🌍<br/>https://app.localhost"] --> Traefik["🚦<br/>Traefik<br/>Container"]
+  subgraph DH["🐳 Docker Host"]
+    subgraph Net["🌐 projects_local_dev"]
+      Traefik --> A["📦<br/> App A<br/>Container"]
+      Traefik --> B["📦<br/> App B<br/>Container"]
+      A --- LabelsA["🏷️ Labels Traefik<br/>
+      traefik.enable=true<br/>
+      traefik.http.routers.appa.rule=Host(`app.localhost`)<br/>
+      traefik.http.services.appa.loadbalancer.server.port=3000"]
+      B --- LabelsB["🏷️ Labels Traefik<br/>
+      traefik.enable=true<br/>
+      traefik.http.routers.appb.rule=Host(`api.localhost`)<br/>
+      traefik.http.services.appb.loadbalancer.server.port=8000"]
+    end
+  end
+  Traefik --> TLS["🔐 TLS / Let's Encrypt"]
+  Traefik --> Dashboard["👁️ Dashboard Traefik"]
+  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
+  class Navigateur,DH cluster;
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class Traefik,A,B containerStyle;
+  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class LabelsA,LabelsB,TLS,Dashboard volumeStyle;
+</mermaid>
 ---
 
 On execute le service `certbot-init` la première fois pour récupérer les certificats - sans oublier de remplacer *<domaine.tld>* par votre domaine 😊

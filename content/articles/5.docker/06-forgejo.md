@@ -23,13 +23,13 @@ En résumé, Forgejo vous donne toute la puissance d’une plateforme Git clou
 
 #### ⚙️ Exemple
 
-Voici un `docker‑compose.yml` avec Forgejo derrière Traefik, accessible avec une belle url *forgejo.domaine.tld* 😉
+Voici un `docker‑compose.yml` avec Forgejo derrière Traefik, accessible via une belle url *forgejo.domaine.tld* 😉
 
 ```yml [docker-compose.yml]
 services:
   traefik:
     restart: unless-stopped
-    image: traefik:v3.2.1
+    image: traefik:v3.6.7
     ports:
       - "80:80"
       - "443:443"
@@ -90,11 +90,9 @@ services:
       # Port interne
       - traefik.http.services.forgejo-secure.loadbalancer.server.port=3000
     networks:
-      homelab:
+      devops:
         aliases:
           - ${URL_FORGEJO}
-    profiles:
-      - devops
 
   postgresql:
     image: postgres:18
@@ -115,11 +113,9 @@ services:
       timeout: 5s
       retries: 10
     networks:
-      homelab:
+      devops:
         aliases:
           - ${URL_POSTGRESQL}
-    profiles:
-      - devops
 
 networks:
   devops:
@@ -142,31 +138,29 @@ URL_POSTGRESQL=postgresql.domaine.tld
 
 <mermaid>
 graph LR
-  subgraph homelab[Homelab – réseau Docker]
-    direction TB
-    PostgreSQL@{ shape: cyl, label: "PostgreSQL" }
-    Forgejo
-    Traefik
+  Navigateur["🌍 Navigateur<br/>https://forgejo.domaine.tld"] -->|HTTP 80| Traefik["🚦<br/>Traefik<br/>Container"]
+  Navigateur -->|HTTPS 443| Traefik
+  Dev["💻 Dev / Git Client"<br/>ssh://git@forgejo.domaine.tld:222/utilisateur/depot.git] -->|SSH 222| Forgejo["📦<br/>Forgejo<br/>Container<br/>🔑 SSH :222<br/>🌍 Web UI"]
+  subgraph DH["🐳 Docker Host"]
+      subgraph devops["🌐 devops (Docker network)"]
+          Traefik --> Forgejo
+          Forgejo --- LabelsTraefik["🏷️Labels Traefik<br/>
+          traefik.enable=true<br/>
+          router forgejo (http)<br/>
+          router forgejo-secure (https)<br/>
+          service port 3000"]
+          Forgejo --> PostgreSQL["🗄️<br/>PostgreSQL<br/>Container<br/>:5432"]
+      end
   end
-  subgraph env[Variables d’environnement]
-    direction LR
-    DB_INFO["DB_USERNAME<br/>DB_PASSWORD"]
-    ENV_FORGEJO["DB_DATABASE_FORGEJO<br/>URL_POSTGRESQL<br/>URL_FORGEJO"]
-    UID_GID["UID<br/>GID"]
-  end
-  subgraph client[Client]
-    direction LR
-    git
-    browser
-  end
-  Forgejo -->|postgres://URL_POSTGRESQL| PostgreSQL
-  git -- "ssh://URL_FORGEJO:222 (SSH - git)" --> Forgejo
-  browser -- "https://URL_FORGEJO (Web UI) -> 443" --> Traefik
-  Traefik -- "https://URL_FORGEJO (Web UI) -> 3000" --> Forgejo
-  DB_INFO --> Forgejo
-  ENV_FORGEJO --> Forgejo
-  DB_INFO --> PostgreSQL
-  UID_GID --> Forgejo
+  Traefik --> TLS["🔐 TLS / Certificat"]
+  Traefik --> Dashboard["👁️ Dashboard :8080"]
+  Traefik --> Redirection["🔁<br/>Redirection HTTP → HTTPS"]
+  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
+  class Navigateur,DH,Dev cluster;
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class Traefik,Forgejo,PostgreSQL containerStyle;
+  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
 </mermaid>
 
 Enfin on ouvre son navigateur préféré, on se connecte à l'url que l'on a indiqué dans le fichier *.env* (ici forgejo.domaine.tld) et hop on a notre Forgejo 
