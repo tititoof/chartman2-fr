@@ -37,7 +37,7 @@ Si vous cherchez une base de données robuste et scalable, PostgreSQL est l'exce
 
 #### ⚙️ Exemple
 
-Et voilà un petit exemple d'un service `Postgresql` dans un fichier *docker-compose.yml*
+Voilà un petit exemple d'un service `Postgresql` dans un fichier *docker-compose.yml*
 
 ```yml [docker-compose.yml]
 services:

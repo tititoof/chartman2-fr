@@ -18,7 +18,7 @@ En quelques lignes de configuration Docker, Jenkins devient votre moteur CI/CD, 
 
 #### ⚙️ Exemple
 
-Voici un `docker‑compose.yml` qui lance Jenkins derrière Traefik — idéal pour un homelab ou un pipeline CI/CD.
+Hop, on démarre par créer un fichier `docker‑compose.yml` qui lance Jenkins derrière Traefik — idéal pour un homelab ou un pipeline CI/CD.
 
 ```yml [docker-compose.yml]
 services:
@@ -80,7 +80,7 @@ services:
       # Port interne
       - "traefik.http.services.jenkins-secure.loadbalancer.server.port=8080"
     networks:
-      homelab:
+      devops:
         aliases:
           - ${URL_JENKINS}
 
@@ -106,7 +106,7 @@ services:
       group_add:
         - 989
       networks:
-        homelab:
+        devops:
           aliases:
             - jenkins_agent_rails
   
@@ -129,14 +129,7 @@ services:
       - ${PWD}/.docker/vuejs_agent_jenkins/agent:/home/jenkins/agent
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - homelab
-
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - homelab
+      - devops
 
 networks:
   devops:
@@ -157,3 +150,30 @@ DB_PASSWORD=superSecretPwd
 URL_FORGEJO=forgejo.domaine.tld
 URL_POSTGRESQL=postgresql.domaine.tld
 ```
+
+<mermaid>
+graph TD
+  Navigateur["🌍 Navigateur<br/>https://jenkins.dev.local"] -->|HTTP 80| Traefik["🚦<br/>Traefik"]
+  Navigateur -->|HTTPS 443| Traefik
+  subgraph DH["🐳 Docker Host"]
+      subgraph devops["🌐 devops (Docker network)"]
+          Traefik --> Jenkins["🧰<br/>Jenkins<br/>Master :8080"]
+          Jenkins --> R["🤖<br/>Jenkins Agent<br/>Rails"]
+          Jenkins --> V["🤖<br/>Jenkins Agent<br/>VueJS"]
+          Jenkins --- LabelsTraefik["🏷️<br/>Labels Traefik<br/>
+          traefik.enable=true<br/>
+          router jenkins (http)<br/>
+          router jenkins-secure (https)<br/>
+          service port 8080"]
+      end
+  end
+  Traefik --> TLS["🔐 TLS / Certificat"]
+  Traefik --> Dashboard["👁️ Dashboard :8080"]
+  Traefik --> Redirection["🔁<br/>Redirection HTTP → HTTPS"]
+  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
+  class Navigateur,DH,Dev cluster;
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class Traefik,Jenkins,R,V containerStyle;
+  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
+</mermaid>
