@@ -18,6 +18,63 @@ En quelques lignes de configuration Docker, Jenkins devient votre moteur CI/CD, 
 
 #### ⚙️ Exemple
 
+Avant de nous lancer dans la mise en place de Jenkins, il faut voir quelques points.
+
+Jenkins a besoin d'agent(s) pour fonctionner. ces eux qui vont lancer les *builds*.
+
+##### Pourquoi les agents ?
+
+Dans Jenkins, le master (ou controller) gère :
+
+- l’interface web,
+- le planificateur de jobs,
+- le stockage des configurations,
+- le démarrage des builds.
+
+Mais il ne fait pas les builds lui‑même : c’est le travail des agents (ou slaves).
+L’avantage :
+
+| Objectif | Pourquoi on en a besoin ? |
+|----------|---------------------------|
+| **Scalabilité** | Un même master peut déployer plusieurs agents sur plusieurs machines (ou conteneurs). |
+| **Isolation** | Chaque agent peut tourner sur un système d’exploitation, un JDK, des dépendances… différents. |
+| **Performance** | Les jobs lourds (tests, compilations, Docker, etc.) ne saturent pas le master. |
+| **Sécurité** | On peut limiter les droits de l’agent (par ex. `privileged: true` uniquement quand nécessaire). |
+
+
+Dans notre docker‑compose, on va avoir un master (jenkins) et deux agents (jenkins_agent_rails et jenkins_agent_vuejs).
+
+Chaque agent exécute les jobs qui lui sont assignés (Rails, Vue JS, etc.) et se connecte au master.
+
+##### Aperçu des agents que l'on va configurer dans le *docker‑compose.yml*
+
+On va déployer 2 agents :
+
+- `jenkins_agent_rails`: Spécialise sur l’environnement Rails (Ruby 2.x/3.x, bundler, gemset, etc.).
+- `jenkins_agent_vuejs`: Spécialise sur l’environnement Vue JS (Node 14+, Yarn, etc.).
+
+
+
+Voilà un tableau des agents que l'on va déployer
+
+
+| Service | Image | Ports exposés | Volumes montés | Commande | Variables d’environnement | Particularités |
+|---------|-------|---------------|----------------|----------|---------------------------|----------------|
+| `jenkins_agent_rails` | `ghcr.io/tititoof/jenkins-agent-rails:latest` | `8082:8080`, `50001:50000`, `8422:22` | Docker socket, `/usr/bin/docker`, `home`, `agent`, `~/.ssh` | `-url http://<mon_ip>:8081 e95b... agent_rails_1` | `JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 ...` | <u>Privileged</u> container, groupe `989` (docker), alias `jenkins_agent_rails`. |
+| `jenkins_agent_vuejs` | `ghcr.io/tititoof/jenkins-agent-vuejs` | `8083:8080`, `50002:50000`, `8522:22` | Docker socket, `/usr/bin/docker`, `home`, `agent` | `-url http://<mon_ip>:8081 69e3... agent_vuejs_1` | `JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 ...` | <u>Privileged</u> container, alias `jenkins_agent_vuejs`. |
+
+
+Bon, c'est un peut gros donc on va expliquer un peu
+
+- **image**: L’image Docker qui contient Jenkins Agent + dépendances spécifiques. |
+- **ports**: `8080` interne (UI agent, utile à des fins de debug). `50000` interne (JNLP). `22` pour les connexions *SSH*.
+- **command**: `-url http://<mon_ip>:8081 <agent_rails_token> <agent‑name>` , on indiquera le token pour que Jenkins puisse identifier l'agent
+- **environment**: `JENKINS_AGENT_SSH_PUBKEY` pour pouvoir se connecter à l'agent en *SSH*
+- **volumes**: Montage du `docker.sock` pour que l’agent puisse lancer des conteneurs Docker (builds Docker, tests, etc.). Le répertoire `home` et `agent` permettent de garder l’historique du job et de l’environnement d’exécution. Pour *builder* l'image de l'application grâce à Docker
+- **group_add: 989**: Ajoute le conteneur au groupe Docker (souvent le groupe `docker` a l’ID 989). Pour *builder* l'image de l'application grâce à Docker
+- **privileged: true**: Accorde des privilèges élevés (capabilities) pour exécuter des actions comme `docker run --privileged`, monter des volumes, etc. Pour *builder* l'image de l'application grâce à Docker
+
+
 Hop, on démarre par créer un fichier `docker‑compose.yml` qui lance Jenkins derrière Traefik — idéal pour un homelab ou un pipeline CI/CD.
 
 ```yml [docker-compose.yml]
@@ -93,9 +150,9 @@ services:
         - 50001:50000
         - 8422:22
       container_name: jenkins_agent_rails
-      command: -url http://<mon_ip>:8081 e95b5085555f57a5b364cb162465ef7a811cc2c5438d6aed9ed30239b50c3506 agent_rails_1
+      command: -url http://<mon_ip>:8081 <agent_rails_token> agent_rails_1
       environment:
-      - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMapu5IAvz0VW6bQCkTXRDmbxLfhfZSyMPlHhu6PoUxT toofytroll@ilmater
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 gnagnagna moi@host
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - /usr/bin/docker:/usr/bin/docker
@@ -119,9 +176,9 @@ services:
       - 50002:50000
       - 8522:22
     container_name: jenkins_agent_vuejs
-    command: -url http://<mon_ip>:8081 69e30c1bf1d12a506ba75ce7feda850c6a1b2f1d85e6e1de84df44c975dc0b96 agent_vuejs_1
+    command: -url http://<mon_ip>:8081 <agent_vuejs_token> agent_vuejs_1
     environment:
-     - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMapu5IAvz0VW6bQCkTXRDmbxLfhfZSyMPlHhu6PoUxT toofytroll@ilmater
+     - JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 gnagnagna moi@host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
@@ -177,3 +234,4 @@ graph TD
   classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
   class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
 </mermaid>
+

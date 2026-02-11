@@ -163,6 +163,15 @@ graph LR
   class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
 </mermaid>
 
+On se connecte à la base de données avec son client préféré, et éxécuté les requêtes pour créer l'utilisateur, la base de données ainsi que de données les droits à l'utilisateur
+
+```sql
+CREATE USER 'forgejo_user' WITH SUPERUSER PASSWORD 'superSecretPwd';
+CREATE DATABASE forgejo;
+GRANT ALL PRIVILEGES ON DATABASE forgejo TO forgejo_user;
+```
+
+
 Enfin on ouvre son navigateur préféré, on se connecte à l'url que l'on a indiqué dans le fichier *.env* (ici forgejo.domaine.tld) et hop on a notre Forgejo 
 
 On fait l'installation
