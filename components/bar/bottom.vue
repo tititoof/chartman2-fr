@@ -15,7 +15,7 @@
             :key="i"
           >
             <v-btn
-              :href="s.href"
+              :href="s.route"
               color="background"
               variant="flat"
               target="_blank"
@@ -75,17 +75,17 @@ const { mobile } = useDisplay()
 const dayjs = useDayjs()
 
 const currentYear = ref(dayjs().year())
-const currentRangeYears = ref(currentYear.value === 2022 ? "2022" : `2022-${currentYear.value}`)
+const currentRangeYears = ref(currentYear.value === 2022 ? '2022' : `2022-${currentYear.value}`)
 
 const social = reactive([
   {
-    name: "Facebook",
-    route: "https://www.facebook.com/christophe.hartmann1/",
+    name: 'Facebook',
+    route: 'https://www.facebook.com/christophe.hartmann1/',
     icon: 'i-mdi:facebook',
   },
   {
-    name: "Linkedin",
-    route: "https://www.linkedin.com/in/christophe-hartmann-3a297a42/",
+    name: 'Linkedin',
+    route: 'https://www.linkedin.com/in/christophe-hartmann-3a297a42/',
     icon: 'i-mdi:linkedin',
   },
 ])
