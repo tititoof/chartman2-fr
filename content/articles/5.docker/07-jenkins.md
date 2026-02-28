@@ -235,3 +235,4 @@ graph TD
   class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
 </mermaid>
 
+Ceci est une modification pour voir un fichier staging
