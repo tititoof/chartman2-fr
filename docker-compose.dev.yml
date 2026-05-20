@@ -11,6 +11,7 @@ services:
     tty: true
     volumes:
       - './:/app'
+      - './.npm:/home/node/.npm'
     environment:
       - PUID="${UID}"
       - PGID="${GID}"

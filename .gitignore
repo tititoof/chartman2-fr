@@ -40,3 +40,7 @@ coverage
 
 # Sonar
 .scannerwork
+
+.npm
+
+.storybook

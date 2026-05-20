@@ -107,6 +107,7 @@ export default defineNuxtConfig({
       appUrl: process.env.APP_URL,
       appDomain: process.env.APP_DOMAIN,
       apiBaseUrl: process.env.API_BASE_URL,
+      railsApiBase: process.env.API_BASE_URL || 'http://localhost:3001/api/v1',
       appName: process.env.APP_NAME,
       environment: process.env.APP_ENVIRONMENT,
       appVersion: process.env.APP_VERSION,

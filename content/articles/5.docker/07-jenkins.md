@@ -51,7 +51,7 @@ Chaque agent exécute les jobs qui lui sont assignés (Rails, Vue JS, etc.) et
 On va déployer 2 agents :
 
 - `jenkins_agent_rails`: Spécialise sur l’environnement Rails (Ruby 2.x/3.x, bundler, gemset, etc.).
-- `jenkins_agent_vuejs`: Spécialise sur l’environnement Vue JS (Node 14+, Yarn, etc.).
+- `jenkins_agent_vuejs`: Spécialise sur l’environnement Vue JS (Node 14+, npm, pnpm, etc.).
 
 
 
@@ -66,9 +66,9 @@ Voilà un tableau des agents que l'on va déployer
 
 Bon, c'est un peut gros donc on va expliquer un peu
 
-- **image**: L’image Docker qui contient Jenkins Agent + dépendances spécifiques. |
+- **image**: Il s'agit d'une image Docker prête à l'emploi, contenant Jenkins Agent avec les logiciels dont il a besoin. |
 - **ports**: `8080` interne (UI agent, utile à des fins de debug). `50000` interne (JNLP). `22` pour les connexions *SSH*.
-- **command**: `-url http://<mon_ip>:8081 <agent_rails_token> <agent‑name>` , on indiquera le token pour que Jenkins puisse identifier l'agent
+- **command**: `-url http://<mon_ip>:8081 <agent_rails_token> <agent‑name>`, on indiquera le token pour que Jenkins puisse identifier l'agent
 - **environment**: `JENKINS_AGENT_SSH_PUBKEY` pour pouvoir se connecter à l'agent en *SSH*
 - **volumes**: Montage du `docker.sock` pour que l’agent puisse lancer des conteneurs Docker (builds Docker, tests, etc.). Le répertoire `home` et `agent` permettent de garder l’historique du job et de l’environnement d’exécution. Pour *builder* l'image de l'application grâce à Docker
 - **group_add: 989**: Ajoute le conteneur au groupe Docker (souvent le groupe `docker` a l’ID 989). Pour *builder* l'image de l'application grâce à Docker
@@ -235,7 +235,4 @@ graph TD
   class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
 </mermaid>
 
-Ceci est une modification pour voir un fichier staging
 
-un test 3
-dd

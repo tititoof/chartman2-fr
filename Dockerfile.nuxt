@@ -19,10 +19,13 @@ RUN chown -Rf node:node /app
 
 USER node
 
-RUN pnpm config set store-dir $HOME/.local/share/pnpm/store/v3 --global
+RUN pnpm config set store-dir $HOME/.local/share/pnpm/store/v3
 #  pnpm install --build-from-source better-sqlite3 \
-RUN pnpm install \
-  && pnpm install vue
+
+RUN pnpm -v \
+ && echo 'allow-build=@parcel/watcher,@sentry/cli,@tsparticles/engine,better-sqlite3,esbuild,sharp,unrs-resolver' > /app/.npmrc \
+ && pnpm install \
+ && pnpm install vue
 
 # RUN pnpm install -g @openai/codex
 
