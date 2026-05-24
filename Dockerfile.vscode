@@ -5,4 +5,17 @@ RUN sudo dnf update -y \
 
 RUN sudo npm install -g pnpm
 
+# ── Blackstaff VS Code extension ──────────────────────────────────────
+ARG BLACKSTAFF_VERSION=0.1.4
+
+RUN curl -fsSL \
+  https://github.com/tititoof/blackstaff-vscode/releases/download/v${BLACKSTAFF_VERSION}/blackstaff-${BLACKSTAFF_VERSION}.vsix \
+  -o /tmp/blackstaff.vsix \
+  && code-server --uninstall-extension tititoof.blackstaff 2>/dev/null || true \
+  && code-server \
+     --extensions-dir /home/coder/.local/share/code-server/extensions \
+     --install-extension /tmp/blackstaff.vsix \
+  && sudo chown -R coder:coder /home/coder/.local \
+  && rm /tmp/blackstaff.vsix
+  
 WORKDIR /home/coder/project
