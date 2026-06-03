@@ -4,14 +4,14 @@
       id="hero"
       color="blue lighten-1"
     >
-     
+
       <v-img
         :min-height="mobile ? '45vh' : '70vh'"
         :max-height="mobile ? '45vh' : '70vh'"
         src="/backgrounds/background.jpeg"
         cover
       >
-        
+
         <v-container
           class="d-flex align-self-center pt-12"
           fluid
@@ -32,7 +32,7 @@
               >
                 Bienvenu sur
               </span>
-  
+
               <span
                 :class="[mobile ? 'display-3' : 'display-4']"
                 class="font-weight-black"
@@ -40,7 +40,7 @@
                 {{ appUrl }}
               </span>
             </v-col>
-  
+
             <v-btn
               class="align-self-end"
               fab

@@ -7,8 +7,7 @@
         :title="$t('global.articles')"
         icon="i-mdi:book-open-variant-outline"
       />
-
-        <articles-categories class="py-12" />
+      <articles-categories class="py-12" />
     </v-container>
   </v-row>
 </template>

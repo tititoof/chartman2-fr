@@ -1,8 +1,9 @@
 ---
 title: "Docker - Traefik"
-description: "Utilisation de Traefik avec Docker"
+description: "Découvrez comment configurer Traefik avec Docker : reverse proxy, routage automatique, HTTPS et certificats Let's Encrypt pour vos conteneurs."
 icon: "i-mdi:docker"
 article_id: "3-docker-traefik-introduction"
+color: "blue"
 ---
 
 #### 📌 Qu’est-ce que Traefik ? ![Traefik](img/traefik.webp){ width=30px }
@@ -25,15 +26,49 @@ Et en plus, c’est open-source, gratuit et animé par une grande communauté su
 
 #### 🚀 Et pourquoi c’est top avec Docker ?
 
-- Il détecte automatiquement tes conteneurs grâce à des balises (labels comme traefik.http.routers...), donc tu n’as pas besoin d’écrire des configs compliquées.
+- Il détecte automatiquement tes conteneurs grâce à des balises (labels comme traefik.http.routers...), donc vous n'avez pas besoin d’écrire des configs compliquées.
 - Gérer HTTPS devient un jeu d’enfant.
-- Tu peux faire tourner plusieurs sites sur la même machine et la même IP, facilement.
+- Vous pouvez faire tourner plusieurs sites sur la même machine et la même IP, facilement.
+
+
+#### 🏗️ Architecture générale
+
+Traefik joue le rôle de **point d'entrée unique** : toutes les requêtes arrivent sur lui, il consulte ses règles de routage (définies dans les labels Docker) et transmet au bon conteneur.
+
+<mermaid>
+graph TD
+  Navigateur["🌍<br/>https://app.localhost"] --> Traefik["🚦<br/>Traefik<br/>Container"]
+  subgraph DH["🐳 Docker Host"]
+    subgraph Net["🌐 projects_local_dev"]
+      Traefik --> A["📦<br/> App A<br/>Container"]
+      Traefik --> B["📦<br/> App B<br/>Container"]
+      A --- LabelsA["🏷️ Labels Traefik<br/>
+      traefik.enable=true<br/>
+      traefik.http.routers.appa.rule=Host(`app.localhost`)<br/>
+      traefik.http.services.appa.loadbalancer.server.port=3000"]
+      B --- LabelsB["🏷️ Labels Traefik<br/>
+      traefik.enable=true<br/>
+      traefik.http.routers.appb.rule=Host(`api.localhost`)<br/>
+      traefik.http.services.appb.loadbalancer.server.port=8000"]
+    end
+  end
+  Traefik --> TLS["🔐 TLS / Let's Encrypt"]
+  Traefik --> Dashboard["👁️ Dashboard Traefik"]
+  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
+  class Navigateur,DH cluster;
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  class Traefik,A,B containerStyle;
+  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class LabelsA,LabelsB,TLS,Dashboard volumeStyle;
+</mermaid>
 
 #### ⚙️ Exemple
 
 Pour intégrer Traefik à notre projet [Todo-list](/blog/article/1-to-do-list-initialisation){:target="_blank"}, voici comment nous pouvons le mettre en place :
 
 ##### 🗂️ Répertoires
+
+Créez les dossiers nécessaires pour stocker les certificats et les données Certbot :
 
 ```sh
 mkdir -p .docker/ovh/etc/letsencrypt \
@@ -43,7 +78,7 @@ mkdir -p .docker/ovh/etc/letsencrypt \
 
 ##### 🌐 Création du réseau interne dans Docker
 
-On crée un réseau interne pour que les containers puissent discuter entre eux
+Ce réseau permet aux conteneurs de communiquer entre eux sans exposer leurs ports sur l'hôte :
 
 ```sh
 docker network create \
@@ -53,18 +88,15 @@ docker network create \
 
 ##### 🔑 Création des token api OVH
 
-Tout est dans l'article de [Rémi Flandrois](https://remiflandrois.fr/2020/03/26/creation-certificat-wildcard-ovh/){:target="_blank"}, la partie de configuration du Token API OVH.
+La génération du token est détaillée dans l'article de [Rémi Flandrois](https://remiflandrois.fr/2020/03/26/creation-certificat-wildcard-ovh/){:target="_blank"}.
 
+Sauvegardez le fichier obtenu dans `.docker/ovh/.ovh-api` — il sera monté dans le conteneur `certbot/dns-ovh` pour générer les certificats wildcard.
 
-On sauvegarde le fichier dans `./docker/ovh/.ovh-api`
-
-
-On utilisera l'image `certbot/dns-ovh` pour générer nos certificats
-
+> 💡 Le challenge DNS-01 utilisé ici permet de générer un certificat wildcard (`*.domain.tld`) sans exposer votre serveur sur internet, contrairement au challenge HTTP-01 classique.
 
 ##### 📝 Configuration
 
-On créer notre fichier docker-compose.yml comme ci-dessous (en adaptant à vos besoins)
+Adaptez le fichier `docker-compose.yml` à votre domaine :
 
 ```yml [./docker-compose.yml]
 services:
@@ -114,7 +146,7 @@ networks:
     external: true
 ```
 
-Ensuite on crée les fichiers de configuration de traefik dont on a besoin pour la gestion des certificats (OVH) et les ports des points d'entrée (http, https, etc...)
+Créez ensuite les deux fichiers de configuration Traefik — l'un pour les certificats, l'autre pour les entrypoints :
 
 
 ```yml [~/Projects/.docker/traefik/tls.yml]
@@ -154,38 +186,10 @@ providers:
     defaultRule: 'HostRegexp(`{{ index .Labels "com.docker.compose.service"}}.<domain.tld>`,`{{ index .Labels "com.docker.compose.service"}}-{dashed-ip:.*}.<domain.tld>`)'
 ```
 
-<mermaid>
-graph TD
-  Navigateur["🌍<br/>https://app.localhost"] --> Traefik["🚦<br/>Traefik<br/>Container"]
-  subgraph DH["🐳 Docker Host"]
-    subgraph Net["🌐 projects_local_dev"]
-      Traefik --> A["📦<br/> App A<br/>Container"]
-      Traefik --> B["📦<br/> App B<br/>Container"]
-      A --- LabelsA["🏷️ Labels Traefik<br/>
-      traefik.enable=true<br/>
-      traefik.http.routers.appa.rule=Host(`app.localhost`)<br/>
-      traefik.http.services.appa.loadbalancer.server.port=3000"]
-      B --- LabelsB["🏷️ Labels Traefik<br/>
-      traefik.enable=true<br/>
-      traefik.http.routers.appb.rule=Host(`api.localhost`)<br/>
-      traefik.http.services.appb.loadbalancer.server.port=8000"]
-    end
-  end
-  Traefik --> TLS["🔐 TLS / Let's Encrypt"]
-  Traefik --> Dashboard["👁️ Dashboard Traefik"]
-  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
-  class Navigateur,DH cluster;
-  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
-  class Traefik,A,B containerStyle;
-  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
-  class LabelsA,LabelsB,TLS,Dashboard volumeStyle;
-</mermaid>
----
-
-On execute le service `certbot-init` la première fois pour récupérer les certificats - sans oublier de remplacer *<domaine.tld>* par votre domaine 😊
+Executez le service `certbot-init` la première fois pour récupérer les certificats - sans oublier de remplacer *<domaine.tld>* par votre domaine 😊
 
 ```sh
-docker compose run -rm certbot-init
+docker compose run --rm certbot-init
 ```
 
 Il ne reste plus qu'à démarrer les services
@@ -195,3 +199,19 @@ docker compose up -d
 ```
 
 Et nous avons un traefik avec nos certificats ! 👍️
+
+#### ✅ Conclusion
+
+Traefik est bien plus qu'un simple reverse proxy : c'est la porte d'entrée de toute notre infrastructure Docker. En lisant les labels de chaque conteneur, il se reconfigure automatiquement à chaque démarrage — plus besoin de toucher à la config quand vous ajoutez un nouveau service.
+
+Avec les certificats wildcard OVH en place, tous vos sous-domaines sont sécurisés en HTTPS sans aucune manipulation supplémentaire.
+
+Dans le prochain article, nous allons mettre Traefik à l'épreuve en déployant [Postgresql](/blog/article/4-docker-postgresql-init) derrière lui — notre premier vrai service de la plateforme CI/CD.
+
+---
+
+#####
+
+::right-note
+Cet article a été rédigé avec l'assistance d'IA.
+::

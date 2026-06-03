@@ -12,11 +12,11 @@ export default defineConfig({
     'i-mdi:vuetify',
     'i-mdi:language-ruby-on-rails',
     'i-mdi:vuejs',
-    'i-mdi:docker'
+    'i-mdi:docker',
   ],
   presets: [
     presetIcons({
       scale: 1.2, // scale the icons
     }),
-  ]
+  ],
 })

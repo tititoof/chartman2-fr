@@ -49,7 +49,7 @@
               </v-card-text>
               <v-card-actions class="d-flex align-end">
                 <v-btn
-                  class="font-weight-black"
+                  class="font-weight-black mt-4"
                   color="info"
                   :nuxt="true"
                   :to="`/blog/article/` + article_id"

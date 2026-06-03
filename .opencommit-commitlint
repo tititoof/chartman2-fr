@@ -1,0 +1,14 @@
+{
+  "hash": "5b51ab20ccb1d80e534e818d834e6f452ed441730f3c86865887012a411c545f",
+  "prompts": [],
+  "consistency": {
+    "française": {
+      "localLanguage": "française",
+      "commitFix": "fix(server): Use uppercase PORT constant instead of lowercase port variable",
+      "commitFeat": "feat(server): Allow server to listen on a port specified through environment variable",
+      "commitFixOmitScope": "fix: Use uppercase PORT constant instead of lowercase port variable",
+      "commitFeatOmitScope": "feat: Allow server to listen on a port specified through environment variable",
+      "commitDescription": "Improved server configuration by using uppercase PORT constant and allowing dynamic port selection"
+    }
+  }
+}

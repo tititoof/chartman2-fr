@@ -1,13 +1,15 @@
-FROM node:lts-alpine
+FROM node:lts-slim
 
-RUN npm install -g pnpm@8.15.4
+ENV PNPM_HOME="/home/node/.local/share/pnpm"
+ENV PATH="/home/node/.local/share/pnpm:$PATH"
+
+RUN npm install -g pnpm@latest
 
 WORKDIR /app
 
-RUN apk --no-cache add git \
-    && rm -rf /var/cache/apk/*
-
-# COPY ./package*.json /app/
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
@@ -18,6 +20,4 @@ USER node
 RUN pnpm config set store-dir /home/node/.local/share/pnpm/store/v3 --global \
     && pnpm install
 
-ENV PATH ./node_modules/.bin/:$PATH
-
-# ENTRYPOINT ["/bin/sh"]
+ENV PATH="./node_modules/.bin/:$PATH"

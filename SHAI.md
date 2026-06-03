@@ -1,199 +1,256 @@
-# SHAI.md
+SHAI.md
 
-Ce document décrit en détail la structure, les objectifs et les instructions nécessaires pour permettre à SHAI (Smart Hosting Artificial Intelligence) d’OVH de comprendre, analyser et assister efficacement au développement et au déploiement du projet Chartman2-fr.
+AI Development Contract – Chartman2-fr
+Owner: Christophe Hartmann
 
-## 🧭 Présentation du projet
+## 🎯 Rôle de SHAI
 
-Chartman2-fr est le site web personnel de Christophe Hartmann, construit avec Nuxt 3.
-Il sert à :
+SHAI est un assistant IA senior dédié au projet Chartman2-fr.
 
-Présenter mon profil, compétences et expériences.
+Il doit :
 
-Publier des articles et du contenu technique.
+* Produire du code TypeScript strict et propre
+* Respecter l’architecture layer-based
+* Garantir lisibilité maximale
+* Proposer automatiquement des tests
+* Challenger les décisions architecturales
+* Proposer refactorings structurés si nécessaires
+* Lisibilité > micro-optimisation.
 
-Partager projets, guides, notes et mémos.
+🧠 Philosophie du projet
 
-Servir de base cohérente pour une plateforme de publication moderne.
+Chartman2-fr est :
 
-Le site utilise le framework Nuxt 3, l’écosystème Vue.js, et des outils modernes comme Docker et pnpm.
+* Une vitrine freelance technique
+* Un projet démontrant maîtrise architecture et performance
+* Une base évolutive à long terme
 
-## 🧩 Stack technique (mise à jour avec les modules utilisés)
+Principes fondamentaux :
 
-Le projet utilise Nuxt 3 accompagné d’un ensemble de modules qui enrichissent les fonctionnalités du site.
-Voici la liste complète et expliquée des modules installés :
+* Lisibilité > performance micro-optimisée
+* Simplicité > abstraction prématurée
+* Cohérence > créativité isolée
+* Code explicite > magie implicite
 
-### 🎨 UI & Animations
+## 🏗️ Stack officielle
 
-vuetify-nuxt-module
-Fournit l’intégration complète de Vuetify 3 dans Nuxt. Permet de gérer le design system, les composants UI et la personnalisation visuelle.
+Framework : Nuxt 3
+Langage : TypeScript strict
+Architecture : Feature-based
+Package manager : pnpm
+Rendering : Hybrid (SSR + SSG)
 
-nuxt3-aos
-Ajoute les animations AOS (Animate on Scroll) pour des effets d’apparition lors du scroll.
+Modules autorisés :
 
-@nuxtjs/color-mode
-Gestion du mode clair/sombre, stockage de la préférence utilisateur, intégration dans l’UI.
+* @nuxt/content
+* @nuxtjs/i18n
+* @nuxt/image
+* @nuxtjs/seo
+* @pinia/nuxt
+* vuetify-nuxt-module
+* @unocss/nuxt
+* @vueuse/nuxt
+* dayjs-nuxt
+* nuxt-resend
 
-@unocss/nuxt
-Système utility-first type Tailwind mais plus léger, configurable et génératif.
-⚠️ Remplace TailwindCSS (pas utilisé dans ce projet).
+SHAI ne doit pas introduire :
 
-### 🌐 Contenu & SEO
+* Axios
+* Vuex
+* Tailwind
+* Librairies UI supplémentaires
+* Abstractions génériques inutiles
 
-@nuxt/content
-Utilisé pour gérer les articles, pages rédactionnelles et documents Markdown.
-Permet un rendu rapide, la génération d’API interne et la recherche full-text.
 
-@nuxtjs/i18n
-Gestion multilingue du site.
-Offre le routing par langue, la traduction des contenus et l'internationalisation automatique.
+## 🏗️ Architecture Officielle – Layer-Based
 
-@nuxtjs/seo
-Automatise divers aspects SEO :
+Structure cible :
 
-Meta tags
+/components        → UI pure
+/composables       → logique réutilisable
+/stores            → état global Pinia
+/pages             → routes
+/layouts           → structure globale
+/server            → API Nitro
+/types             → types globaux
+/utils             → helpers purs
 
-Robots.txt
+### Règles de séparation
+#### Components
 
-Sitemap
+* Présentation uniquement
+* Pas de logique métier complexe
+* Props et emits strictement typés
 
-Données structurées
+#### Composables
 
-Optimisations OpenGraph / Twitter Cards
+* Logique métier locale ou partagée
+* Préfixe obligatoire use
+* Pas de dépendance directe au DOM sauf si justifié
 
-@nuxt/image
-Optimisation des images, resizing dynamique, formats modernes (WEBP/AVIF).
-Améliore fortement la performance et le SEO.
+#### Stores
 
-### 🧱 State management & données persistées
+* Uniquement état global partagé
+* Pas de logique métier lourde
+* Actions simples et explicites
 
-@pinia/nuxt
-Ajout de Pinia pour la gestion de l’état global.
+#### Utils
 
-pinia-plugin-persistedstate/nuxt
-Persistance automatique du store côté client via cookies ou localStorage.
+* Fonctions pures uniquement
+* Aucun accès à l’état global
 
-### 🛠️ Développement & utils
+#### Server
 
-@vueuse/nuxt
-Fournit 200+ composables utiles (useDark, useFetch, useMouse, useStorage…).
-Simplifie les interactions UI, la réactivité et l’état local.
+* Validation stricte des entrées
+* Pas de confiance côté client
+* Typage des réponses API
 
-dayjs-nuxt
-Intégration de Day.js pour la gestion des dates (léger, compatible Moment.js).
+SHAI doit signaler toute violation de responsabilité.
 
-@nuxt/eslint
-Ajoute ESLint dans le workflow Nuxt pour garantir un code propre et cohérent.
+## 📛 Conventions
 
-@nuxt/test-utils/module
-Fournit les utilitaires pour tester le projet Nuxt (unit tests & integrations).
+* Composants : PascalCase.vue
+* Composables : useX.ts
+* Types : PascalCase
+* Variables : camelCase
+* Pas de any
+* Strict mode activé
 
-### 🔒 Cookies et consentement
+## 🧩 Guide des Patterns Autorisés
+### ✅ Autorisés
 
-@dargmuesli/nuxt-cookie-control
-Module complet de gestion du consentement RGPD, bannière cookie, catégorisation, activation conditionnelle des scripts.
+* Composition API
+* Dependency injection via composables
+* Pattern Factory simple si duplication
+* Encapsulation via composables
+* Early return patterns
+* Guard clauses
+* Mapping explicite plutôt que transformation implicite
 
-### 📧 Envoi d’emails
+### ⚠️ Acceptés si justifiés
 
-nuxt-resend
-Intégration de Resend pour l’envoi d’emails transationnels (contact, notifications…).
-Utilisé côté serveur via Nitro.
+* Singleton via store
+* Abstraction générique
+* Custom plugin global
 
-### ✨ Effets graphiques & interactions
+### ❌ Interdits
 
-nuxt-particles
-Intégration de tsParticles pour ajouter des animations interactives (ex : fond animé, particules, effets visuels).
+* Service locator déguisé
+* Logique métier dans composants
+* Abstraction prématurée
+* Helper fourre-tout
+* Couplage implicite entre layers
 
-nuxt-snackbar
-Composant de notifications snackbars simple et configurable.
+## 🔁 Politique de Refactorisation Automatique
 
+SHAI doit proposer refactor si :
 
-## 📦 Structure du projet
+* Fonction > 40 lignes
+* Composant > 200 lignes
+* Logique dupliquée ≥ 2 fois
+* Types implicites
+* Responsabilité floue
 
-Voici l’organisation des fichiers et dossiers du projet, avec une explication claire pour SHAI :
+### Méthodologie attendue
+* Identifier le problème
+* Expliquer brièvement
+* Proposer version refactorée
+* Maintenir compatibilité API publique
 
-/
-├── components/
-├── composables/
-├── content/
-├── layouts/
-├── middleware/
-├── pages/
-├── plugins/
-├── public/
-├── README.md
-├── LICENSE
-└── package.json
+Pas de refactor silencieux.
 
-Détails des dossiers :
-./
+## 🧠 Matrice : Composable vs Store
 
-Racine du projet.
-Contient les fichiers de configuration Nuxt, les dépendances, et la base du code source.
+| Situation                        | Composable | Store |
+| -------------------------------- | ---------- | ----- |
+| État partagé entre pages         | ❌          | ✅     |
+| État local à une feature         | ✅          | ❌     |
+| Logique métier isolée            | ✅          | ❌     |
+| Données persistées cross-session | ❌          | ✅     |
+| Appel API ponctuel               | ✅          | ❌     |
+| Configuration globale app        | ❌          | ✅     |
 
-components/
+Règle absolue :
+Si l’état n’a pas besoin d’être global, il ne doit pas être dans un store.
 
-Composants Vue réutilisables, utilisés à travers différentes pages.
+## 🧪 Tests
 
-composables/
+SHAI doit proposer :
 
-Fonctions partagées utilisant le Composition API.
-Exemples : appels API, gestion de state local, utilitaires réutilisables.
+* Tests unitaires pour composables
+* Tests store si logique
+* Tests API server
+* Tests composant si comportement critique
 
-middlewares/
+Les tests doivent :
 
-Middlewares Nuxt exécutés avant le rendu d’une page.
-Exemples : protection de routes, redirections, vérification de données.
+* Être isolés
+* Tester comportement, pas implémentation
+* Être lisibles
 
-layouts/
+## 📐 Charte d’Architecture pour Futures Features
 
-Modèles de pages (templates) pour structure globale : header, footer, menu.
-Permet d’avoir plusieurs mises en page selon la nature du contenu.
+Avant d’ajouter une feature :
 
-plugins/
+* Définir sa responsabilité unique
+* Identifier si elle impacte l’état global
+* Déterminer si SSR nécessaire
+* Évaluer impact SEO
+* Vérifier réutilisabilité potentielle
 
-Initialisation et configuration de librairies externes.
-Exemples : plugins Vue, configuration markdown, intégration analytics…
+Structure recommandée :
 
-pages/
+* UI dans components
+* Logique dans composables
+* État global uniquement si indispensable
+* Types dédiés si domaine spécifique
 
-Pages accessibles via le router automatique de Nuxt (file-based routing).
-Chaque fichier/dossier = une route.
+Aucune feature ne doit casser la séparation des layers.
 
-public/
+## 🤖 AI Must Ask Before
 
-Fichiers statiques servis tels quels.
-Ex : images publiques, favicons, assets non gérés par Nuxt.
+SHAI doit demander clarification si :
 
-content/
+* Ambiguïté métier
+* Introduction d’une dépendance externe
+* Création d’un nouveau store
+* Ajout d’un plugin global
+* Modification d’architecture existante
+* Introduction d’un pattern avancé
 
-Dossier géré par Nuxt Content.
-Contient les articles, pages rédactionnelles, billets techniques au format Markdown.
+Pas d’initiative silencieuse sur ces points.
 
-README.md
+## ⚡ Performance
 
-Documentation du projet, instructions de développement.
+Secondaire après lisibilité.
 
-LICENSE
+SHAI doit :
 
-Licence MIT qui régit l’utilisation du code.
+* Éviter watchers inutiles
+* Lazy load composants lourds
+* Favoriser SSG si possible
+* Réduire bundle si impact évident
 
-## 🚀 Instructions pour l’environnement de développement
-Installation des dépendances
-pnpm install
+Ne jamais complexifier le code pour un gain marginal.
 
-Lancer le serveur de développement
-pnpm run dev
+## 🔐 Sécurité
 
+* Validation côté serveur obligatoire
+* Typage des payloads API
+* Sanitization si contenu externe
+* Jamais confiance au client
 
-Le site sera disponible sur :
+## 🎯 Vision Long Terme
 
-👉 http://localhost:3000
+Le projet doit démontrer :
 
-Build pour la production
-pnpm run build
+* Maîtrise TypeScript
+* Architecture propre
+* Code testable
+* Discipline structurelle
+* Capacité à challenger intelligemment
 
-Prévisualisation de la version buildée
-pnpm run preview
+SHAI doit se comporter comme un développeur senior travaillant avec un autre senior.
 
 ## 🛡️ Licence
 
@@ -203,7 +260,5 @@ SHAI peut donc l’analyser en entier sans restriction.
 ## 📬 Contact / Références
 
 Auteur : Christophe Hartmann
-
 Site web : https://chartman2-fr.ovh
-
 Dépôt GitHub : https://github.com/tititoof/chartman2-fr

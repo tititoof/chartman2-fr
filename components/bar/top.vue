@@ -16,7 +16,7 @@
     <v-app-bar-title>
       {{ $t('global.name') }}
     </v-app-bar-title>
-    
+
     <template #append>
       <v-btn
         icon="i-mdi:theme-light-dark"
@@ -60,8 +60,8 @@
     </template>
   </v-app-bar>
 </template>
+
 <script setup>
-import { useCookies } from '@vueuse/integrations/useCookies'
 import { useApplicationStore } from '~/stores/application'
 
 const applicationStore = useApplicationStore()
@@ -90,7 +90,7 @@ const token = useCookie('token')
 const visibleMenuItems = computed(() => {
   const isLoggedIn = !!token.value
 
-  return menuItems.filter(item => {
+  return menuItems.filter((item) => {
     if (item.to === '/auth/sign-in') {
       return !isLoggedIn
     }
@@ -109,5 +109,4 @@ const toggleTheme = () => {
 const backToHomePage = () => {
   router.push({ path: '/' })
 }
-
 </script>

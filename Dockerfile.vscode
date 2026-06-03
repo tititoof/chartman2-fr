@@ -3,13 +3,19 @@ FROM codercom/code-server:fedora
 RUN sudo dnf update -y \
   && sudo dnf install -y fira-code-fonts java-latest-openjdk.x86_64 nodejs 
 
-RUN sudo npm install -g pnpm \
-  && sudo npm install -g aicommit2 \
-  && sudo aicommit2 config set locale="fr" \
-  && sudo aicommit2 config set type="gitmoji" \
-  && sudo aicommit2 config set includeBody="true" \
-  && sudo aicommit2 config set OLLAMA.host=project-ollama \
-  && sudo aicommit2 config set OLLAMA.model=<your model> \
-  && sudo aicommit2 config set OLLAMA.numCtx=4096
+RUN sudo npm install -g pnpm
 
+# ── Blackstaff VS Code extension ──────────────────────────────────────
+ARG BLACKSTAFF_VERSION=0.1.4
+
+RUN curl -fsSL \
+  https://github.com/tititoof/blackstaff-vscode/releases/download/v${BLACKSTAFF_VERSION}/blackstaff-${BLACKSTAFF_VERSION}.vsix \
+  -o /tmp/blackstaff.vsix \
+  && code-server --uninstall-extension tititoof.blackstaff 2>/dev/null || true \
+  && code-server \
+     --extensions-dir /home/coder/.local/share/code-server/extensions \
+     --install-extension /tmp/blackstaff.vsix \
+  && sudo chown -R coder:coder /home/coder/.local \
+  && rm /tmp/blackstaff.vsix
+  
 WORKDIR /home/coder/project
