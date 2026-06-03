@@ -26,34 +26,17 @@ Avec un fichier simple, appelé *docker-compose.yml*, vous composez toutes vos d
 Voici quelques avantages qui vont vous convaincre :  
 
 
-- **Configuration unique et claire**
+- **Configuration unique et claire** : Un seul fichier YAML pour décrire tous vos services, réseaux et volumes. Facile à partager entre collègues, utiliser dans vos pipelines CI/CD ou même en production.  
 
-Un seul fichier YAML pour décrire tous vos services, réseaux et volumes. Facile à partager entre collègues, utiliser dans vos pipelines CI/CD ou même en production.  
+- **Isolation des services** : Chaque composant fonctionne dans son propre conteneur, évitant ainsi les conflits de dépendances (par exemple, différentes versions de PHP, MySQL ou Redis) et assurant une stabilité optimale.  
 
+- **Démarrage dans le bon ordre** : Grâce à la directive *depends_on*, vos services se lancent dans le bon ordre, et avec les health‑checks, vous êtes sûr qu’ils sont prêts à recevoir du trafic.  
 
-- **Isolation des services**
+- **Gestion ultra simple** : Les commandes comme *docker compose up*, *down*, *ps*, *logs* ou *exec* sont intuitives. En quelques secondes, vous avez tout sous contrôle.  
 
-Chaque composant fonctionne dans son propre conteneur, évitant ainsi les conflits de dépendances (par exemple, différentes versions de PHP, MySQL ou Redis) et assurant une stabilité optimale.  
+- **Résilience et persistance** : Les volumes montés sur votre machine permettent de conserver vos données (bases, fichiers téléchargés…) même si vous supprimez un conteneur.  
 
-
-- **Démarrage dans le bon ordre**
-
-Grâce à la directive *depends_on*, vos services se lancent dans le bon ordre, et avec les health‑checks, vous êtes sûr qu’ils sont prêts à recevoir du trafic.  
-
-
-- **Gestion ultra simple**
-
-Les commandes comme *docker compose up*, *down*, *ps*, *logs* ou *exec* sont intuitives. En quelques secondes, vous avez tout sous contrôle.  
-
-
-- **Résilience et persistance**
-
-Les volumes montés sur votre machine permettent de conserver vos données (bases, fichiers téléchargés…) même si vous supprimez un conteneur.  
-
-
-- **Un écosystème complet**
-
-Docker Compose s’intègre facilement avec Docker Swarm, Kubernetes (via Kompose) ou dans vos pipelines CI/CD pour des tests d’intégration fiables et répétables.  
+- **Un écosystème complet** : Docker Compose s’intègre facilement avec Docker Swarm, Kubernetes (via Kompose) ou dans vos pipelines CI/CD pour des tests d’intégration fiables et répétables.  
 
 <mermaid>
 flowchart LR
@@ -137,7 +120,7 @@ services:
     image: mysql:5.7
     volumes:
       - db_data:/var/lib/mysql
-    restart: unless-stop
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: somewordpress
       MYSQL_DATABASE: wordpress
@@ -235,7 +218,7 @@ Ainsi, toutes vos données restent en sécurité, même si vous supprimez ou red
 
 
 ```yaml [./docker-compose.yml]
-  restart: unless-stop
+  restart: unless-stopped
 ```
 
 Le conteneur se relancera automatiquement s’il s’arrête tout seul, sauf si vous le stoppez manuellement.
@@ -269,6 +252,23 @@ Identifiants d’un utilisateur supplémentaire ayant accès à la base.
 wordpress:
   depends_on:
     - db
+```
+
+> 💡 Pour vraiment attendre que MySQL soit prêt, utilisez un `healthcheck` :
+
+```yaml
+db:
+  image: mysql:5.7
+  healthcheck:
+    test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
+
+wordpress:
+  depends_on:
+    db:
+      condition: service_healthy
 ```
 
 Ce paramètre indique que WordPress doit démarrer après la base de données, pour s’assurer que MySQL est bien en route. 
@@ -320,7 +320,23 @@ volumes:
 
 Ce volume nommé **db_data** est utilisé pour stocker de façon durable toutes vos données MySQL. La syntaxe `{}` indique qu’il est créé avec la configuration par défaut, sans réglages particuliers.
 
-##### 📋 Résumé 
+#### 🖥️ Commandes essentielles
+
+Chaque jour, il vous suffit d'utiliser quelques boutons pour gérer vos conteneurs. Prenez juste quelques instants pour apprendre à les utiliser, cela vous fera gagner beaucoup de temps ! 🚀
+
+| Commande | Description |
+|----------|-------------|
+| `docker compose up -d` | Démarre tous les services en arrière-plan |
+| `docker compose down` | Arrête et supprime les conteneurs |
+| `docker compose down -v` | Idem + supprime les volumes |
+| `docker compose ps` | Liste les conteneurs actifs |
+| `docker compose logs -f` | Affiche les logs en temps réel |
+| `docker compose exec db bash` | Ouvre un terminal dans le conteneur `db` |
+| `docker compose restart wordpress` | Redémarre un service spécifique |
+| `docker compose pull` | Met à jour les images |
+
+
+#### 📋 Résumé 
 
 Ce fichier `docker-compose.yml` met en place un environnement WordPress complet :  
 - La base de données MySQL est persistante grâce à un volume dédié.  
@@ -329,3 +345,23 @@ Ce fichier `docker-compose.yml` met en place un environnement WordPress complet 
 - Même si vous supprimez ou redémarrez les conteneurs, vos données restent sauvegardées dans le volume.
 
 C’est une façon simple et efficace de faire fonctionner un WordPress localement avec sa base de données, prête à l’emploi !
+
+#### ✅ Conclusion
+
+Docker Compose, ce n'est pas juste un fichier Word ou Excel, c'est comme un chef d'orchestre pour vos applications. Il permet de gérer facilement plusieurs éléments comme des bases de données, des sites web, des outils pour accélérer le développement ou d'autres services, tout cela en un seul endroit.
+
+Grâce à ce fichier central, que vous pouvez partager facilement avec votre équipe, vous décrivez toute votre infrastructure. Fini les longues explications ou les configurations différentes selon les personnes : avec une seule commande, vous pouvez remettre en marche une version exacte du même environnement, peu importe où vous vous trouvez.
+
+Que vous travailliez sur un simple blog WordPress, une API avec Laravel, une application Rails ou un ensemble de plusieurs services, Docker Compose vous fait gagner du temps, rend vos déploiements plus sûrs et facilite votre quotidien.
+
+Dans les prochains articles, nous verrons comment ajouter petit à petit les éléments essentiels d’un environnement moderne : une base de données PostgreSQL, un outil pour gérer le trafic web comme [Traefik](/blog/article/3-docker-traefik-introduction), un service pour tester les mails, Forgejo pour gérer votre code, et bien d’autres. Chacun sera intégré dans le fichier docker-compose.yml pour créer un environnement complet, facile à refaire et à maintenir.
+
+Si Docker permet de faire tourner vos applications, Docker Compose est comme le tableau de bord qui facilite la gestion de tout votre système d’un seul coup de commande. 🚀 🐳
+
+---
+
+#####
+
+::right-note
+Cet article a été rédigé avec l'assistance d'IA.
+::

@@ -11,39 +11,42 @@
     >
       Bonjour ! <br>
       Je m'appelle Christophe Hartmann,<br>
-      Je suis passionné de judo et d'informatique depuis tout petit, curieux de
-      nature, j'adore découvrir et apprendre.<br>
-      Je suis tombé amoureux de Ruby à travers son framework
+      Développeur passionné depuis l'enfance, j'aide les équipes à construire des applications solides et des infrastructures qui ne lâchent pas.<br>
+      Mon terrain de jeu : 
       <v-btn
         variant="plain"
         class="text-decoration-none font-italic mx-0 px-0"
         @click="useScroll('features')"
       >
-        Ruby on Rails
+        Ruby on Rails 
       </v-btn>
+      pour la solidité du backend,
       <br>
-      Ce langage me sert pour gérer les données (backend). Côté utilisateur
-      (frontend), VueJS avec le framework
       <v-btn
         variant="plain"
         class="text-decoration-none font-italic mx-0 px-0"
         @click="useScroll('features')"
       >
-        NuxtJS
+        Vue.js / Nuxt
+      </v-btn> pour des interfaces fluides, et
+      <v-btn
+        variant="plain"
+        class="text-decoration-none font-italic mx-0 px-0"
+        @click="useScroll('features')"
+      >
+        Docker
       </v-btn>
-      (simple rapide et efficace) m'a redonné le goût du JavaScript.<br>
-      Afin de comprendre le
       <v-btn
         variant="plain"
         class="text-decoration-none font-italic mx-0 px-0"
         @click="useScroll('features')"
       >
         CI / CD
-      </v-btn>, j'ai mis en place le mien avec Gitea, Jenkins, SonarQube et
-      Openproject.<br>
-      Judoka, j'applique ce que m'ont transmis mes senseïs
-      dans mon travail.
-      Une question ? envoyez moi un message
+      </v-btn>, pour que tout ça tourne sans accroc en production.<br>
+      J'ai monté ma propre infrastructure DevOps — Forgejo, Jenkins, SonarQube, OpenProject — pas par obligation,
+      mais parce que comprendre les outils de l'intérieur change tout à la façon dont on les utilise.<br>
+      Judoka depuis toujours, j'apporte sur chaque mission ce que le tatami m'a appris : rigueur, écoute, et l'humilité de toujours progresser.
+      Une question ? Un projet ? envoyez moi un
       <v-btn
         variant="plain"
         class="text-decoration-none font-italic mx-0 px-0"

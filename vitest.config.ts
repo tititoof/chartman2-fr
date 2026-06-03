@@ -31,5 +31,15 @@ export default defineVitestConfig({
       include: ['components', 'composables', 'stores', 'pages', 'app'],
       all: true,
     },
+    alias: [
+      {
+        find: /^\/.*\.(svg|png|jpg|webp|gif)$/,
+        replacement: '/tests/mocks/assets.ts',
+      },
+      {
+        find: 'universal-cookie',
+        replacement: '/tests/mocks/universal-cookie.ts',
+      }
+    ]
   },
 })

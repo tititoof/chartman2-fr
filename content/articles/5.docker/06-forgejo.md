@@ -5,25 +5,21 @@ icon: "i-mdi:docker"
 article_id: "6-docker-forgejo-init"
 ---
  
-Voici [Forgejo](https://forgejo.org/), un logiciel de forge logicielle libre qui se base sur Gitea, mais avec une touche d’indépendance, de transparence et une gouvernance participative par sa communauté. Son but ? Créer un espace convivial où vous pouvez héberger votre code, gérer vos dépôts Git, suivre vos issues, centraliser votre documentation et automatiser vos workflows CI/CD. Et tout cela, bien sûr, sous une licence libre, sans dépendre d’une entreprise privée.
-
 #### 📌 Forgejo ![Forgejo](/img/Forgejo_logo.svg){ width=30px }
-Vous cherchez une solution Git self‑hosted : sans cloud, sans abonnement, tout sous votre contrôle ?  
-[Forgejo](https://forgejo.org){:target="_blank"} est le fork de Gitea qui combine performance, simplicité et modernité.  
-En un seul conteneur Docker, vous obtenez :
 
-- **Serveur Git complet** : gestion de dépôts, pull‑requests, branchements…
-- **Gestion de projets** : issues, milestones, projets Kanban, wiki intégré
-- **Intégration continue** : webhooks vers Jenkins, GitHub Actions, GitLab CI…
-- **Sécurité et audit** : authentification LDAP/OAuth2, chiffrement TLS, logs centralisés
-- **Interface web conviviale** : recherche, visualisation, éditeur Markdown, visualisation de graphe
-- **Extensibilité** : plugins, API REST, intégrations tierces
+[Forgejo](https://forgejo.org){:target="_blank"} est une forge logicielle libre et self-hosted,
+fork de Gitea à gouvernance communautaire. En un seul conteneur Docker, vous obtenez une
+plateforme Git complète, sans cloud ni abonnement.
 
-En résumé, Forgejo vous donne toute la puissance d’une plateforme Git cloud sans quitter votre homelab.
+- **Serveur Git complet** : dépôts, pull-requests, branches, tags…
+- **Gestion de projets** : issues, milestones, Kanban, wiki intégré
+- **Intégration continue** : webhooks vers Jenkins, GitHub Actions, GitLab CI…
+- **Sécurité** : authentification LDAP/OAuth2, TLS, logs centralisés
+- **API REST** : intégrations tierces, automatisation, scripts
 
 #### ⚙️ Exemple
 
-Voici un `docker‑compose.yml` avec Forgejo derrière Traefik, accessible via une belle url *forgejo.domaine.tld* 😉
+Voici un `docker-compose.yml` avec Forgejo derrière Traefik, accessible via `forgejo.domaine.tld` 😉 :
 
 ```yml [docker-compose.yml]
 services:
@@ -80,12 +76,16 @@ services:
       # HTTP
       - traefik.http.routers.forgejo.rule=Host(`${URL_FORGEJO}`)
       - traefik.http.routers.forgejo.entrypoints=http
+      - traefik.http.routers.forgejo.middlewares=forgejo-redirect
 
       # HTTPS
       - traefik.http.routers.forgejo-secure.service=forgejo-secure
       - traefik.http.routers.forgejo-secure.rule=Host(`${URL_FORGEJO}`)
       - traefik.http.routers.forgejo-secure.entrypoints=https
       - traefik.http.routers.forgejo-secure.tls=true
+
+      # HTTP → HTTPS redirection
+      - traefik.http.middlewares.forgejo-redirect.redirectscheme.scheme=https
 
       # Port interne
       - traefik.http.services.forgejo-secure.loadbalancer.server.port=3000
@@ -121,6 +121,12 @@ networks:
   devops:
     driver: bridge
 ```
+
+> ⚠️ `--api.insecure=true` expose le dashboard Traefik sans authentification.
+> Acceptable en développement local, à ne jamais utiliser en production.
+
+> ⚠️ Les ports `3000`, `5432` exposés directement sont utiles en développement.
+> En production, supprimez-les : Traefik et le réseau Docker interne suffisent.
 
 ```bash [.env]
 UID=1000
@@ -163,41 +169,60 @@ graph LR
   class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
 </mermaid>
 
-On se connecte à la base de données avec son client préféré, et éxécuté les requêtes pour créer l'utilisateur, la base de données ainsi que de données les droits à l'utilisateur
+> 💡 En ajoutant `POSTGRES_DB` dans les variables d'environnement du service PostgreSQL,
+> Docker crée automatiquement la base et les droits au premier démarrage — aucune
+> intervention manuelle nécessaire.
+>
+> Si vous connectez Forgejo à une instance PostgreSQL **existante**, exécutez ces requêtes :
 
 ```sql
-CREATE USER 'forgejo_user' WITH SUPERUSER PASSWORD 'superSecretPwd';
-CREATE DATABASE forgejo;
+CREATE USER forgejo_user WITH PASSWORD 'superSecretPwd';
+CREATE DATABASE forgejo OWNER forgejo_user;
 GRANT ALL PRIVILEGES ON DATABASE forgejo TO forgejo_user;
 ```
 
 
-Enfin on ouvre son navigateur préféré, on se connecte à l'url que l'on a indiqué dans le fichier *.env* (ici forgejo.domaine.tld) et hop on a notre Forgejo 
+Ouvrez votre navigateur, connectez-vous à l'URL définie dans le fichier `.env` (ici `forgejo.domaine.tld`) et suivez l'assistant d'installation.
 
-On fait l'installation
 ![Forgejo - Install](/img/content/forgejo-installation.png){ width=100% }
 
-Et la magie opère
+Une fois l'installation terminée, vous accédez à votre instance Forgejo :
 
 ![Forgejo - Page d'accueil ](/img/content/forgejo.png){ width=100% }
 
 ![Forgejo - Dashboard](/img/content/forgejo-dashboard.png){ width=100% }
 
-Il ne reste plus qu'à configurer votre utilisateur, rajouter votre clé ssh
+Il ne reste plus qu'à configurer votre utilisateur, ajouter votre clé SSH, créer un dépôt, puis pointer votre projet local vers votre propre plateforme :
 
 ![Forgejo - Configuration](/img/content/forgejo-configuration.png)
 
-Créer un dépôt
-
 ![Forgejo - New repository](/img/content/forgejo-new-repo.png)
 
-
-Puis configurer git sur votre projet vers votre forgejo :
 
 ```bash
 git remote set-url origin ssh://git@forgejo.domaine.tld:222/utilisateur/depot.git
 ```
 
-Il ne reste plus qu'à développer et pousser vos modifications sur votre propre platforme 😊
+#### ✅ Conclusion
 
-Bon coding !
+Forgejo vous permet de gérer votre code source vous-même, sans dépendre d'une plateforme en ligne. En quelques étapes avec des conteneurs Docker, vous avez une plateforme complète pour gérer votre projet : héberger votre code, suivre les tâches à faire, suivre l'avancement de vos projets, et faciliter la collaboration entre votre équipe.
+
+En combinant Forgejo avec une base de données PostgreSQL pour stocker vos informations et Traefik pour assurer la sécurité de vos services, cette plateforme devient un élément clé de votre organisation pour le développement logiciel. Vous gardez le contrôle total sur vos données, vos sauvegardes, qui peut y accéder, et la gestion de tout votre cycle de développement.
+
+Son interface familière — proche de GitHub ou GitLab — et sa légèreté en font un bon choix que vous soyez en homelab, en équipe ou en entreprise.
+
+Dans la suite de notre plateforme Docker, Forgejo jouera le rôle de point d'entrée
+du cycle de développement : les développeurs y publieront leur code,
+[Jenkins](/blog/article/7-docker-jenkins-init){:target="_blank"} y récupérera les
+modifications via les webhooks, les pipelines construiront et testeront les applications,
+puis les déploiements seront automatisés vers les différents environnements.
+
+Une brique essentielle pour construire une chaîne CI/CD complète, maîtrisée et entièrement hébergée chez soi.
+
+---
+
+#####
+
+::right-note
+Cet article a été rédigé avec l'assistance d'IA.
+::
