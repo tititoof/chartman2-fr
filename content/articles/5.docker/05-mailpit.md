@@ -1,8 +1,9 @@
 ---
 title: "Docker - Mailpit"
-description: "Utilisation de Mailpit avec Docker"
+description: "Découvrez Mailpit avec Docker : intercepter les emails en développement, tester l’envoi sans envoyer de vrais messages, et visualiser les emails dans une interface web."
 icon: "i-mdi:docker"
 article_id: "5-docker-mailpit-init"
+color: "blue"
 ---
 
 #### 📌 Mailpit ![Mailpit](/img/mailpit.png){ width=30px }

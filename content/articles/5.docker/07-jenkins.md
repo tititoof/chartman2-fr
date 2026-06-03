@@ -1,8 +1,9 @@
 ---
 title: "Docker – Jenkins"
-description: "Installer et déployer Jenkins avec Docker"
+description: "Découvrez comment installer et configurer Jenkins avec Docker : master, agents SSH, pipeline CI/CD, intégration Forgejo, SonarQube et déploiement automatisé."
 icon: "i-mdi:docker"
 article_id: "7-docker-jenkins-init"
+color: "blue"
 ---
 #### 📌 Jenkins ![Jenkins](/img/jenkins-logo.png){ width=30px }
 
@@ -218,6 +219,7 @@ URL_JENKINS=jenkins.domain.tld
 
 ##### Explications
 
+::tool-table
 | Paramètre | Rôle |
 |-----------|------|
 | `privileged: true` | Permet à l'agent de lancer des commandes Docker (`docker build`, `docker push`…) |
@@ -226,6 +228,7 @@ URL_JENKINS=jenkins.domain.tld
 | `JENKINS_SLAVE_SSH_PUBKEY` | Clé publique SSH que Jenkins utilisera pour se connecter à l'agent |
 | `expose: 22` | Le port SSH de l'agent, accessible uniquement depuis le réseau interne Docker |
 | `build: context:` | Les agents sont construits depuis un Dockerfile local (image personnalisée) |
+::
 
 ######
 
@@ -398,10 +401,12 @@ graph TD
 
 Le pipeline adapte son comportement selon la branche :
 
+::tool-table
 | Branche | Tag Docker | Environnement Coolify |
 |---------|------------|----------------------|
 | `develop` | `:staging` | `chartman2-fr-staging` |
 | `main` | `:latest` | `frontend-chartman2-fr-production` |
+::
 
 Les Pull Requests (`PR-*`) ne déclenchent que les étapes de build et de test, sans déploiement.
 
@@ -409,6 +414,7 @@ Les Pull Requests (`PR-*`) ne déclenchent que les étapes de build et de test, 
 
 ##### Les credentials utilisés
 
+::tool-table
 | ID Jenkins | Type | Usage |
 |------------|------|-------|
 | `sonarqube-server` | Secret text | URL du serveur SonarQube |
@@ -417,6 +423,7 @@ Les Pull Requests (`PR-*`) ne déclenchent que les étapes de build et de test, 
 | `ghcr-token` | Secret text | Token pour `docker push` vers GHCR |
 | `frontend-chartman2-fr-env` | Secret file | Fichier `.env` injecté au `docker build` |
 | `coolify-token` | Secret text | Token API Coolify pour déclencher le déploiement |
+::
 
 ######
 
@@ -468,7 +475,7 @@ On va déployer 2 agents :
 
 Voilà un tableau des agents que l'on va déployer
 
-::small-table
+::tool-table
 | Service | Image | Ports exposés | Volumes montés | Commande | Variables d’environnement | Particularités |
 |---------|-------|---------------|----------------|----------|---------------------------|----------------|
 | `jenkins_agent_rails` | `ghcr.io/tititoof/jenkins-agent-rails:latest` | `8082:8080`, `50001:50000`, `8422:22` | Docker socket, `/usr/bin/docker`, `home`, `agent`, `~/.ssh` | `-url http://<mon_ip>:8081 e95b... agent_rails_1` | `JENKINS_AGENT_SSH_PUBKEY=ssh-ed25519 ...` | <u>Privileged</u> container, groupe `989` (docker), alias `jenkins_agent_rails`. |
@@ -501,7 +508,7 @@ Hébergé chez vous, versionné, reproductible : cette stack Jenkins + Forgejo +
 Coolify constitue une chaîne CI/CD complète, maîtrisée de bout en bout.
 
 Dans le prochain article, nous verrons comment configurer
-[SonarQube](/blog/article/8-docker-sonarqube-init){:target="_blank"} pour analyser
+[SonarQube](/blog/article/8-docker-sonarqube-init) pour analyser
 la qualité de votre code directement depuis le pipeline Jenkins.
 
 ---

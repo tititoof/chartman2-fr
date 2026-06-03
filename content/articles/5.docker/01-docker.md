@@ -1,8 +1,9 @@
 ---
 title: "Docker"
-description: "Introduction à Docker"
+description: "Apprenez Docker, la plateforme open source qui permet de créer, exécuter et déployer des applications dans des conteneurs légers, portables et reproductibles."
 icon: "i-mdi:docker"
 article_id: "1-docker-description"
+color: "blue"
 ---
 
 #### 📌 Qu’est-ce que Docker ?
@@ -77,6 +78,7 @@ flowchart LR
 
 #### 🆚 Docker vs Machine Virtuelle
 
+::tool-table
 | | Machine Virtuelle | Conteneur Docker |
 |---|---|---|
 | **OS complet** | ✅ Oui (plusieurs Go) | ❌ Non (noyau partagé) |
@@ -85,6 +87,7 @@ flowchart LR
 | **Isolation** | Totale | Par processus |
 | **Performance** | Plus lourde | Proche du natif |
 | **Cas d'usage** | OS différents, isolation totale | Microservices, CI/CD, dev |
+::
 
 #### 🖥️ Les commandes de base
 

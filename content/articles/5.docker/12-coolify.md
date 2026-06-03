@@ -1,8 +1,9 @@
 ---
 title: "Docker – Coolify"
-description: "Installer et déployer Coolify avec Docker"
+description: "Automatisez vos déploiements Docker avec Coolify : intégration Jenkins, API REST, registry privé et GHCR. Guide complet d'installation et configuration."
 icon: "i-mdi:docker"
 article_id: "12-docker-coolify-init"
+color: "blue"
 ---
 
 #### 📌 Coolify ![Coolify](/img/coolify-transparent.svg){ width=30px }
@@ -25,10 +26,12 @@ en production via un simple appel API.
 
 Coolify se compose de deux services :
 
+::tool-table
 | Service | Rôle |
 |---------|------|
 | `coolify` | Application principale — UI, API, gestion des déploiements |
 | `soketi` | Serveur WebSocket — logs et notifications en temps réel dans l'UI |
+::
 
 > 💡 **TCP passthrough** : contrairement aux autres services de la série qui utilisent
 > HTTP(S) via Traefik, Coolify gère son propre TLS. Traefik laisse donc passer le trafic
@@ -231,6 +234,7 @@ Dans votre projet, créez deux environnements :
 
 Dans chaque environnement → **+ Add Resource** → **Docker Image** :
 
+::tool-table
 | Champ | Production | Staging |
 |-------|-----------|---------|
 | **Name** | `docker-image-frontend-chartman2-fr` | `docker-image-frontend-chartman2-fr` |
@@ -238,6 +242,7 @@ Dans chaque environnement → **+ Add Resource** → **Docker Image** :
 | **Tag** | `latest` | `staging` |
 | **Domain** | `https://chartman2-fr.ovh` | `https://staging.chartman2-fr.ovh` |
 | **Direction** | `Redirect to non-www` | — |
+::
 
 ![Coolify - Configuration](/img/content/coolify-configuration.png){ width=100% }
 
@@ -269,6 +274,7 @@ Créez un nouveau token :
 Copiez le token — il ne sera affiché qu'une seule fois. Enregistrez-le dans Jenkins
 sous l'ID `coolify-token` (**Manage Jenkins** → **Credentials** → **Secret text**).
 
+::tool-table
 | Permission | Rôle |
 |------------|------|
 | `root` | Accès total — à éviter |
@@ -276,6 +282,7 @@ sous l'ID `coolify-token` (**Manage Jenkins** → **Credentials** → **Secret t
 | `deploy` | Déclenchement de déploiements uniquement ✅ |
 | `read` | Lecture seule |
 | `read:sensitive` | Lecture des données sensibles (secrets, env) |
+::
 
 Enregistrez-le dans Jenkins sous l'ID `coolify-token`
 
@@ -351,5 +358,5 @@ inaccessible.
 #####
 
 ::right-note
-*Cet article a été rédigé avec l'assistance d'IA.*
+Cet article a été rédigé avec l'assistance d'IA.
 ::

@@ -1,8 +1,9 @@
 ---
 title: "Docker – OpenProject"
-description: "Installer et déployer OpenProject avec Docker"
+description: "Découvrez comment installer et configurer OpenProject avec Docker : plateforme de gestion de projets open-source, Kanban, roadmap, wiki et intégration Forgejo et Jenkins."
 icon: "i-mdi:docker"
 article_id: "10-docker-openproject-init"
+color: "blue"
 ---
 
 #### 📌 OpenProject ![OpenProject](/img/openproject.jpg){ width=30px }
@@ -260,7 +261,7 @@ le déploiement est géré par Coolify — et tout l'avancement est suivi dans O
 
 Chaque outil fait une seule chose, bien, et s'intègre aux autres via webhooks et API.
 
-Dans le prochain article, nous verrons comment mettre en place un [Registry Docker privé](/blog/article/11-docker-registry-init){:target="_blank"} — le hub central des images de notre stack, où Jenkins poussera les images buildées et depuis lequel Coolify les récupèrera pour les déployer.
+Dans le prochain article, nous verrons comment mettre en place un [Registry Docker privé](/blog/article/11-docker-registry-init) — le hub central des images de notre stack, où Jenkins poussera les images buildées et depuis lequel Coolify les récupèrera pour les déployer.
 
 ---
 

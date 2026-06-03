@@ -1,8 +1,9 @@
 ---
 title: 'Docker compose'
-description: 'Introduction à Docker compose'
+description: 'Découvrez Docker Compose, l’outil simple et puissant pour définir, lancer et gérer plusieurs conteneurs Docker dans un seul fichier YAML.'
 icon: 'i-mdi:docker'
 article_id: '2-docker-compose-description'
+color: "blue"
 ---
 
 #### 📌 Docker Compose : la façon la plus simple d'orchestrer vos conteneurs
@@ -324,6 +325,7 @@ Ce volume nommé **db_data** est utilisé pour stocker de façon durable toutes 
 
 Chaque jour, il vous suffit d'utiliser quelques boutons pour gérer vos conteneurs. Prenez juste quelques instants pour apprendre à les utiliser, cela vous fera gagner beaucoup de temps ! 🚀
 
+::tool-table
 | Commande | Description |
 |----------|-------------|
 | `docker compose up -d` | Démarre tous les services en arrière-plan |
@@ -334,7 +336,7 @@ Chaque jour, il vous suffit d'utiliser quelques boutons pour gérer vos conteneu
 | `docker compose exec db bash` | Ouvre un terminal dans le conteneur `db` |
 | `docker compose restart wordpress` | Redémarre un service spécifique |
 | `docker compose pull` | Met à jour les images |
-
+::
 
 #### 📋 Résumé 
 

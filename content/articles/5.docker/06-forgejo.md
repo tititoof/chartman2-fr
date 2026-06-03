@@ -1,8 +1,9 @@
 ---
 title: "Docker - Forgejo"
-description: "Gestion des dépôts Git avec Docker"
+description: "Découvrez Forgejo avec Docker : forge Git self-hosted complète pour gérer vos dépôts, pull requests, issues et projets, sans dépendre de GitHub ou GitLab."
 icon: "i-mdi:docker"
 article_id: "6-docker-forgejo-init"
+color: "blue"
 ---
  
 #### 📌 Forgejo ![Forgejo](/img/Forgejo_logo.svg){ width=30px }
@@ -213,7 +214,7 @@ Son interface familière — proche de GitHub ou GitLab — et sa légèreté en
 
 Dans la suite de notre plateforme Docker, Forgejo jouera le rôle de point d'entrée
 du cycle de développement : les développeurs y publieront leur code,
-[Jenkins](/blog/article/7-docker-jenkins-init){:target="_blank"} y récupérera les
+[Jenkins](/blog/article/7-docker-jenkins-init) y récupérera les
 modifications via les webhooks, les pipelines construiront et testeront les applications,
 puis les déploiements seront automatisés vers les différents environnements.
 

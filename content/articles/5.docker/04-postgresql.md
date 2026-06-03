@@ -1,8 +1,9 @@
 ---
 title: "Docker - PostgreSQL"
-description: "Utilisation de PostgreSQL avec Docker"
+description: "Découvrez comment installer et configurer PostgreSQL avec Docker : volumes persistants, healthcheck, variables d’environnement et scripts d’initialisation."
 icon: "i-mdi:docker"
 article_id: "4-docker-postgresql-init"
+color: "blue"
 ---
 
 #### 📌 Le SGBD idéal pour vos projets : PostgreSQL ![PostgreSQL](/img/Postgresql_elephant.svg.png){ width=30px }

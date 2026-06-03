@@ -1,8 +1,9 @@
 ---
 title: "Docker – SonarQube"
-description: "Installer et déployer SonarQube avec Docker"
+description: "Découvrez comment installer et configurer SonarQube avec Docker : analyse de qualité de code, Quality Gate, intégration Jenkins et base PostgreSQL pour une CI/CD automatisée."
 icon: "i-mdi:docker"
 article_id: "8-docker-sonarqube-init"
+color: "blue"
 ---
 #### 📌 SonarQube ![SonarQube](/img/sonarqube.png){ width=30px }
 
@@ -186,8 +187,6 @@ Rendez-vous sur `https://sonarqube.domain.tld`. Les identifiants par défaut son
 
 ![Sonarqube - Login](/img/content/sonarqube-projects.png)
 
-
-
 #### 🔑 Générer un token SonarQube
 
 Jenkins a besoin d'un token pour s'authentifier auprès de SonarQube.
@@ -231,10 +230,12 @@ Dans **Manage Jenkins** → **System** → section **SonarQube servers** :
 
 Dans **Manage Jenkins** → **Credentials** → **Global** → **Add** :
 
+::tool-table
 | ID | Type | Valeur |
 |----|------|--------|
 | `sonarqube-server` | Secret text | URL de votre instance (`https://sonarqube.domain.tld`) |
 | `sonarqube-token` | Secret text | Token généré dans SonarQube (**My Account** → **Security** → **Generate Token**) |
+::
 
 ##### 5. Configurer le webhook SonarQube → Jenkins
 
@@ -308,6 +309,7 @@ stage('Quality Gate') {
 
 **Ce que fait ce pipeline :**
 
+::tool-table
 | Paramètre | Rôle |
 |-----------|------|
 | `tool 'sonarqube-scanner'` | Utilise le scanner déclaré dans les outils Jenkins |
@@ -318,6 +320,7 @@ stage('Quality Gate') {
 | `sonar.javascript.lcov.reportPaths` | Rapport de couverture de code |
 | `waitForQualityGate()` | Bloque le pipeline jusqu'au retour du webhook SonarQube |
 | `abortPipeline` via `error` | Annule le build si la Quality Gate échoue |
+::
 
 ![Sonarqube - Login](/img/content/sonarqube-project-view.png)
 
@@ -328,6 +331,7 @@ La Quality Gate par défaut (Sonar Way) est un bon point de départ. Pour la per
 
 Dans SonarQube → **Quality Gates** → **Create** :
 
+::tool-table
 | Métrique | Condition recommandée |
 |----------|----------------------|
 | Coverage | > 80 % sur le nouveau code |
@@ -335,6 +339,7 @@ Dans SonarQube → **Quality Gates** → **Create** :
 | Bugs | = 0 sur le nouveau code |
 | Vulnerabilities | = 0 sur le nouveau code |
 | Security Hotspots reviewed | = 100 % |
+::
 
 Assignez ensuite cette Quality Gate à vos projets dans
 **Project Settings** → **Quality Gate**.
@@ -365,7 +370,7 @@ Combiné à Jenkins pour le déclenchement et Forgejo pour le versioning, SonarQ
 le gardien silencieux de votre codebase — sans intervention manuelle, sans oublier une
 vérification.
 
-Dans le prochain article, nous verrons comment mettre en place [OpenProject](/blog/article/10-docker-openproject-init){:target="_blank"} — la plateforme de gestion de projets self-hosted qui centralisera le suivi de vos tâches, liera vos commits Forgejo à vos issues.
+Dans le prochain article, nous verrons comment mettre en place [OpenProject](/blog/article/10-docker-openproject-init) — la plateforme de gestion de projets self-hosted qui centralisera le suivi de vos tâches, liera vos commits Forgejo à vos issues.
 
 ---
 

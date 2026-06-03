@@ -1,8 +1,9 @@
 ---
 title: "Docker – Registry"
-description: "Installer et déployer un registry Docker privé avec Docker"
+description: "Découvrez comment installer et configurer un registry Docker privé avec Docker : stockage local d’images, intégration Jenkins et Coolify, interface web et push/pull sécurisés."
 icon: "i-mdi:docker"
 article_id: "11-docker-registry-init"
+color: "blue"
 ---
 
 #### 📌 Registry Docker ![Registry](/img/registry.png){ width=30px }
@@ -220,10 +221,12 @@ stage('Build HomeLab') {
 
 **Pourquoi le double push ?**
 
+::tool-table
 | Destination | Usage |
 |-------------|-------|
 | `registry.domain.tld` | Pull rapide sur le réseau local (homelab) |
 | `ghcr.io` | Pull depuis l'extérieur par Coolify en production |
+::
 
 #### 🗂️ Structure des fichiers
 
@@ -255,7 +258,7 @@ et pousse, le registry stocke, Coolify déploie. Le double push vers GHCR garant
 que vos images sont disponibles même quand votre homelab est éteint.
 
 Dans le prochain article, nous verrons comment configurer
-[Coolify](/blog/article/12-docker-coolify-init){:target="_blank"} pour déployer
+[Coolify](/blog/article/12-docker-coolify-init) pour déployer
 automatiquement ces images en production.
 
 ---
