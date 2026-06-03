@@ -1,6 +1,4 @@
-# Use the Node.js image as the base image
-FROM node:lts-alpine AS build
-# Set the working directory
+FROM node:lts AS build
 WORKDIR /app
 
 ARG API_BASE_URL 
@@ -13,54 +11,46 @@ ARG NUXT_RESEND_API_KEY
 ARG SENTRY_DSN
 ARG SENTRY_AUTH_TOKEN
 
-# RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
-
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
-
 ENV npm_config_platform=linux
 ENV npm_config_libc=glibc
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="/root/.local/share/pnpm:$PATH"
 
-RUN apk --no-cache add --virtual native-deps \
-  g++ gcc libgcc libstdc++ linux-headers make python3 libc6-compat vips-dev \
-    fftw-dev \
-    build-base \
-  && npm install --quiet node-gyp -g
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  python3 \
+  build-essential \
+  libvips-dev \
+  && rm -rf /var/lib/apt/lists/*
 
+RUN npm install --quiet node-gyp -g && \
+    npm install -g pnpm@latest
 
-# Install pnpm
-RUN npm install -g pnpm@latest && \
-  pnpm config set store-dir $HOME/.local/share/pnpm/store/v3 --global && \
-  pnpm install && \
+COPY package.json pnpm-lock.yaml pnpm.json pnpm-workspace.yaml ./
+
+RUN  pnpm install && \
   pnpm install vue
+# pnpm config set store-dir /root/.local/share/pnpm/store --global && \
 
-# Copy the rest of the application code
 COPY . .
 
-ENV PATH ./node_modules/.bin/:$PATH
+ENV PATH="./node_modules/.bin/:$PATH"
 
-# Build the Nuxt app
 RUN pnpm run build
 
-# Use a smaller base image for the runtime stage
-FROM node:lts-alpine
+FROM node:lts-slim
 
-RUN apk --no-cache add \
-  vips \
-  libstdc++ libgcc
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  libvips \
+  && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
 WORKDIR /app
 
 RUN echo ${SENTRY_AUTH_TOKEN} > .env.sentry-build-plugin && \
   chmod 600 .env.sentry-build-plugin
 
-# Copy only the necessary files from the build stage
 COPY --from=build /app/.output /app/.output
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/
 
-# Expose the port the app runs on
 EXPOSE 3000
-# Start the Nuxt app in production mode
 CMD ["node", ".output/server/index.mjs"]
