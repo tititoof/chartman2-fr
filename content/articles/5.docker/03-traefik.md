@@ -4,6 +4,8 @@ description: "Découvrez comment configurer Traefik avec Docker : reverse proxy,
 icon: "i-mdi:docker"
 article_id: "3-docker-traefik-introduction"
 color: "blue"
+draft: false
+publishedAt: '2026-06-03'
 ---
 
 #### 📌 Qu’est-ce que Traefik ? ![Traefik](img/traefik.webp){ width=30px }

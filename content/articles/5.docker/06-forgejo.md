@@ -4,6 +4,8 @@ description: "Découvrez Forgejo avec Docker : forge Git self-hosted complète p
 icon: "i-mdi:docker"
 article_id: "6-docker-forgejo-init"
 color: "blue"
+draft: false
+publishedAt: '2026-07-08'
 ---
  
 #### 📌 Forgejo ![Forgejo](/img/Forgejo_logo.svg){ width=30px }

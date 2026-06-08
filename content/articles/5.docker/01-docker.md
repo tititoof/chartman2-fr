@@ -4,6 +4,8 @@ description: "Apprenez Docker, la plateforme open source qui permet de créer, e
 icon: "i-mdi:docker"
 article_id: "1-docker-description"
 color: "blue"
+draft: false
+publishedAt: '2026-06-03'
 ---
 
 #### 📌 Qu’est-ce que Docker ?

@@ -4,6 +4,8 @@ description: "Découvrez comment installer et configurer un registry Docker priv
 icon: "i-mdi:docker"
 article_id: "11-docker-registry-init"
 color: "blue"
+draft: false
+publishedAt: '2026-08-05'
 ---
 
 #### 📌 Registry Docker ![Registry](/img/registry.png){ width=30px }

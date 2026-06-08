@@ -4,6 +4,8 @@ description: "Découvrez comment installer et configurer PostgreSQL avec Docker 
 icon: "i-mdi:docker"
 article_id: "4-docker-postgresql-init"
 color: "blue"
+draft: false
+publishedAt: '2026-06-03'
 ---
 
 #### 📌 Le SGBD idéal pour vos projets : PostgreSQL ![PostgreSQL](/img/Postgresql_elephant.svg.png){ width=30px }

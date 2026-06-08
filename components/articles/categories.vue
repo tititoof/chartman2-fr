@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex justify-space-around">
+  <v-row class="d-flex justify-space-around text-center">
     <v-col
       v-for="({ type, src, color, text, title, link }, i) in articles"
       :key="i"
@@ -9,7 +9,7 @@
     >
       <v-card
         v-aos="['animate__flipInX']"
-        class="mx-auto"
+        class="mx-auto d-flex flex-column"
         max-width="400"
         min-height="480"
         max-height="480"
@@ -19,6 +19,7 @@
       >
         <v-icon
           v-if="type === 'icon'"
+          class="mx-auto"
           role="img"
           size="280"
           :icon="src"
@@ -31,7 +32,7 @@
           size="300"
           :image="src"
         />
-        <v-card-title class="font-weight-black text-uppercase text-secondary">
+        <v-card-title class="font-weight-black text-uppercase text-secondary text-wrap card-title-wrap">
           {{ title }}
         </v-card-title>
         <v-card-text class="title font-weight-light mb-5">
@@ -42,7 +43,7 @@
             {{ text }}
           </v-sheet>
         </v-card-text>
-        <v-card-actions class="d-flex align-end">
+        <v-card-actions class="mt-auto">
           <v-btn
             class="font-weight-black"
             color="info"
@@ -76,15 +77,23 @@ const articles = reactive([
     src: 'i-mdi:nuxt',
     color: 'green',
     title: 'Nuxt',
-    text: 'Framework Nuxt, Vuetify...',
+    text: 'Framework Nuxt, Vuetify',
     link: '/blog/category/nuxt',
+  },
+  {
+    type: 'icon',
+    src: 'i-mdi:language-php',
+    color: 'secondary',
+    title: 'PHP',
+    text: 'Articles autour de PHP.',
+    link: '/blog/category/php',
   },
   {
     type: 'icon',
     src: 'i-mdi:docker',
     color: 'blue',
     title: 'Docker',
-    text: 'Docker, les containers, docker compose...',
+    text: 'Conteneurisation, Traefik, CI/CD et infrastructure 100% self-hosted.',
     link: '/blog/category/docker',
   },
   {
@@ -92,8 +101,22 @@ const articles = reactive([
     src: 'i-mdi:checkbox-marked-circle-plus-outline',
     color: 'secondary',
     title: 'To-do list',
-    text: 'Construction d\'une To-do liste avec Nuxt & Rails.',
+    text: 'Projet full-stack Nuxt 4 + Rails 8 : authentification BFF, API REST et tests.',
     link: '/blog/category/todolist',
+  },
+  {
+    type: 'icon',
+    src: 'i-mdi:shield-home',
+    color: 'teal',
+    title: 'Self-Hosted',
+    text: 'Divers services que l\'on peut self hosted.',
+    link: '/blog/category/selfhosted',
   },
 ])
 </script>
+<style lang="css" scoped>
+.card-title-wrap {
+  white-space: normal;
+  word-break: break-word;
+}
+</style>
