@@ -4,6 +4,8 @@ description: "Découvrez pourquoi héberger soi-même ses outils DevOps et ses d
 icon: "i-mdi:docker"
 article_id: "0-pourquoi-heberger-soi-meme-souverainete-numerique-self-hosted"
 color: "blue"
+draft: false
+publishedAt: '2026-06-03'
 ---
 
 Pendant des années, j'ai utilisé GitHub, GitLab, Jenkins, SonarQube ou Vercel sans vraiment me poser de questions. Puis un jour, j'ai voulu comprendre ce qu'il se passait derrière ces interfaces. Cette série est née de cette curiosité.

@@ -4,6 +4,8 @@ description: 'Découvrez Docker Compose, l’outil simple et puissant pour défi
 icon: 'i-mdi:docker'
 article_id: '2-docker-compose-description'
 color: "blue"
+draft: false
+publishedAt: '2026-06-03'
 ---
 
 #### 📌 Docker Compose : la façon la plus simple d'orchestrer vos conteneurs

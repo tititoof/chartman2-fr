@@ -4,6 +4,8 @@ description: "Découvrez comment installer et configurer SonarQube avec Docker :
 icon: "i-mdi:docker"
 article_id: "8-docker-sonarqube-init"
 color: "blue"
+draft: false
+publishedAt: '2026-07-08'
 ---
 #### 📌 SonarQube ![SonarQube](/img/sonarqube.png){ width=30px }
 

@@ -92,6 +92,7 @@ export default defineNuxtConfig({
             'html',
             'css',
             'vue',
+            'php'
           ],
         },
         rehypePlugins: {

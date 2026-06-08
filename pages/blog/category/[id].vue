@@ -20,7 +20,7 @@
           >
             <v-card
               v-aos="['animate__flipInX']"
-              class="mx-auto"
+              class="mx-auto d-flex flex-column"
               max-width="400"
               min-height="480"
               max-height="480"
@@ -30,12 +30,13 @@
             >
               <v-icon
                 role="img"
+                class="mx-auto"
                 size="280"
                 :icon="icon"
                 :color="color"
               />
               <v-card-title>
-                <div class="font-weight-black text-uppercase text-secondary">
+                <div class="font-weight-black text-uppercase text-secondary text-wrap ">
                   {{ title }}
                 </div>
               </v-card-title>
@@ -47,9 +48,9 @@
                   {{ description }}
                 </v-sheet>
               </v-card-text>
-              <v-card-actions class="d-flex align-end">
+              <v-card-actions class="mt-auto">
                 <v-btn
-                  class="font-weight-black mt-4"
+                  class="font-weight-black mt-2"
                   color="info"
                   :nuxt="true"
                   :to="`/blog/article/` + article_id"
@@ -70,7 +71,8 @@
 </template>
 
 <script setup lang="ts">
+const { applyPublishFilter } = useArticleQuery()
 const route = useRoute()
 
-const { data: articles } = await useAsyncData('content', () => queryCollection(route.params.id).all())
+const { data: articles } = await useAsyncData('content', () => applyPublishFilter(queryCollection(route.params.id).order('publishedAt', 'ASC')).all())
 </script>

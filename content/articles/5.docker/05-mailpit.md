@@ -4,6 +4,8 @@ description: "Découvrez Mailpit avec Docker : intercepter les emails en dévelo
 icon: "i-mdi:docker"
 article_id: "5-docker-mailpit-init"
 color: "blue"
+draft: false
+publishedAt: '2026-07-08'
 ---
 
 #### 📌 Mailpit ![Mailpit](/img/mailpit.png){ width=30px }

@@ -4,6 +4,8 @@ description: "Découvrez comment installer et configurer OpenProject avec Docker
 icon: "i-mdi:docker"
 article_id: "10-docker-openproject-init"
 color: "blue"
+draft: false
+publishedAt: '2026-07-08'
 ---
 
 #### 📌 OpenProject ![OpenProject](/img/openproject.jpg){ width=30px }

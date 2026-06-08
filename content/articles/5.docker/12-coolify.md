@@ -4,6 +4,8 @@ description: "Automatisez vos déploiements Docker avec Coolify : intégration J
 icon: "i-mdi:docker"
 article_id: "12-docker-coolify-init"
 color: "blue"
+draft: false
+publishedAt: '2026-08-05'
 ---
 
 #### 📌 Coolify ![Coolify](/img/coolify-transparent.svg){ width=30px }

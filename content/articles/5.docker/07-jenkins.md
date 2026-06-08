@@ -4,6 +4,8 @@ description: "Découvrez comment installer et configurer Jenkins avec Docker : m
 icon: "i-mdi:docker"
 article_id: "7-docker-jenkins-init"
 color: "blue"
+draft: false
+publishedAt: '2026-07-08'
 ---
 #### 📌 Jenkins ![Jenkins](/img/jenkins-logo.png){ width=30px }
 
