@@ -4,6 +4,8 @@ description: 'Models, services versionnés, serializers JSON:API et controllers'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
 color: 'secondary'
 article_id: '6-to-do-list-backend-todo'
+draft: false
+publishedAt: '2026-07-01'
 ---
 
 #### 📋 Backend — Todo

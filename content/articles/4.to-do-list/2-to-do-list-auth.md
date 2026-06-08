@@ -4,6 +4,8 @@ description: 'Sessions sécurisées avec nuxt-auth-utils, server routes BFF, log
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
 color: 'secondary'
 article_id: '2-to-do-list-auth'
+draft: false
+publishedAt: '2026-07-01'
 ---
 
 #### 🔐 Frontend — Authentification

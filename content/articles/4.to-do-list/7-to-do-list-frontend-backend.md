@@ -4,6 +4,8 @@ description: 'Server routes Nuxt, composable useTodoApi et flux complet'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
 color: 'secondary'
 article_id: '7-to-do-list-frontend-backend'
+draft: false
+publishedAt: '2026-07-01'
 ---
 
 #### 🔌 Connexion frontend-backend

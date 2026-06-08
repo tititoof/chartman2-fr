@@ -4,6 +4,8 @@ description: 'Mise en place du projet Nuxt 4 avec Docker et Traefik : dépôt Gi
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
 color: 'secondary'
 article_id: '1-to-do-list-initialisation'
+draft: false
+publishedAt: '2026-07-01'
 ---
 
 #### 🎨 Frontend — Initialisation
