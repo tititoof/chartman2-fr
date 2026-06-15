@@ -115,7 +115,7 @@ docker images
 
 #### 🚀 Pourquoi adopter Docker ?
 
-- **Une isolation parfaite des applications** : Chaque conteneur fonctionne de manière indépendante. Vous pouvez donc gérer plusieurs projets sans risque de conflits de dépendances.
+- **Une isolation des applications** : Chaque conteneur fonctionne de manière indépendante. Vous pouvez donc gérer plusieurs projets sans risque de conflits de dépendances.
 
 - **Une portabilité sans souci** : Vos conteneurs fonctionnent partout où Docker est installé. Idéal pour passer facilement du poste de développement au serveur de production.
 

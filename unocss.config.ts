@@ -13,7 +13,8 @@ export default defineConfig({
     'i-mdi:language-ruby-on-rails',
     'i-mdi:vuejs',
     'i-mdi:docker',
-    'i-mdi:file-account-outline'
+    'i-mdi:file-account-outline',
+    'i-mdi:table-large',
   ],
   presets: [
     presetIcons({

@@ -109,8 +109,9 @@ Créez ce fichier à la racine de votre projet Docker. Il ne doit **jamais**
 # Application
 PORT=3000
 NODE_ENV=production
-PUBLIC_URL=https://reactive-resume.domain.tld
-ALLOWED_ORIGINS=https://reactive-resume.domain.tld
+REACTIVE_RESUME_URL=reactive-resume.chartman2-fr.ovh
+PUBLIC_URL=https://${REACTIVE_RESUME_URL}
+ALLOWED_ORIGINS=https://${REACTIVE_RESUME_URL}
 
 # Base de données
 DATABASE_URL=postgresql://reactive_user:votre_mot_de_passe@postgresql:5432/reactive_resume
@@ -150,19 +151,14 @@ services:
       # Stockage local des uploads quand S3 n'est pas configuré
       - ./.docker/reactive-resume:/app/data
     labels:
-      - "traefik.enable=true"
-
-      # HTTP → HTTPS redirection
-      - "traefik.http.routers.reactive-resume.rule=Host(`reactive-resume.domain.tld`)"
-      - "traefik.http.routers.reactive-resume.entrypoints=http"
-      - "traefik.http.middlewares.reactive-resume-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.reactive-resume.middlewares=reactive-resume-redirect"
-
-      # HTTPS
-      - "traefik.http.routers.reactive-resume-secure.service=reactive-resume-secure"
-      - "traefik.http.routers.reactive-resume-secure.rule=Host(`reactive-resume.domain.tld`)"
-      - "traefik.http.routers.reactive-resume-secure.entrypoints=https"
-      - "traefik.http.routers.reactive-resume-secure.tls=true"
+    - "traefik.http.routers.reactive-resume.rule=Host(`${REACTIVE_RESUME_URL}`)"
+    - "traefik.http.routers.reactive-resume.entrypoints=http"
+    - "traefik.http.middlewares.reactive-resume-redirect.redirectscheme.scheme=https"
+    - "traefik.http.routers.reactive-resume.middlewares=reactive-resume-redirect"
+    - "traefik.http.routers.reactive-resume-secure.rule=Host(`${REACTIVE_RESUME_URL}`)"
+    - "traefik.http.routers.reactive-resume-secure.entrypoints=https"
+    - "traefik.http.routers.reactive-resume-secure.tls=true"
+    - "traefik.http.services.reactive-resume-secure.loadbalancer.server.port=3000"
 
       # Port interne
       - "traefik.http.services.reactive-resume-secure.loadbalancer.server.port=3000"
