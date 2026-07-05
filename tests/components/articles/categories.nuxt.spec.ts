@@ -33,15 +33,23 @@ describe('Components - articles/categories', async () => {
         src: 'i-mdi:nuxt',
         color: 'green',
         title: 'Nuxt',
-        text: 'Framework Nuxt, Vuetify...',
+        text: 'Framework Nuxt, Vuetify',
         link: '/blog/category/nuxt',
+      },
+      {
+        type: 'icon',
+        src: 'i-mdi:language-php',
+        color: 'secondary',
+        title: 'PHP',
+        text: 'Articles autour de PHP.',
+        link: '/blog/category/php',
       },
       {
         type: 'icon',
         src: 'i-mdi:docker',
         color: 'blue',
         title: 'Docker',
-        text: 'Docker, les containers, docker compose...',
+        text: 'Conteneurisation, Traefik, CI/CD et infrastructure 100% self-hosted.',
         link: '/blog/category/docker',
       },
       {
@@ -49,8 +57,16 @@ describe('Components - articles/categories', async () => {
         src: 'i-mdi:checkbox-marked-circle-plus-outline',
         color: 'secondary',
         title: 'To-do list',
-        text: 'Construction d\'une To-do liste avec Nuxt & Rails.',
+        text: 'Projet full-stack Nuxt 4 + Rails 8 : authentification BFF, API REST et tests.',
         link: '/blog/category/todolist',
+      },
+      {
+        type: 'icon',
+        src: 'i-mdi:shield-home',
+        color: 'teal',
+        title: 'Self-Hosted',
+        text: 'Divers services que l\'on peut self hosted.',
+        link: '/blog/category/selfhosted',
       },
     ])
   })

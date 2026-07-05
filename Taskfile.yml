@@ -18,7 +18,7 @@ tasks:
   logs:
     desc: Logs des services
     cmds:
-      - docker compose -f docker-compose.dev.yml logs -f
+      - exec docker compose -f docker-compose.dev.yml logs -f
   ps:
     desc: PS des services
     cmds:
@@ -40,7 +40,7 @@ tasks:
   f-ssh:
     desc: Connexion SSH au frontend
     cmds:
-      - docker compose -f docker-compose.dev.yml exec frontend-dev sh
+      - exec docker compose -f docker-compose.dev.yml exec frontend-dev bash
   prod-build:
     desc: Build du frontend de production
     cmds:

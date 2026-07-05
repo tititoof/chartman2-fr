@@ -15,6 +15,7 @@
             rounded
             color="background"
             width="100%"
+            style="overflow-x: hidden; max-width: 100vw;"
           >
             <ClientOnly>
               <ContentRenderer

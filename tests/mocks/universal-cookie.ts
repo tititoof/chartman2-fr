@@ -1,4 +1,4 @@
-export default class Cookies {
+class Cookies {
   get() { return undefined }
   getAll() { return {} }
   set() {}
@@ -6,3 +6,6 @@ export default class Cookies {
   addChangeListener() {}
   removeChangeListener() {}
 }
+
+export default Cookies
+export { Cookies }
