@@ -6,7 +6,7 @@
         <v-icon icon="i-mdi:file-account-outline" size="64" color="primary" class="mb-4" />
         <h1 class="text-h4 font-weight-bold mb-2">Christophe Hartmann</h1>
         <p class="text-body-1 text-medium-emphasis mb-8">
-          Développeur full-stack — Ruby on Rails · Nuxt · DevOps
+          Architecte Solutions Web & DevOps
         </p>
 
         <div class="d-flex gap-4 justify-center flex-wrap">

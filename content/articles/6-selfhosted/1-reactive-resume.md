@@ -214,11 +214,13 @@ Une fois le statut `healthy`, l'application est accessible sur
 
 Les fonctionnalités clés :
 
-🎨 **Éditeur en temps réel** : modification et aperçu côte à côte.
-📄 **Export PDF** : rendu via Chromium headless — propre et fidèle.
-🔗 **URL publique** : chaque CV a une URL partageable (`/r/votre-slug`).
-🌍 **Multi-langues** : interface disponible en français.
-📋 **Templates** : plusieurs templates professionnels inclus.
+* 🎨 **Éditeur en temps réel** : modification et aperçu côte à côte.
+* 📄 **Export PDF** : rendu via Chromium headless — propre et fidèle.
+* 🔗 **URL publique** : chaque CV a une URL partageable (`/r/votre-slug`).
+* 🌍 **Multi-langues** : interface disponible en français.
+* 📋 **Templates** : plusieurs templates professionnels inclus.
+
+######
 
 > 💡 Pour activer l'export PDF, vous pouvez connecter un service Chrome
 > headless via les variables `CHROME_TOKEN` et `CHROME_URL`. Sans ça,

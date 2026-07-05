@@ -15,6 +15,9 @@ export default defineConfig({
     'i-mdi:docker',
     'i-mdi:file-account-outline',
     'i-mdi:table-large',
+    'i-mdi:sitemap-outline',
+    'i-mdi:robot-outline',
+    'i-mdi:content-copy'
   ],
   presets: [
     presetIcons({
