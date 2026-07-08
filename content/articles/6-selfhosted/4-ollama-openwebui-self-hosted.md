@@ -305,12 +305,10 @@ configuration.
 Ouvrez `https://open-webui.domain.tld`. Le premier compte créé devient
 automatiquement administrateur.
 
-![Premier accès Open WebUI](/img/content/openwebui-premier-acces.png){ width=100% }
-
 Une fois connecté, le modèle téléchargé à l'étape précédente apparaît
 directement dans le sélecteur de modèle — prêt à discuter.
 
-![Chat Open WebUI](/img/content/openwebui-chat.png){ width=100% }
+![Chat Open WebUI](/img/content/openwebui-1.png){ width=100% }
 
 
 #### 🔌 Connecter Ollama à n8n
