@@ -5,7 +5,7 @@ icon: "i-mdi:docker"
 article_id: "13-docker-backup-init"
 color: "blue"
 draft: false
-publishedAt: '2026-08-05'
+publishedAt: '2026-07-08'
 ---
 
 #### 📌 Sauvegardes des bases de données

@@ -5,7 +5,7 @@ icon: "i-mdi:docker"
 article_id: "11-docker-registry-init"
 color: "blue"
 draft: false
-publishedAt: '2026-08-05'
+publishedAt: '2026-07-08'
 ---
 
 #### 📌 Registry Docker ![Registry](/img/registry.png){ width=30px }
