@@ -7,7 +7,7 @@ color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---
- 
+
 #### 📌 Forgejo ![Forgejo](/img/Forgejo_logo.svg){ width=30px }
 
 [Forgejo](https://forgejo.org){:target="_blank"} est une forge logicielle libre et self-hosted,
@@ -20,65 +20,73 @@ plateforme Git complète, sans cloud ni abonnement.
 - **Sécurité** : authentification LDAP/OAuth2, TLS, logs centralisés
 - **API REST** : intégrations tierces, automatisation, scripts
 
-#### ⚙️ Exemple
+---
 
-Voici un `docker-compose.yml` avec Forgejo derrière Traefik, accessible via `forgejo.domaine.tld` 😉 :
+#### 🧩 Schéma
 
-```yml [docker-compose.yml]
+<mermaid>
+graph LR
+  Browser["🌍 Navigateur"]
+  Dev["💻 Git Client\nSSH :222"]
+  Traefik["🚦 Traefik\nReverse proxy + TLS"]
+  Forgejo["📦 Forgejo\n:3000 / :22"]
+  PG["🗄️ PostgreSQL\n:5432"]
+  Mailpit["📬 Mailpit\n:1025 SMTP"]
+  Browser -->|"HTTPS"| Traefik
+  Dev -->|"SSH :222"| Forgejo
+  Traefik -->|"HTTP interne"| Forgejo
+  Forgejo --> PG
+  Forgejo -->|"SMTP interne"| Mailpit
+  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
+  classDef dbStyle fill:#ddf,stroke:#00d,stroke-width:2px;
+  class Traefik,Forgejo containerStyle;
+  class PG,Mailpit dbStyle;
+</mermaid>
+
+---
+
+#### ⚙️ Configuration
+
+##### `docker-compose.yml`
+
+```yaml [docker-compose.yml]
 services:
-  traefik:
-    restart: unless-stopped
-    image: traefik:v3.6.7
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    labels:
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-    volumes:
-      - ./.docker/traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./.docker/traefik/tls.yml:/etc/traefik/tls.yml
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./.docker/ovh/etc/letsencrypt/archive/<domain.tld>:/etc/ssl/traefik
-    command:
-      - "--global.sendAnonymousUsage"
-      - "--log.level=INFO"
-      - "--api.insecure=true"
-      - "--api=true"
-      - "--api.dashboard=true"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-    networks:
-      - devops
-
   forgejo:
-    image: codeberg.org/forgejo/forgejo:13
+    image: codeberg.org/forgejo/forgejo:14
     restart: unless-stopped
     environment:
       - USER_UID=${UID}
       - USER_GID=${GID}
+
+      # Base de données PostgreSQL
       - FORGEJO__database__DB_TYPE=postgres
-      - FORGEJO__database__HOST=${URL_POSTGRESQL}:5432
+      - FORGEJO__database__HOST=${URL_HOST}:5432
       - FORGEJO__database__NAME=${DB_DATABASE_FORGEJO}
       - FORGEJO__database__USER=${DB_USERNAME}
       - FORGEJO__database__PASSWD=${DB_PASSWORD}
+
+      # Webhooks — restreint les hôtes autorisés (Jenkins uniquement)
+      - FORGEJO__webhook__ALLOWED_HOST_LIST=${URL_JENKINS}
+
+      # Mailer → Mailpit en interne
+      - FORGEJO__mailer__ENABLED=true
+      - FORGEJO__mailer__SMTP_ADDR=mailpit
+      - FORGEJO__mailer__SMTP_PORT=1025
+      - FORGEJO__mailer__FROM=forgejo@domain.tld
+      - FORGEJO__mailer__PROTOCOL=smtp
     volumes:
       - ${PWD}/.docker/forgejo:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - "222:22"
-      - "3000:3000"
+      - "222:22"     # SSH Git — nécessaire pour les clients Git
     labels:
-      # Ajout dans traefik
       - traefik.enable=true
-      # HTTP
+
+      # HTTP → HTTPS redirection
       - traefik.http.routers.forgejo.rule=Host(`${URL_FORGEJO}`)
       - traefik.http.routers.forgejo.entrypoints=http
+      - traefik.http.middlewares.forgejo-redirect.redirectscheme.scheme=https
       - traefik.http.routers.forgejo.middlewares=forgejo-redirect
 
       # HTTPS
@@ -87,144 +95,203 @@ services:
       - traefik.http.routers.forgejo-secure.entrypoints=https
       - traefik.http.routers.forgejo-secure.tls=true
 
-      # HTTP → HTTPS redirection
-      - traefik.http.middlewares.forgejo-redirect.redirectscheme.scheme=https
-
       # Port interne
       - traefik.http.services.forgejo-secure.loadbalancer.server.port=3000
     networks:
-      devops:
+      homelab:
         aliases:
           - ${URL_FORGEJO}
+    profiles:
+      - devops
+    depends_on:
+      postgresql:
+        condition: service_healthy
 
   postgresql:
-    image: postgres:18
+    image: postgres:17
     user: "${UID}:${GID}"
     restart: unless-stopped
     volumes:
-      - ${PWD}/.docker/postgresql:/var/lib/postgresql
+      - ${PWD}/.docker/postgresql:/var/lib/postgresql/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE_FORGEJO}
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${DB_USERNAME} -d postgres']
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${DB_USERNAME} -d ${DB_DATABASE_FORGEJO}']
       interval: 5s
       timeout: 5s
       retries: 10
     networks:
-      devops:
+      homelab:
         aliases:
-          - ${URL_POSTGRESQL}
+          - ${URL_HOST}
+    profiles:
+      - devops
 
 networks:
-  devops:
+  homelab:
+    name: projects_local_dev
     driver: bridge
+    external: true
 ```
 
-> ⚠️ `--api.insecure=true` expose le dashboard Traefik sans authentification.
-> Acceptable en développement local, à ne jamais utiliser en production.
-
-> ⚠️ Les ports `3000`, `5432` exposés directement sont utiles en développement.
-> En production, supprimez-les : Traefik et le réseau Docker interne suffisent.
+##### `.env`
 
 ```bash [.env]
 UID=1000
 GID=1000
 
+# Forgejo
+URL_FORGEJO=forgejo.domain.tld
+URL_HOST=postgresql.domain.tld
+URL_JENKINS=jenkins.domain.tld
+
+# Base de données
 DB_DATABASE_FORGEJO=forgejo
 DB_USERNAME=forgejo_user
 DB_PASSWORD=superSecretPwd
-
-URL_FORGEJO=forgejo.domaine.tld
-URL_POSTGRESQL=postgresql.domaine.tld
 ```
-
-#### 🧩 Schéma
-
-<mermaid>
-graph LR
-  Navigateur["🌍 Navigateur<br/>https://forgejo.domaine.tld"] -->|HTTP 80| Traefik["🚦<br/>Traefik<br/>Container"]
-  Navigateur -->|HTTPS 443| Traefik
-  Dev["💻 Dev / Git Client"<br/>ssh://git@forgejo.domaine.tld:222/utilisateur/depot.git] -->|SSH 222| Forgejo["📦<br/>Forgejo<br/>Container<br/>🔑 SSH :222<br/>🌍 Web UI"]
-  subgraph DH["🐳 Docker Host"]
-      subgraph devops["🌐 devops (Docker network)"]
-          Traefik --> Forgejo
-          Forgejo --- LabelsTraefik["🏷️Labels Traefik<br/>
-          traefik.enable=true<br/>
-          router forgejo (http)<br/>
-          router forgejo-secure (https)<br/>
-          service port 3000"]
-          Forgejo --> PostgreSQL["🗄️<br/>PostgreSQL<br/>Container<br/>:5432"]
-      end
-  end
-  Traefik --> TLS["🔐 TLS / Certificat"]
-  Traefik --> Dashboard["👁️ Dashboard :8080"]
-  Traefik --> Redirection["🔁<br/>Redirection HTTP → HTTPS"]
-  classDef cluster fill:#41dcce,stroke:#333,stroke-width:1.5px,rx:10,ry:10;
-  class Navigateur,DH,Dev cluster;
-  classDef containerStyle fill:#ffd,stroke:#dd0,stroke-width:2px;
-  class Traefik,Forgejo,PostgreSQL containerStyle;
-  classDef volumeStyle fill:#ddf,stroke:#00d,stroke-width:2px;
-  class LabelsTraefik,Redirection,TLS,Dashboard volumeStyle;
-</mermaid>
-
-> 💡 En ajoutant `POSTGRES_DB` dans les variables d'environnement du service PostgreSQL,
-> Docker crée automatiquement la base et les droits au premier démarrage — aucune
-> intervention manuelle nécessaire.
->
-> Si vous connectez Forgejo à une instance PostgreSQL **existante**, exécutez ces requêtes :
-
-```sql
-CREATE USER forgejo_user WITH PASSWORD 'superSecretPwd';
-CREATE DATABASE forgejo OWNER forgejo_user;
-GRANT ALL PRIVILEGES ON DATABASE forgejo TO forgejo_user;
-```
-
-
-Ouvrez votre navigateur, connectez-vous à l'URL définie dans le fichier `.env` (ici `forgejo.domaine.tld`) et suivez l'assistant d'installation.
-
-![Forgejo - Install](/img/content/forgejo-installation.png){ width=100% }
-
-Une fois l'installation terminée, vous accédez à votre instance Forgejo :
-
-![Forgejo - Page d'accueil ](/img/content/forgejo.png){ width=100% }
-
-![Forgejo - Dashboard](/img/content/forgejo-dashboard.png){ width=100% }
-
-Il ne reste plus qu'à configurer votre utilisateur, ajouter votre clé SSH, créer un dépôt, puis pointer votre projet local vers votre propre plateforme :
-
-![Forgejo - Configuration](/img/content/forgejo-configuration.png)
-
-![Forgejo - New repository](/img/content/forgejo-new-repo.png)
-
-
-```bash
-git remote set-url origin ssh://git@forgejo.domaine.tld:222/utilisateur/depot.git
-```
-
-#### ✅ Conclusion
-
-Forgejo vous permet de gérer votre code source vous-même, sans dépendre d'une plateforme en ligne. En quelques étapes avec des conteneurs Docker, vous avez une plateforme complète pour gérer votre projet : héberger votre code, suivre les tâches à faire, suivre l'avancement de vos projets, et faciliter la collaboration entre votre équipe.
-
-En combinant Forgejo avec une base de données PostgreSQL pour stocker vos informations et Traefik pour assurer la sécurité de vos services, cette plateforme devient un élément clé de votre organisation pour le développement logiciel. Vous gardez le contrôle total sur vos données, vos sauvegardes, qui peut y accéder, et la gestion de tout votre cycle de développement.
-
-Son interface familière — proche de GitHub ou GitLab — et sa légèreté en font un bon choix que vous soyez en homelab, en équipe ou en entreprise.
-
-Dans la suite de notre plateforme Docker, Forgejo jouera le rôle de point d'entrée
-du cycle de développement : les développeurs y publieront leur code,
-[Jenkins](/blog/article/7-docker-jenkins-init) y récupérera les
-modifications via les webhooks, les pipelines construiront et testeront les applications,
-puis les déploiements seront automatisés vers les différents environnements.
-
-Une brique essentielle pour construire une chaîne CI/CD complète, maîtrisée et entièrement hébergée chez soi.
 
 ---
 
-#####
+#### 🔐 Points de sécurité
+
+Plusieurs éléments méritent attention avant de passer en production.
+
+**Le port `3000` n'est pas exposé directement**
+
+Traefik gère le routage HTTP/HTTPS — exposer le port `3000` sur l'hôte
+créerait un accès non sécurisé sans TLS. Seul le port `222` (SSH Git)
+est exposé, car les clients Git en ont besoin pour cloner via SSH.
+
+**`FORGEJO__webhook__ALLOWED_HOST_LIST`**
+
+Cette variable restreint les hôtes vers lesquels Forgejo peut envoyer
+des webhooks. Sans elle, n'importe quelle URL peut être configurée —
+y compris des adresses internes, ce qui exposerait votre réseau Docker
+à des attaques SSRF (Server-Side Request Forgery).
+
+En listant uniquement votre Jenkins, vous limitez la surface d'attaque :
+
+```bash
+# Un seul hôte autorisé
+FORGEJO__webhook__ALLOWED_HOST_LIST=jenkins.domain.tld
+
+# Plusieurs hôtes
+FORGEJO__webhook__ALLOWED_HOST_LIST=jenkins.domain.tld,192.168.1.206
+```
+
+**La redirection HTTP → HTTPS est obligatoire**
+
+Les deux labels Traefik travaillent ensemble :
+
+```yaml
+- traefik.http.middlewares.forgejo-redirect.redirectscheme.scheme=https
+- traefik.http.routers.forgejo.middlewares=forgejo-redirect
+```
+
+Oublier l'un des deux laisse le port 80 accessible sans redirection.
+
+**`depends_on` avec `service_healthy`**
+
+Forgejo attend que PostgreSQL soit réellement prêt avant de démarrer.
+Sans ça, Forgejo peut démarrer avant que la base soit disponible et
+échouer silencieusement.
+
+---
+
+#### 📬 Intégration Mailpit
+
+Forgejo envoie des emails pour de nombreux événements : création de
+compte, invitations, notifications de PR, mentions, réinitialisation
+de mot de passe.
+
+En développement, ces emails ne doivent pas partir vers de vraies
+adresses. Mailpit les intercepte et les affiche dans une interface web —
+aucun email ne quitte votre infrastructure.
+
+La configuration mailer dans le `docker-compose.yml` pointe directement
+vers le service `mailpit` sur le réseau Docker interne :
+
+```yaml
+- FORGEJO__mailer__SMTP_ADDR=mailpit   # nom du service Docker
+- FORGEJO__mailer__SMTP_PORT=1025      # port SMTP Mailpit
+- FORGEJO__mailer__FROM=forgejo@domain.tld
+- FORGEJO__mailer__PROTOCOL=smtp
+```
+
+Les emails Forgejo que vous verrez dans Mailpit :
+
+::tool-table
+| Événement | Déclencheur |
+|-----------|-------------|
+| Bienvenue | Création de compte |
+| Confirmation | Changement d'email |
+| Reset | Demande de mot de passe oublié |
+| Notification | Mention dans une issue ou PR |
+| Invitation | Ajout d'un membre à une organisation |
+| Digest | Résumé d'activité (configurable) |
+::
+
+Pour tester l'envoi depuis Forgejo, créez un compte ou utilisez
+**Paramètres → Notifications → Envoyer un email de test** dans
+l'interface d'administration.
+
+> 💡 L'article [Mailpit](/blog/article/5-docker-mailpit-init)
+> explique comment déployer et accéder à l'interface web.
+
+---
+
+#### 🚀 Premier démarrage
+
+```bash
+docker compose --profile devops up -d
+
+# Suivre les logs
+docker compose logs -f forgejo
+```
+
+Ouvrez votre navigateur sur `https://forgejo.domain.tld` et suivez
+l'assistant d'installation.
+
+![Forgejo - Install](/img/content/forgejo-installation.png){ width=100% }
+
+Une fois l'installation terminée :
+
+![Forgejo - Page d'accueil](/img/content/forgejo.png){ width=100% }
+
+![Forgejo - Dashboard](/img/content/forgejo-dashboard.png){ width=100% }
+
+Configurez votre utilisateur, ajoutez votre clé SSH, créez un dépôt
+et pointez votre projet local vers votre instance :
+
+```bash
+git remote set-url origin ssh://git@forgejo.domain.tld:222/utilisateur/depot.git
+```
+
+> 💡 En ajoutant `POSTGRES_DB` dans les variables d'environnement
+> de PostgreSQL, Docker crée automatiquement la base au premier
+> démarrage — aucune intervention SQL manuelle nécessaire.
+
+---
+
+#### ✅ Conclusion
+
+Forgejo vous permet de gérer votre code source vous-même, sans dépendre
+d'une plateforme en ligne. Avec PostgreSQL pour la persistance, Traefik
+pour le TLS et Mailpit pour intercepter les emails en développement,
+vous avez une forge complète, sécurisée et intégrée à votre stack.
+
+Dans la suite de cette série, Forgejo jouera le rôle de point d'entrée
+du cycle de développement : les développeurs y publieront leur code,
+[Jenkins](/blog/article/7-docker-jenkins-init) y récupérera les
+modifications via les webhooks, et les pipelines construiront et
+déploieront les applications automatiquement.
+
+---
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

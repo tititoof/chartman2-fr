@@ -17,7 +17,7 @@ Voici comment le mettre en place rapidement avec Docker.
 **Pourquoi choisir PostgreSQL ?**
 
 - **Transactions ACID** : intégrité des données garantie, même en cas de crash ou d'accès concurrent.
-- **Types avancés** : JSONB, tableaux, types géospatiaux via PostGIS — bien au-delà du SQL classique.
+- **Types avancés** : JSONB, tableaux, types géospatiaux via PostGIS (bien au-delà du SQL classique).
 - **Extensibilité** : des centaines d'extensions disponibles (uuid-ossp, pgcrypto, PostGIS...).
 - **Performances** : excellent sur les requêtes complexes, les agrégations et les gros volumes de données.
 - **Open-source & communauté active** : maintenu depuis plus de 35 ans, avec une documentation solide et des mises à jour régulières.
@@ -114,7 +114,7 @@ Un init.sql n'est nécessaire que si vous souhaitez plusieurs bases, ajouter des
 
 PostgreSQL est une base de données fiable et éprouvée, utilisée dans des projets de toutes tailles à travers le monde. Avec Docker, son installation se résume à quelques lignes de configuration : un conteneur propre, un healthcheck intégré et la persistance des données assurée par un volume.
 
-Dans le prochain article, nous allons mettre en place [Mailpit](/blog/article/5-docker-mailpit-init) — un outil qui permet d'intercepter et de visualiser les emails envoyés par vos applications en développement, sans risque d'envoyer de vrais messages à de vrais destinataires.
+Dans le prochain article, nous allons mettre en place [Mailpit](/blog/article/5-docker-mailpit-init), un outil qui permet d'intercepter et de visualiser les emails envoyés par vos applications en développement, sans risque d'envoyer de vrais messages à de vrais destinataires.
 
 ---
 
