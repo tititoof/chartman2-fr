@@ -5,7 +5,7 @@ icon: "i-mdi:docker"
 article_id: "12-docker-coolify-init"
 color: "blue"
 draft: false
-publishedAt: '2026-08-05'
+publishedAt: '2026-07-08'
 ---
 
 #### 📌 Coolify ![Coolify](/img/coolify-transparent.svg){ width=30px }
