@@ -100,7 +100,7 @@ export const CSkillsCICD = {
     },
     {
       type: 'image',
-      src: '/img/jenkins.png',
+      src: '/img/Jenkins-logo.png',
       title: 'Jenkins',
       text: 'Outil de build automation qui permet aux développeurs de automatiser les processus de construction, de test et de déploiement de leurs applications.',
     },
