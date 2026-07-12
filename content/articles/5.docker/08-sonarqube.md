@@ -346,6 +346,52 @@ Dans SonarQube → **Quality Gates** → **Create** :
 Assignez ensuite cette Quality Gate à vos projets dans
 **Project Settings** → **Quality Gate**.
 
+#### 📬 Intégration Mailpit — notifications de qualité
+
+SonarQube envoie des emails pour signaler les changements d'état
+de la Quality Gate et les nouvelles issues détectées.
+Mailpit les intercepte en développement.
+
+La configuration se fait dans **Administration → Configuration →
+General Settings → Email** :
+
+::tool-table
+| Champ | Valeur |
+|-------|--------|
+| SMTP host | `mailpit.domaine.tldt` |
+| SMTP port | `1025` |
+| SMTP username | *(vide)* |
+| SMTP password | *(vide)* |
+| From address | `sonarqube@domain.tld` |
+| From name | `SonarQube` |
+| Secure connection | Aucune |
+::
+
+![Sonarqube - Mailpit](/img/content/sonarqube-mailpit.png)
+
+Pour tester : **Administration → Configuration → General Settings →
+Email → Test configuration** — un email de test apparaît
+immédiatement dans Mailpit.
+
+
+![Sonarqube - Mailpit](/img/content/sonarqube-email-test.png)
+
+Les notifications que vous verrez dans Mailpit :
+
+::tool-table
+| Événement | Déclencheur |
+|-----------|-------------|
+| Quality Gate — Failed | Le seuil de qualité n'est plus respecté |
+| Quality Gate — Passed | Retour au vert après un échec |
+| New issues | Nouvelles vulnérabilités ou bugs détectés |
+| Issue assigned | Une issue vous est assignée |
+| Comment | Un commentaire ajouté sur une issue |
+::
+
+Chaque utilisateur SonarQube peut également configurer
+ses propres préférences de notification dans
+**My Account → Notifications**.
+
 #### 🗂️ Structure des fichiers
 
 ```

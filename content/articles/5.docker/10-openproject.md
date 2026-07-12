@@ -254,6 +254,71 @@ stage('Update OpenProject') {
 - **Épinglez la version** : `openproject/openproject:15` plutôt que `latest` pour
   maîtriser les migrations de base lors des mises à jour majeures
 
+#### 📬 Intégration Mailpit — notifications de collaboration
+
+OpenProject est l'outil de la série qui envoie le plus d'emails —
+assignations, mentions, changements de statut, rappels d'échéance,
+invitations. En développement, Mailpit les intercepte tous.
+
+La configuration se fait via des variables d'environnement dans
+le `docker-compose.yml` — OpenProject utilise un format avec
+double underscore :
+
+```yaml [docker-compose.yml]
+openproject:
+  environment:
+    - "DATABASE_URL=postgresql://..."
+    - "USE_PUMA=true"
+    - "IMAP_ENABLED=false"
+
+    # Mailpit — notifications emails
+    - "OPENPROJECT_EMAIL__DELIVERY__METHOD=smtp"
+    - "OPENPROJECT_SMTP__ADDRESS=mailpit"
+    - "OPENPROJECT_SMTP__PORT=1025"
+    - "OPENPROJECT_SMTP__AUTHENTICATION=none"
+    - "OPENPROJECT_SMTP__DOMAIN=domain.tld"
+    - "OPENPROJECT_EMAIL__FROM=openproject@domain.tld"
+    - "OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO=false"
+    - "OPENPROJECT_SMTP__SSL=false"
+```
+
+![Openproject - Emails](/img/content/openproject-email-configuration.png)
+
+> ⚠️ Les deux dernières variables sont indispensables. Sans elles,
+> OpenProject tente d'initier une connexion chiffrée via `STARTTLS`
+> et Mailpit répond `502 5.5.1 Command not implemented` — l'email
+> de test échoue silencieusement. Mailpit accepte uniquement les
+> connexions en clair sur le port 1025.
+
+Redémarrez le conteneur après modification :
+
+```bash
+docker compose restart openproject
+```
+
+Testez ensuite depuis **Administration → Emails et notifications →
+Envoyer un email de test**.
+
+![Openproject - Mailpit](/img/content/openproject-mailpit.png)
+
+Les notifications que vous verrez dans Mailpit :
+
+::tool-table
+| Événement | Déclencheur |
+|-----------|-------------|
+| Assignation | Une tâche vous est assignée |
+| Mention | Vous êtes mentionné dans un commentaire |
+| Changement de statut | Une tâche change d'état |
+| Rappel d'échéance | Date limite approchante |
+| Invitation | Ajout à un projet |
+| Modification de wiki | Page wiki mise à jour |
+::
+
+> 💡 En production, remplacez `mailpit` par votre vrai serveur
+> SMTP, passez `OPENPROJECT_SMTP__AUTHENTICATION` à `login` et
+> ajoutez `OPENPROJECT_SMTP__USER__NAME` et
+> `OPENPROJECT_SMTP__PASSWORD` avec vos credentials.
+
 #### ✅ Conclusion
 
 

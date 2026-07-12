@@ -345,6 +345,37 @@ stage('Deploy') {
 - **Épinglez la version** de soketi (`coolify-realtime:1.0.10`) pour éviter les
   incompatibilités avec Coolify lors des mises à jour
 
+#### 📬 Intégration Mailpit — notifications de déploiement
+
+Coolify envoie des emails pour chaque événement de déploiement.
+
+Mailpit les intercepte en développement — vous voyez exactement ce que vos utilisateurs verront en production.
+
+Renseignez la configuration  **Settings** → **Transactional Email** 
+
+![Coolify - Mailpit](/img/content/coolify-settings-email.png)
+
+Activez ensuite les notifications dans **Notifications** → **Email** :
+
+Cochez **Use system wide (transactional) email settings**
+
+
+::tool-table
+| Événement | Déclencheur |
+|-----------|-------------|
+| Deployment started | Début d'un déploiement |
+| Deployment success | Image pullée et conteneur actif |
+| Deployment failed | Échec du pull ou du démarrage |
+| Application stopped | Conteneur arrêté manuellement |
+| Backup success | Sauvegarde de base de données réussie |
+| Backup failed | Échec de sauvegarde |
+::
+
+![Coolify - Mailpit](/img/content/coolify-email-tests.png)
+
+> 💡 En production, remplacez `mailpit` par votre vrai serveur
+> SMTP et ajoutez les credentials `MAIL_USERNAME` et `MAIL_PASSWORD`.
+
 #### ✅ Conclusion
 
 Coolify referme la boucle de notre stack DevOps : le code pushé sur Forgejo déclenche

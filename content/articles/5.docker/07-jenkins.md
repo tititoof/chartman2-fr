@@ -440,6 +440,69 @@ Les Pull Requests (`PR-*`) ne déclenchent que les étapes de build et de test, 
 - **Protéger l'accès à Jenkins** derrière Traefik avec TLS
 - **Mettre à jour régulièrement** Jenkins LTS et ses plugins (`Manage Jenkins` → `Plugin Manager`)
 
+#### 📬 Intégration Mailpit — notifications de build
+
+Jenkins envoie des emails pour notifier l'état des builds :
+un échec, un retour à la normale après une correction,
+ou un résultat instable. En développement, Mailpit les intercepte
+avant qu'ils n'atteignent de vraies adresses.
+
+La configuration se fait dans **Manage Jenkins → System →
+E-mail Notification** :
+
+::tool-table
+| Champ | Valeur |
+|-------|--------|
+| SMTP server | `mailpit.domain.tld` |
+| Default user e-mail suffix | `@domain.tld` |
+| SMTP Port | `1025` |
+| Use SMTP Authentication | ❌ Non |
+| Use SSL | ❌ Non |
+::
+
+Cliquez sur **Test configuration** — un email de test
+apparaît immédiatement dans l'interface Mailpit.
+
+![Jenkins - Mailpit](/img/content/jenkins-mailpit.png)
+
+Les emails que vous verrez dans Mailpit :
+
+::tool-table
+| Événement | Déclencheur |
+|-----------|-------------|
+| Build failed | Premier échec sur une branche |
+| Build fixed | Retour au vert après un échec |
+| Build unstable | Tests en échec mais build OK |
+| Build success | Optionnel, désactivé par défaut |
+::
+
+> 💡 Avec le plugin **Email Extension** (déjà inclus dans les
+> plugins suggérés), vous pouvez personnaliser finement les
+> destinataires, le sujet et le corps des emails directement
+> dans le Jenkinsfile :
+
+```groovy [Jenkinsfile]
+post {
+    failure {
+        emailext(
+            subject: "❌ Build échoué — ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "Voir les logs : ${env.BUILD_URL}",
+            to: "votre@email.com"
+        )
+    }
+    fixed {
+        emailext(
+            subject: "✅ Build corrigé — ${env.JOB_NAME}",
+            body: "Le pipeline est de nouveau au vert.",
+            to: "votre@email.com"
+        )
+    }
+}
+```
+
+En production, remplacez `mailpit` par votre vrai serveur SMTP
+et ajoutez les credentials d'authentification si nécessaire.
+
 
 #### 🗂️ Structure des fichiers
 
