@@ -24,8 +24,6 @@ C'est exactement ce que permet **MCP (Model Context Protocol)** — un
 protocole ouvert qui donne à une IA la capacité d'appeler des outils
 externes de façon structurée et sécurisée.
 
----
-
 #### 🧩 Qu'est-ce que MCP ?
 
 MCP est un protocole créé par Anthropic, maintenant standard dans
@@ -43,8 +41,6 @@ modèle peut appeler. Exemples pour Forgejo :
 Le modèle décide seul quels outils appeler en fonction de votre question.
 Vous posez une question en français, il orchestre les appels nécessaires
 et vous retourne une réponse.
-
----
 
 #### 🚦 Modes de transport — stdio vs HTTP
 
@@ -67,8 +63,6 @@ PC Portable                          Homelab
 └─────────────────┘                 │  mcp-ssh.domain.tld            │
                                     └────────────────────────────────┘
 ```
-
----
 
 #### 🗺️ Architecture
 
@@ -103,8 +97,6 @@ graph LR
   class Forgejo,SonarQube,Jenkins,Linux dbStyle;
 </mermaid>
 
----
-
 #### ⚙️ Prérequis
 
 Cette série s'appuie sur les articles précédents :
@@ -118,8 +110,6 @@ Cette série s'appuie sur les articles précédents :
 | SonarQube | [Article 8](/blog/article/8-docker-sonarqube-init) |
 | Réseau `projects_local_dev` | [Article 2](/blog/article/2-docker-compose-description) |
 ::
-
----
 
 #### 🔐 Sécurité — comprendre l'authentification MCP
 
@@ -137,8 +127,6 @@ qui s'en charge.
 > ⚠️ Exposez ces services uniquement via HTTPS. En HTTP, les tokens
 > circuleraient en clair. Avec votre configuration Traefik + Let's
 > Encrypt, vous êtes déjà couverts.
-
----
 
 #### 🦌 1. Forgejo MCP
 
@@ -206,8 +194,6 @@ openssl rand -hex 32
 | + 98 autres | Issues, organisations, admin... |
 ::
 
----
-
 #### 📊 2. SonarQube MCP
 
 `sonarsource/sonarqube-mcp` est le serveur MCP **officiel** de SonarSource.
@@ -264,8 +250,6 @@ MCP_SONARQUBE_URL=mcp-sonarqube.domain.tld
 | `search_projects` | Lister les projets |
 ::
 
----
-
 #### 🧰 3. Jenkins MCP (communautaire)
 
 Pour Jenkins, `ghcr.io/huangjien/devops-mcps` est un projet communautaire
@@ -310,8 +294,6 @@ services:
 ```bash [.env]
 MCP_JENKINS_URL=mcp-jenkins.domain.tld
 ```
-
----
 
 #### 🐧 4. SSH MCP — accès à tous vos serveurs Linux
 
@@ -472,8 +454,6 @@ MCP_SSH_URL=mcp-ssh.domain.tld
 | + 6 autres | Transfert de fichiers, monitoring... |
 ::
 
----
-
 #### 🚀 Démarrage
 
 ```bash
@@ -489,8 +469,6 @@ curl https://mcp-forgejo.domain.tld/health
 curl https://mcp-sonarqube.domain.tld/health
 curl https://mcp-ssh.domain.tld/health
 ```
-
----
 
 #### 🖥️ Connexion depuis Open WebUI
 
@@ -542,8 +520,6 @@ Testez avec des questions simples :
 "Y a-t-il des issues ouvertes sur le dépôt todo-backend ?"
 ```
 
----
-
 #### 🔖 Commit
 
 ```bash
@@ -551,8 +527,6 @@ git add docker-compose.yml .gitignore
 git commit -m "feat: ajout serveurs MCP pour la stack DevOps"
 git push origin main
 ```
-
----
 
 #### ✅ Résumé
 
@@ -564,8 +538,6 @@ git push origin main
 | Jenkins MCP | `ghcr.io/huangjien/devops-mcps` | Communautaire | 8080 | `JENKINS_API_TOKEN` |
 | SSH MCP | `giuliolibrando/ssh-mcp-server` | Communautaire | 8000 | Clé SSH dédiée |
 ::
-
----
 
 #### ✅ Conclusion
 
@@ -584,5 +556,5 @@ apparaissent régulièrement. Surveillez le registre officiel
 ---
 
 ::right-note
-Cet article a été rédigé avec l'assistance de [Claude](https://claude.ai){:target="_blank"}, IA développée par Anthropic.
+Cet article a été rédigé avec l'assistance d'IA.
 ::
