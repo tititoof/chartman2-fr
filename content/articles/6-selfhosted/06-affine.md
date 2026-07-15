@@ -10,8 +10,7 @@ publishedAt: '2026-08-01'
 
 #### 📝 AFFiNE — L'alternative open-source à Notion et Miro
 
-Notion pour les documents. Miro pour les tableaux blancs. Deux abonnements,
-deux interfaces, deux silos de données.
+Notion pour les documents. Miro pour les tableaux blancs. Deux abonnements, deux interfaces, deux silos de données.
 
 **AFFiNE** fusionne les deux dans un seul outil open-source self-hosted : un
 canvas unifié où un document peut devenir un tableau blanc, où un tableau kanban
@@ -21,11 +20,10 @@ peut s'intégrer dans une page de notes — le tout dans la même interface.
 - **Tableaux blancs** : canvas infini, formes, cadres, mind maps
 - **Bases de données** : vues grille, kanban, calendrier, galerie
 - **Collaboration** : édition temps réel, commentaires, permissions
+- **Applications natives** : desktop (Windows, macOS, Linux) et mobile (iOS, Android) connectables à votre instance
 
 > 💡 Le dépôt officiel :
 > [github.com/toeverything/AFFiNE](https://github.com/toeverything/AFFiNE){:target="_blank"}
-
----
 
 #### 🆚 AFFiNE vs les alternatives
 
@@ -36,7 +34,9 @@ peut s'intégrer dans une page de notes — le tout dans la même interface.
 | **Tableau blanc** | ❌ | ✅ | ✅ |
 | **Self-hosted** | ❌ | ❌ | ✅ |
 | **Open-source** | ❌ | ❌ | ✅ (AGPL-3.0) |
-| **Mode hors ligne** | Partiel | ❌    | ✅      |
+| **Mode hors ligne** | Partiel | ❌ | ✅ |
+| **App mobile** | ✅ | ✅ | ✅ |
+| **App desktop** | ✅ | ❌ | ✅ |
 | **Prix** | ~10€/user/mois | ~8€/user/mois | Gratuit |
 ::
 
@@ -44,7 +44,7 @@ peut s'intégrer dans une page de notes — le tout dans la même interface.
 
 > ⚠️ À savoir
 
->Le projet est encore tout frais, mais certaines fonctionnalités continuent de s'améliorer à toute vitesse ! L’écosystème est un peu plus petit que celui de Notion, mais ça ne cesse de grandir. Et comme c’est encore en développement, il peut arriver que quelques petits bugs apparaissent selon la version que vous utilisez.
+> Le projet est encore tout frais, mais certaines fonctionnalités continuent de s'améliorer à toute vitesse ! L'écosystème est un peu plus petit que celui de Notion, mais ça ne cesse de grandir. Et comme c'est encore en développement, il peut arriver que quelques petits bugs apparaissent selon la version que vous utilisez.
 
 #### 🗺️ Architecture
 
@@ -65,9 +65,7 @@ graph LR
   class PG,Redis dbStyle;
 </mermaid>
 
-**Pourquoi `pgvector` ?** AFFiNE utilise PostgreSQL avec l'extension pgvector
-pour stocker les embeddings vectoriels, nécessaire pour les fonctionnalités IA d'AFFiNE (recherche sémantique et fonctionnalités associées). L'image `pgvector/pgvector:pg16` inclut l'extension.
-
+**Pourquoi `pgvector` ?** AFFiNE utilise PostgreSQL avec l'extension pgvector pour stocker les embeddings vectoriels, nécessaire pour les fonctionnalités IA d'AFFiNE (recherche sémantique et fonctionnalités associées). L'image `pgvector/pgvector:pg16` inclut l'extension.
 
 #### ⚙️ Prérequis
 
@@ -77,7 +75,6 @@ pour stocker les embeddings vectoriels, nécessaire pour les fonctionnalités IA
 | Traefik | Reverse proxy + TLS | [Article 3](/blog/article/3-docker-traefik-introduction) |
 | Réseau `projects_local_dev` | Réseau partagé | [Article 2](/blog/article/2-docker-compose-description) |
 ::
-
 
 #### 🚀 Mise en place
 
@@ -229,6 +226,8 @@ docker compose logs -f affine
 
 Une fois démarré, AFFiNE est accessible sur `https://affine.domain.tld`.
 
+![Affine](/img/content/affine-01.png){ width=100% }
+
 ##### 4. Premier accès
 
 À la première ouverture, créez votre compte administrateur.
@@ -241,6 +240,46 @@ Les fonctionnalités clés à explorer :
 - 📋 **Bases de données** — vues grille, kanban, calendrier, galerie
 - 🤝 **Collaboration** — invitez des membres, éditez en temps réel
 
+![Affine - Kanban](/img/content/affine-02.png){ width=100% }
+
+#### 📱 Applications natives
+
+AFFiNE ne se limite pas au navigateur. Des applications natives sont disponibles
+pour toutes les plateformes — et chacune peut se connecter à votre propre instance
+self-hosted plutôt qu'à AFFiNE Cloud.
+
+**Desktop — Windows, macOS, Linux**
+
+Téléchargez l'application sur
+[affine.pro/download](https://affine.pro/download){:target="_blank"}
+ou depuis les
+[releases GitHub](https://github.com/toeverything/AFFiNE/releases){:target="_blank"}.
+
+Au premier lancement, sur l'écran de connexion :
+
+→ **"Use Self-hosted"** → saisissez votre URL → connectez-vous avec votre compte
+
+L'application fonctionne hors ligne et synchronise automatiquement avec votre
+instance dès que la connexion est rétablie.
+
+**Mobile — iOS et Android**
+
+- [App Store](https://apps.apple.com/app/affine-note-knowledge-base/id6470737362){:target="_blank"}
+- [Google Play](https://play.google.com/store/apps/details?id=app.affine.pro){:target="_blank"}
+
+Même processus qu'en desktop : sélectionnez **"Self-hosted"** à la connexion
+et entrez l'URL de votre instance.
+
+**URL à renseigner dans les applications :**
+
+```
+https://affine.domain.tld
+```
+
+> 💡 Votre instance doit être accessible depuis l'extérieur (ce qu'assure
+> Traefik avec votre certificat Let's Encrypt) pour que les applications
+> mobiles et desktop puissent s'y connecter depuis n'importe quel réseau.
+
 #### 💾 Sauvegardes
 
 AFFiNE stocke tout dans deux endroits :
@@ -248,8 +287,7 @@ AFFiNE stocke tout dans deux endroits :
 - **PostgreSQL** (`affine_postgres`) → documents, workspaces, utilisateurs, embeddings vectoriels
 - **Volume storage** (`.docker/affine/storage`) → pièces jointes, images, fichiers
 
-Si vous avez déjà mis en place la stratégie de sauvegarde de la série DevOps,
-les deux sont couverts automatiquement.
+La sauvegarde automatique de PostgreSQL sera abordée dans un prochain article de cette série [DevOps](https://chartman2-fr.ovh/blog/category/docker){:target="_blank"}.
 
 #### ✅ Résumé
 
@@ -261,17 +299,20 @@ les deux sont couverts automatiquement.
 | Base de données | PostgreSQL + pgvector |
 | Cache | Redis dédié |
 | URL | `https://affine.domain.tld` |
+| App desktop | Windows, macOS, Linux |
+| App mobile | iOS, Android |
 | Licence | AGPL-3.0 |
 ::
 
 #### ✅ Conclusion
 
-AFFiNE est l'alternative self-hosted la plus complète à Notion et Miro combinés.
-Le canvas unifié — où documents et tableaux blancs coexistent dans le même
-espace — est ce qui distingue AFFiNE de toutes les autres alternatives.
+AFFiNE est aujourd'hui l'une des alternatives open-source les plus abouties à Notion, avec une approche qui intègre également les fonctionnalités de tableau blanc popularisées par Miro.
 
-C'est encore jeune, mais c'est déjà le meilleur outil de cette catégorie
-pour un développeur qui souhaite garder le contrôle de ses données.
+Son principal atout réside dans son canvas unifié, où documents, bases de données et tableaux blancs cohabitent naturellement au sein d'un même espace de travail.
+
+Avec les applications natives sur desktop et mobile connectées à votre instance, vous disposez d'un espace de travail, accessible partout, même hors ligne.
+
+Il s'agit encore d'une solution émergente, mais elle constitue déjà un outil performant dans cette catégorie, particulièrement adapté aux développeurs souhaitant conserver la maîtrise de leurs données.
 
 ---
 
