@@ -17,7 +17,8 @@ export default defineConfig({
     'i-mdi:table-large',
     'i-mdi:sitemap-outline',
     'i-mdi:robot-outline',
-    'i-mdi:content-copy'
+    'i-mdi:content-copy',
+    'i-mdi:note-multiple-outline'
   ],
   presets: [
     presetIcons({
