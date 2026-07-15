@@ -5,7 +5,7 @@ icon: 'i-mdi:note-multiple-outline'
 article_id: 'affine-self-hosted'
 color: 'indigo'
 draft: false
-publishedAt: '2026-08-01'
+publishedAt: '2026-07-15'
 ---
 
 #### 📝 AFFiNE — L'alternative open-source à Notion et Miro
