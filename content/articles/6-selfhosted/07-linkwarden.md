@@ -1,13 +1,13 @@
 ---
 title: "Docker – Linkwarden"
 description: "Découvrez comment installer et configurer Linkwarden avec Docker : gestionnaire de favoris self-hosted, archivage complet des pages et tagging automatique via Ollama."
-icon: "i-mdi:docker"
+icon: "i-mdi:link-variant"
 article_id: "docker-linkwarden-init"
 color: "blue"
 draft: false
 publishedAt: '2026-08-01'
 ---
-#### 📌 Linkwarden ![Linkwarden](/img/linkwarden.png){ width=30px }
+#### 📌 Linkwarden ![Linkwarden](/img/linkwarden.webp){ width=30px }
 
 Combien de favoris dorment dans votre navigateur, jamais retrouvés ? [Linkwarden](https://linkwarden.app){:target="_blank"} est un gestionnaire de favoris open-source et auto-hébergeable qui va bien au-delà du simple marque-page :
 
@@ -103,7 +103,7 @@ networks:
 
 ######
 
-> 💡 Contrairement à un simple gestionnaire de favoris, chaque lien sauvegardé déclenche un archivage complet de la page. Prévoyez de l'espace disque en conséquence si votre bibliothèque grossit.
+> 💡 À la différence d'un simple gestionnaire de favoris, chaque lien que vous enregistrez permet de faire une copie complète de la page. N'oubliez pas de prévoir un peu d'espace sur votre disque si votre collection s'étoffe !
 
 [Github](https://github.com/linkwarden/linkwarden){:target="_blank"} · [Documentation officielle](https://docs.linkwarden.app){:target="_blank"}
 
@@ -130,7 +130,7 @@ GRANT ALL PRIVILEGES ON DATABASE linkwarden TO toofytroll_dev_local;
 \q
 ```
 
-> 💡 Chaque application dispose de son propre compte PostgreSQL afin d'isoler les permissions : un problème de configuration ou une fuite d'identifiants sur Linkwarden ne donne pas accès aux autres bases de la stack.
+> 💡 Chaque application a son propre compte PostgreSQL, ce qui permet de garder les choses bien séparées. Comme ça, si jamais il y a un souci de configuration ou si des identifiants se retrouvent divulgués sur Linkwarden, cela n'affectera pas les autres bases de la stack.
 
 #### 🚀 Premier démarrage
 
@@ -144,7 +144,7 @@ Rendez-vous sur `https://linkwarden.domain.tld`. À la première ouverture, cré
 
 #### 🤖 Configurer le tagging automatique par Ollama
 
-Linkwarden peut s'appuyer sur plusieurs fournisseurs IA pour générer ses tags (OpenAI, Azure, Anthropic, OpenRouter, Perplexity), essayés dans cet ordre si plusieurs sont configurés. Ici, on reste 100 % local avec Ollama.
+Linkwarden accepte plusieurs fournisseurs IA pour le tagging automatique. On choisit ici de rester 100 % local avec Ollama, sans clé API externe.
 
 ##### 1. Vérifier que le modèle est disponible
 
@@ -166,7 +166,7 @@ environment:
   - OLLAMA_MODEL=phi3:mini-4k
 ```
 
-> 💡 Ces deux variables suffisent à indiquer à Linkwarden où trouver Ollama et quel modèle utiliser. Si plusieurs fournisseurs IA sont configurés en même temps, Linkwarden les essaie dans un ordre de priorité (OpenAI, Azure, Anthropic, puis Ollama) — pour rester 100 % local, ne renseignez que les variables Ollama.
+> 💡 Ces deux variables sont tout ce qu'il faut pour dire à Linkwarden où chercher Ollama et quel modèle choisir. Si vous avez plusieurs fournisseurs d'IA configurés en même temps, Linkwarden essaiera dans cet ordre de priorité : OpenAI, Azure, Anthropic, puis Ollama. Pour garder tout à fait local, il suffit de ne remplir que les variables Ollama.
 
 > ⚠️ L'URL doit être joignable **depuis le conteneur Linkwarden**, pas depuis votre navigateur. Si Ollama tourne dans un autre projet Docker Compose, assurez-vous que les deux conteneurs partagent le même réseau (`local_dev` ici) — sinon Linkwarden ne pourra pas résoudre le nom `ollama`.
 
@@ -204,7 +204,7 @@ Chaque favori sauvegardé peut générer plusieurs fichiers :
 - une **capture d'écran**
 - un **PDF**
 
-Sur quelques dizaines de liens, ça ne pèse rien. Sur plusieurs milliers, le volume disque peut devenir conséquent — prévoyez de la marge sur votre partition de stockage, ou désactivez certains formats d'archive dans les paramètres si l'espace est limité.
+Avec seulement quelques dizaines de liens, ça ne prend pas beaucoup de place. En revanche, si vous avez plusieurs milliers de liens, le volume peut rapidement devenir conséquent. Pensez à réserver un peu d'espace sur votre disque ou, si votre capacité est limitée, vous pouvez désactiver certains formats d'archives dans les paramètres pour faire de la place.
 
 #### 🗂️ Structure des fichiers
 
@@ -217,7 +217,7 @@ Sur quelques dizaines de liens, ça ne pèse rien. Sur plusieurs milliers, le vo
          └── data/          ← archives (captures, PDF, HTML) et données persistantes
 ```
 
-> 💡 Les archives peuvent représenter un volume de stockage conséquent selon le nombre de liens sauvegardés — pensez à les inclure dans votre stratégie de sauvegarde existante (Postgresus + RustFS par exemple), au même titre que la base PostgreSQL.
+> 💡 Pensez à inclure ce dossier dans votre stratégie de sauvegarde existante (Postgresus + RustFS par exemple), au même titre que la base PostgreSQL.
 
 #### 🔒 Bonnes pratiques de sécurité
 
