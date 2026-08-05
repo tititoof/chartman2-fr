@@ -48,7 +48,7 @@ pipeline {
                                 }
                                 sh "${scannerHome}/bin/sonar-scanner \
                                         -Dsonar.projectKey=$sonarqubeBranch \
-                                        -Dsonar.sources='pages, layouts, components, stores, composables' \
+                                        -Dsonar.sources='app' \
                                         -Dsonar.exclusions=public/**/* \
                                         -Dsonar.host.url=$SONAR_URL \
                                         -Dsonar.login=$SONAR_CREDENTIALS \
