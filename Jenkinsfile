@@ -48,7 +48,7 @@ pipeline {
                                 }
                                 sh "${scannerHome}/bin/sonar-scanner \
                                         -Dsonar.projectKey=$sonarqubeBranch \
-                                        -Dsonar.sources='pages, layouts, components, stores, composables' \
+                                        -Dsonar.sources='app' \
                                         -Dsonar.exclusions=public/**/* \
                                         -Dsonar.host.url=$SONAR_URL \
                                         -Dsonar.login=$SONAR_CREDENTIALS \
@@ -98,7 +98,7 @@ pipeline {
                                     git config --global user.name "Christophe Hartmann"
                                     touch github-update.txt
                                     touch ./.sonarcloud.properties
-                                    echo "sonar.sources=pages,layouts,components,store" >> ./.sonarcloud.properties
+                                    echo "sonar.sources=app" >> ./.sonarcloud.properties
                                     echo "sonar.exclusions=test/**/*, coverage/**/*" >> ./.sonarcloud.properties
                                     echo "sonar.testExecutionReportPaths=test-report.xml" >> ./.sonarcloud.properties
                                     echo "sonar.javascript.lcov.reportPaths=./coverage/lcov.info" >> ./.sonarcloud.properties
@@ -131,7 +131,7 @@ pipeline {
                                     git config --global user.name "Christophe Hartmann"
                                     touch github-update.txt
                                     touch ./.sonarcloud.properties
-                                    echo "sonar.sources=pages,layouts,components,store" >> ./.sonarcloud.properties
+                                    echo "sonar.sources=app" >> ./.sonarcloud.properties
                                     echo "sonar.exclusions=test/**/*, coverage/**/*" >> ./.sonarcloud.properties
                                     echo "sonar.testExecutionReportPaths=test-report.xml" >> ./.sonarcloud.properties
                                     echo "sonar.javascript.lcov.reportPaths=./coverage/lcov.info" >> ./.sonarcloud.properties
