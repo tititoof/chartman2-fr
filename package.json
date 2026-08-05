@@ -20,7 +20,7 @@
     "dotenv": "^17.4.2",
     "import-in-the-middle": "^1.15.0",
     "mermaid": "^11.15.0",
-    "nuxt": "^3.21.8",
+    "nuxt": "^4.4.8",
     "nuxt-snackbar": "^1.4.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",

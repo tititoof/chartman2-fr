@@ -47,7 +47,8 @@
     </client-only>
   </section>
 </template>
-<script setup>
+
+<script setup lang="ts">
 import { CStats } from '~/utils/common'
 
 const { mobile } = useDisplay()
