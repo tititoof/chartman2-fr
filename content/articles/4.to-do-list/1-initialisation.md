@@ -134,11 +134,11 @@ et les scripts disponibles. Créez-le à la racine :
 {
   "name": "todo-frontend",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --host",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -152,22 +152,25 @@ et les scripts disponibles. Créez-le à la racine :
     "@pinia/nuxt": "^0.11.1",
     "@vueuse/core": "^12.7.0",
     "@vueuse/nuxt": "^12.7.0",
-    "nuxt": "^4.4.7",
+    "nuxt": "^4.5.0",
     "pinia": "^3.0.2",
     "pinia-plugin-persistedstate": "^4.3.0",
-    "vue": "^3.5.16",
-    "vue-router": "^5.0.0",
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0",
     "vuetify": "^3.8.5",
     "vuetify-nuxt-module": "^0.18.4"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.17.2",
+    "@nuxt/test-utils": "^4.1.0",
+    "@types/node": "^22.13.0",
     "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^20.11.2",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.2",
     "vue-tsc": "^2.2.10"
   }
 }
+
 ```
 
 Le script `dev` utilise `--host` pour que Nuxt soit accessible depuis
@@ -457,6 +460,7 @@ export default defineNuxtConfig({
   },
 
   i18n: {
+    restructureDir: false,
     locales: [
       { code: 'fr', name: 'Français' },
       { code: 'en', name: 'English' },

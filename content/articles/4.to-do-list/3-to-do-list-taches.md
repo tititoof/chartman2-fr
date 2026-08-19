@@ -429,14 +429,19 @@ correspond à `app/components/partial/todo/new.vue`, sans import manuel.
 
 #### 🧪 Tests
 
+> 💡 Convention établie en article 2 (voir `SUMMARIZE.md`) : dossier `test/`
+> au singulier, suffixe `.nuxt.spec.ts`, et pas d'import explicite des
+> auto-imports Nuxt — `useTodoStore` est auto-importé au même titre que
+> `useAuthApi` dans `test/composables/useAuthApi.nuxt.spec.ts`. On s'y tient
+> ici aussi.
+
 ```bash
-mkdir -p tests/stores
+mkdir -p test/stores
 ```
 
-```ts [tests/stores/todo.test.ts]
+```ts [test/stores/todo.nuxt.spec.ts]
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useTodoStore } from '~/stores/todo'
 
 describe('useTodoStore', () => {
   beforeEach(() => {
@@ -558,7 +563,7 @@ git push origin main
 | `app/components/partial/todo/new.vue` | ➕ Nouveau | Formulaire d'ajout avec sélecteur de scope |
 | `app/components/partial/todo/list.vue` | ➕ Nouveau | Liste avec filtre par scope |
 | `app/pages/todo.vue` | ➕ Nouveau | Page principale protégée |
-| `tests/stores/todo.test.ts` | ➕ Nouveau | 8 tests unitaires du store |
+| `test/stores/todo.nuxt.spec.ts` | ➕ Nouveau | 8 tests unitaires du store |
 ::
 
 ---

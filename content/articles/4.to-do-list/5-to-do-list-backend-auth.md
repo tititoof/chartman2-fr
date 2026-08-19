@@ -45,7 +45,7 @@ Ces trois commandes génèrent :
 |---------|-------------|
 | `config/initializers/devise.rb` | Configuration globale de Devise |
 | `db/migrate/xxx_devise_create_users.rb` | Table `users` |
-| `db/migrate/xxx_devise_api_create_devise_api_tokens.rb` | Table des tokens |
+| `db/migrate/xxx_create_devise_api_tables.rb` | Table des tokens |
 | `app/models/user.rb` | Modèle User |
 ::
 
@@ -56,10 +56,21 @@ Ces trois commandes génèrent :
 Avant de migrer, vérifiez que les deux fichiers générés correspondent
 à ce qui suit. Adaptez si nécessaire.
 
+> ⚠️ Le `Gemfile` épingle `devise-api` en `~> 0.1`, mais ce contrainte
+> autorise en réalité toute version `0.x` — au moment de la rédaction,
+> `bundle install` résout la `0.2.0`. Son générateur produit un schéma
+> différent des versions `0.1.x` : `revoked_at` (datetime) à la place de
+> `revoked` (boolean), et des index simples au lieu d'index uniques.
+> **Ne modifiez pas ces colonnes** — le code Ruby du gem (`token.rb`,
+> `TokensService::Revoke`) est câblé sur `revoked_at`. Si vous éditez la
+> migration pour revenir au schéma `revoked` boolean décrit dans une
+> version antérieure de cet article, le endpoint `revoke` lèvera une
+> `NoMethodError` au runtime.
+
 **`db/migrate/xxx_devise_create_users.rb`** :
 
 ```ruby [db/migrate/xxx_devise_create_users.rb]
-class DeviseCreateUsers < ActiveRecord::Migration[8.0]
+class DeviseCreateUsers < ActiveRecord::Migration[8.1]
   def change
     create_table :users do |t|
       t.string :email,              null: false, default: ""
@@ -78,24 +89,35 @@ class DeviseCreateUsers < ActiveRecord::Migration[8.0]
 end
 ```
 
-**`db/migrate/xxx_devise_api_create_devise_api_tokens.rb`** :
+**`db/migrate/xxx_create_devise_api_tables.rb`** — laissez le fichier généré
+par `devise_api:install` tel quel, ne le réécrivez pas à la main :
 
-```ruby [db/migrate/xxx_devise_api_create_devise_api_tokens.rb]
-class DeviseApiCreateDeviseApiTokens < ActiveRecord::Migration[8.0]
+```ruby [db/migrate/xxx_create_devise_api_tables.rb]
+class CreateDeviseApiTables < ActiveRecord::Migration[8.1]
   def change
-    create_table :devise_api_tokens do |t|
-      t.references :resource_owner, polymorphic: true, null: false, index: true
-      t.string  :access_token,           null: false
-      t.string  :refresh_token
-      t.integer :expires_in,             null: false
-      t.boolean :revoked,                null: false, default: false
-      t.string  :previous_refresh_token, default: ""
+    # Utilise le type de clé primaire/étrangère configuré pour Active Record
+    primary_key_type, foreign_key_type = primary_and_foreign_key_types
+
+    create_table :devise_api_tokens, id: primary_key_type do |t|
+      t.belongs_to :resource_owner, null: false, polymorphic: true, index: true, type: foreign_key_type
+      t.string :access_token, null: false, index: true
+      t.string :refresh_token, null: true, index: true
+      t.integer :expires_in, null: false
+      t.datetime :revoked_at, null: true
+      t.string :previous_refresh_token, null: true, index: true
+
       t.timestamps
     end
+  end
 
-    add_index :devise_api_tokens, :access_token,           unique: true
-    add_index :devise_api_tokens, :refresh_token,          unique: true
-    add_index :devise_api_tokens, :previous_refresh_token
+  private
+
+  def primary_and_foreign_key_types
+    config = Rails.configuration.generators
+    setting = config.options[config.orm][:primary_key_type]
+    primary_key_type = setting || :primary_key
+    foreign_key_type = setting || :bigint
+    [primary_key_type, foreign_key_type]
   end
 end
 ```
@@ -115,6 +137,10 @@ par une version épurée centrée sur notre besoin API :
 
 ```ruby [config/initializers/devise.rb]
 Devise.setup do |config|
+  # Charge l'intégration ActiveRecord — sans cette ligne, `devise :database_authenticatable, ...`
+  # dans les modèles échoue avec NoMethodError.
+  require "devise/orm/active_record"
+
   config.mailer_sender = ENV.fetch("MAILER_FROM", "noreply@example.com")
 
   # API uniquement — désactive les redirections HTML après connexion/déconnexion
@@ -144,6 +170,13 @@ end
 `navigational_formats = []` est essentiel en mode API : sans ça, Devise
 tente des redirections HTML après connexion/déconnexion, ce qui provoque
 des erreurs `ActionController::InvalidAuthenticityToken`.
+
+`require "devise/orm/active_record"` est générée par défaut par
+`devise:install` mais disparaît si vous épurez le fichier sans y prêter
+attention — c'est elle qui ajoute la méthode de classe `devise` sur
+`ActiveRecord::Base`. Sans elle, `User < ApplicationRecord` avec un appel
+à `devise :database_authenticatable, ...` lève `NoMethodError: undefined
+method 'devise' for class User` au chargement du modèle.
 
 ---
 
@@ -195,9 +228,13 @@ end
 | `POST` | `/users/tokens/sign_up` | Inscription |
 | `POST` | `/users/tokens/sign_in` | Connexion |
 | `POST` | `/users/tokens/refresh` | Renouvellement token |
-| `DELETE` | `/users/tokens/revoke` | Déconnexion |
+| `POST` | `/users/tokens/revoke` | Déconnexion |
 | `GET` | `/users/tokens/info` | Informations utilisateur |
 ::
+
+> 💡 `revoke` est en `POST`, pas en `DELETE` — c'est ainsi que
+> `devise-api` déclare la route (`resource :tokens do collection do post
+> :revoke ... end end`). Une requête `DELETE` sur cette route renvoie 404.
 
 Vérifiez les routes générées :
 
@@ -287,7 +324,7 @@ RSpec.describe "Authentification", type: :request do
     it "crée un compte et retourne un token" do
       post sign_up_user_tokens_path, params: valid_params
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
       expect(json["token"]).to be_present
       expect(json["refresh_token"]).to be_present
@@ -325,7 +362,7 @@ RSpec.describe "Authentification", type: :request do
     end
   end
 
-  describe "DELETE /users/tokens/revoke" do
+  describe "POST /users/tokens/revoke" do
     it "révoque le token — plus d'accès ensuite" do
       user = create(:user)
       post sign_in_user_tokens_path, params: {
@@ -334,9 +371,9 @@ RSpec.describe "Authentification", type: :request do
       }
       token = JSON.parse(response.body)["token"]
 
-      delete revoke_user_tokens_path, headers: { "Authorization" => "Bearer #{token}" }
+      post revoke_user_tokens_path, headers: { "Authorization" => "Bearer #{token}" }
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
 
       get info_user_tokens_path, headers: { "Authorization" => "Bearer #{token}" }
       expect(response).to have_http_status(:unauthorized)
@@ -349,15 +386,27 @@ end
 
 #### 🧪 Lancer les tests
 
+> ⚠️ Notre `docker-compose.yml` (article 4) fixe `RAILS_ENV=development`
+> sur le conteneur `backend`. Cette variable est déjà présente dans
+> l'environnement du conteneur au moment où `bundle exec rspec` démarre,
+> ce qui **écrase silencieusement** le `ENV["RAILS_ENV"] ||= "test"` de
+> `spec/rails_helper.rb` (`||=` ne s'applique que si la variable est
+> vide). Résultat sans précaution : RSpec tourne en environnement
+> `development` — mauvaise base de données, et surtout `config.hosts`
+> (restreint en dev à `localhost`/votre domaine) rejette le host de test
+> par défaut de Rails (`www.example.com`) avec une erreur 403 "Blocked
+> hosts". Pensez donc à toujours forcer l'environnement avec `-e
+> RAILS_ENV=test` sur `docker compose exec` :
+
 ```bash
 # Tests du modèle
-docker compose exec backend bundle exec rspec spec/models/user_spec.rb
+docker compose exec -e RAILS_ENV=test backend bundle exec rspec spec/models/user_spec.rb
 
 # Tests des endpoints auth
-docker compose exec backend bundle exec rspec spec/requests/auth_spec.rb
+docker compose exec -e RAILS_ENV=test backend bundle exec rspec spec/requests/auth_spec.rb
 
 # Ou tous les tests
-docker compose exec backend bundle exec rspec
+docker compose exec -e RAILS_ENV=test backend bundle exec rspec
 ```
 
 ---
@@ -381,7 +430,7 @@ git push origin main
 | `config/routes.rb` | ✏️ Modifié | `devise_for :users` |
 | `app/models/user.rb` | ✏️ Modifié | Module `:api`, relation `todo_items` |
 | `db/migrate/xxx_devise_create_users.rb` | ➕ Généré | Table `users` |
-| `db/migrate/xxx_devise_api_create_devise_api_tokens.rb` | ➕ Généré | Table des tokens |
+| `db/migrate/xxx_create_devise_api_tables.rb` | ➕ Généré | Table des tokens (`revoked_at`) |
 | `spec/factories/users.rb` | ➕ Nouveau | Factory User avec Faker |
 | `spec/models/user_spec.rb` | ➕ Nouveau | Tests des validations |
 | `spec/requests/auth_spec.rb` | ➕ Nouveau | Tests des endpoints auth |
