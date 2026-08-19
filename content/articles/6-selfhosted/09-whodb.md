@@ -1,7 +1,7 @@
 ---
 title: "Docker – WhoDB"
 description: "Découvrez comment installer et configurer WhoDB avec Docker : explorateur de bases de données léger, multi-SGBD, et requêtes en langage naturel via Ollama."
-icon: "i-mdi:database-search"
+icon: "i-mdi:database-eye"
 article_id: "docker-whodb-init"
 color: "blue"
 draft: false
