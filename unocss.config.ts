@@ -19,7 +19,8 @@ export default defineConfig({
     'i-mdi:robot-outline',
     'i-mdi:content-copy',
     'i-mdi:note-multiple-outline',
-    'i-mdi:link-variant'
+    'i-mdi:link-variant',
+    'i-mdi:database-eye',
   ],
   presets: [
     presetIcons({
