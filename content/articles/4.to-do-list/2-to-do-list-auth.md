@@ -469,11 +469,12 @@ mkdir -p app/composables
 import type { ILoginInput, IRegisterInput } from '~/types/auth'
 
 export const useAuthApi = () => {
-  const { clear } = useUserSession()
+  const { clear, fetch: fetchUserSession } = useUserSession()
 
   const signIn = async (credentials: ILoginInput) => {
     try {
       const data = await $fetch('/api/auth/login', { method: 'POST', body: credentials })
+      await fetchUserSession()
       return { data, statusCode: 200 }
     } catch (error: any) {
       return { data: null, statusCode: error?.statusCode ?? 0 }
@@ -483,6 +484,7 @@ export const useAuthApi = () => {
   const signUp = async (credentials: IRegisterInput) => {
     try {
       const data = await $fetch('/api/auth/register', { method: 'POST', body: credentials })
+      await fetchUserSession()
       return { data, statusCode: 200 }
     } catch (error: any) {
       return { data: null, statusCode: error?.statusCode ?? 0 }
@@ -498,6 +500,17 @@ export const useAuthApi = () => {
   return { signIn, signUp, signOut }
 }
 ```
+
+> ⚠️ **Piège** : `useUserSession()` expose un état réactif côté client
+> (`useState('nuxt-session')`), distinct du cookie de session posé côté
+> serveur par `setUserSession`. Sans l'appel explicite à `fetchUserSession()`
+> (= `fetch()` de `useUserSession()`) après un login/register réussi, `loggedIn`
+> reste `false` côté client jusqu'au prochain rechargement complet de la page.
+> Conséquence concrète : `router.push('/todo')` s'exécute bien après
+> connexion, mais le middleware `auth` de l'étape suivante voit encore
+> `loggedIn.value === false` et renvoie aussitôt vers `/login` — on dirait
+> que la connexion échoue silencieusement alors que le serveur a bien créé
+> la session.
 
 ---
 
@@ -878,7 +891,7 @@ git push origin main
 | `server/api/auth/login.post.ts` | ➕ Nouveau | Login → session scellée |
 | `server/api/auth/register.post.ts` | ➕ Nouveau | Inscription → session scellée |
 | `server/api/auth/logout.delete.ts` | ➕ Nouveau | Révocation + clear session |
-| `app/composables/useAuthApi.ts` | ➕ Nouveau | `signIn`, `signUp`, `signOut` |
+| `app/composables/useAuthApi.ts` | ➕ Nouveau | `signIn`, `signUp`, `signOut`, rafraîchit la session client après login/register |
 | `app/middleware/auth.ts` | ➕ Nouveau | Protection des routes |
 | `app/stores/application.ts` | ➕ Nouveau | Store global (notifications) |
 | `app/pages/login.vue` | ➕ Nouveau | Page de connexion |

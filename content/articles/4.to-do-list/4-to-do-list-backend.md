@@ -418,29 +418,103 @@ end
 
 ---
 
-##### 11. Créer `app/controllers/application_controller.rb`
+##### 11. Créer les classes de base des Services (`ApplicationService` + `ServiceResult`)
+
+Tout appel à un Service renvoie un objet `ServiceResult` — jamais une
+exception pour un échec métier attendu (validation ratée, règle métier
+non respectée). Le controller n'a qu'à interroger `success?`, `data`
+et `errors`.
+
+```bash
+mkdir -p app/services
+```
+
+```ruby [app/services/service_result.rb]
+class ServiceResult
+  attr_reader :data, :errors
+
+  def initialize(success:, data: nil, errors: [])
+    @success = success
+    @data = data
+    @errors = Array(errors)
+  end
+
+  def success?
+    @success
+  end
+
+  def failure?
+    !success?
+  end
+end
+```
+
+```ruby [app/services/application_service.rb]
+class ApplicationService
+  def self.call(...)
+    new(...).call
+  end
+
+  private
+
+  def success(data = nil)
+    ServiceResult.new(success: true, data: data)
+  end
+
+  def failure(errors)
+    ServiceResult.new(success: false, errors: errors)
+  end
+end
+```
+
+Tous les services héritent de `ApplicationService` et implémentent
+`#call`, qui doit toujours se terminer par `success(...)` ou
+`failure(...)`. `.call` en méthode de classe permet d'écrire
+`Todos::CreateService.call(params)` depuis le controller sans jamais
+instancier l'objet explicitement :
+
+```ruby
+module Todos
+  class CreateService < ApplicationService
+    def initialize(params)
+      @params = params
+    end
+
+    def call
+      todo = Todo::Item.new(@params)
+
+      if todo.save
+        success(todo)
+      else
+        failure(todo.errors.full_messages)
+      end
+    end
+  end
+end
+```
+
+---
+
+##### 12. Créer `app/controllers/application_controller.rb`
 
 Ce controller de base ajoute un helper `serializer_response` utilisé
-par tous les controllers API pour standardiser le format des réponses :
+par tous les controllers API pour transformer un `ServiceResult` en
+réponse JSON:API :
 
 ```ruby [app/controllers/application_controller.rb]
 class ApplicationController < ActionController::API
-  # Sérialise la réponse à partir d'un service
-  # @resource [Hash] { success:, payload:, errors:, status: }
-  def serializer_response(serializer_class)
-    if @resource[:success]
-      payload = @resource[:payload]
+  # Sérialise la réponse à partir d'un ServiceResult (voir app/services/service_result.rb)
+  def serializer_response(result, serializer_class, success_status: :ok)
+    if result.success?
+      payload = result.data
 
       if payload.nil?
-        render json: {}, status: :ok
-      elsif payload.respond_to?(:each)
-        render json: serializer_class.new(payload).serializable_hash, status: :ok
+        render json: {}, status: success_status
       else
-        render json: serializer_class.new(payload).serializable_hash, status: :ok
+        render json: serializer_class.new(payload).serializable_hash, status: success_status
       end
     else
-      status = @resource[:status] || :unprocessable_entity
-      render json: { errors: @resource[:errors] }, status: status
+      render json: { errors: result.errors }, status: :unprocessable_entity
     end
   end
 end
@@ -449,31 +523,11 @@ end
 Tous les controllers l'utiliseront ainsi :
 
 ```ruby
-def index
-  @resource = { success: true, payload: Todo::Item.all }
-  serializer_response(Todo::ItemSerializer)
+def create
+  result = Todos::CreateService.call(todo_params)
+  serializer_response(result, Todo::ItemSerializer, success_status: :created)
 end
 ```
-
----
-
-##### 12. Créer `app/services/application_callable.rb`
-
-```bash
-mkdir -p app/services
-```
-
-```ruby [app/services/application_callable.rb]
-class ApplicationCallable
-  def self.call(...)
-    new(...).call
-  end
-end
-```
-
-Le pattern **Command Object** : chaque service hérite de cette classe et
-implémente `#call`. L'appel se fait via `MonService.call(params)` sans
-instancier manuellement l'objet.
 
 ---
 
@@ -591,8 +645,9 @@ git push origin main
 | `config/database.yml` | ✏️ Modifié | Connexion via `DATABASE_URL` |
 | `config/initializers/cors.rb` | ➕ Nouveau | CORS configurable |
 | `config/routes.rb` | ✏️ Modifié | Health check + namespace API |
-| `app/controllers/application_controller.rb` | ✏️ Modifié | Helper `serializer_response` |
-| `app/services/application_callable.rb` | ➕ Nouveau | Pattern Command Object |
+| `app/services/service_result.rb` | ➕ Nouveau | Contrat `success?` / `data` / `errors` |
+| `app/services/application_service.rb` | ➕ Nouveau | Classe de base des Services (`.call`) |
+| `app/controllers/application_controller.rb` | ✏️ Modifié | Helper `serializer_response` (consomme un `ServiceResult`) |
 | `spec/rails_helper.rb` | ✏️ Modifié | RSpec + FactoryBot + Shoulda |
 ::
 

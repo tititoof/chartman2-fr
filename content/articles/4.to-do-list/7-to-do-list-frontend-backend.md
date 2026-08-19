@@ -16,7 +16,15 @@ jamais le serveur grâce à `nuxt-auth-utils`.
 
 > 💡 Commits correspondants :
 > - Backend : [`feat: seeds scopes par défaut`](https://forgejo.chartman-fr.ovh/tititoof/todo-backend){:target="_blank"}
+> - Backend : [`fix: autoriser le hostname Docker interne backend`](https://forgejo.chartman-fr.ovh/tititoof/todo-backend){:target="_blank"}
 > - Frontend : [`feat: connexion API Rails`](https://forgejo.chartman-fr.ovh/tititoof/todo-frontend){:target="_blank"}
+> - Frontend : [`fix: rafraîchir la session client après login/register`](https://forgejo.chartman-fr.ovh/tititoof/todo-frontend){:target="_blank"}
+
+> ⚠️ Testé en réel (Docker + Traefik + domaine local) après rédaction
+> initiale de l'article : deux corrections ont dû être apportées pour que
+> le flux fonctionne de bout en bout — voir l'étape 2 ci-dessous (backend)
+> et l'encart correspondant dans l'article 2 « Authentification »
+> (frontend, `useAuthApi.ts`).
 
 ---
 
@@ -55,7 +63,7 @@ scopes = [
   { name: "Personnel", nickname: "personnal" },
   { name: "Travail",   nickname: "work" },
   { name: "Famille",   nickname: "family" },
-  { name: "Autre",     nickname: "other" },
+  { name: "Autre",     nickname: "other" }
 ]
 
 scopes.each do |attrs|
@@ -71,7 +79,7 @@ puts "Seeds OK : #{Todo::Scope.count} scopes"
 docker compose exec backend bin/rails db:seed
 ```
 
-Commitez et passez au frontend :
+Commitez :
 
 ```bash
 git add db/seeds.rb
@@ -81,11 +89,40 @@ git push origin main
 
 ---
 
+#### 🔧 2. Backend — Autoriser le hostname Docker interne
+
+Le frontend appelle Rails via `RAILS_API_URL=http://backend:3001` (le nom du
+service Docker, pas le domaine public) : les server routes créées plus bas
+enverront donc un `Host: backend:3001`. Sans ça, Rails 8 rejette la requête
+avec un `403 Blocked host`, **avant même l'authentification** — le point
+d'entrée de tout le flux de cet article.
+
+```diff [config/environments/development.rb]
+  # Toujours autoriser localhost et le réseau Docker interne
+  config.hosts << "localhost"
++ config.hosts << "backend"
+  config.hosts << /.*\.chartman2-fr\.ovh/
+```
+
+```bash
+docker compose restart backend
+```
+
+Commitez et passez au frontend :
+
+```bash
+git add config/environments/development.rb
+git commit -m "fix: autoriser le hostname Docker interne backend (Host Authorization)"
+git push origin main
+```
+
+---
+
 #### 🎨 Frontend — dépôt `todo-frontend`
 
 ---
 
-##### 2. Mettre à jour `app/types/todo.ts`
+##### 3. Mettre à jour `app/types/todo.ts`
 
 Ajoutez `ITodoScope` et le champ `scopeApiId` dans `ITodoItem` — l'ID
 numérique Rails est nécessaire pour les appels PUT et DELETE :
@@ -113,7 +150,7 @@ export interface ITodoScope {
 
 ---
 
-##### 3. Mettre à jour `app/stores/todo.ts`
+##### 4. Mettre à jour `app/stores/todo.ts`
 
 Ajoutez la gestion des scopes et mettez à jour `addItem` pour accepter
 `scopeApiId` :
@@ -177,7 +214,7 @@ if (import.meta.hot) {
 
 ---
 
-##### 4. Créer les server routes pour les items
+##### 5. Créer les server routes pour les items
 
 ```bash
 mkdir -p server/api/todo/items
@@ -217,7 +254,7 @@ export default defineEventHandler(async (event) => {
 
 ---
 
-##### 5. Créer les server routes pour les scopes
+##### 6. Créer les server routes pour les scopes
 
 ```bash
 mkdir -p server/api/todo/scopes
@@ -260,7 +297,7 @@ le token est récupéré depuis la session scellée, le browser ne le voit jamai
 
 ---
 
-##### 6. Créer `app/composables/useTodoApi.ts`
+##### 7. Créer `app/composables/useTodoApi.ts`
 
 ```ts [app/composables/useTodoApi.ts]
 import type { ITodoItem, ITodoScope, IScope } from '~/types/todo'
@@ -357,7 +394,7 @@ d'état optimiste — on garde le code simple.
 
 ---
 
-##### 7. Mettre à jour `app/components/partial/todo/new.vue`
+##### 8. Mettre à jour `app/components/partial/todo/new.vue`
 
 Les scopes viennent maintenant du store (chargés depuis l'API) et
 la création d'item passe par `useTodoApi` :
@@ -438,7 +475,7 @@ pas une constante locale.
 
 ---
 
-##### 8. Mettre à jour `app/components/partial/todo/list.vue`
+##### 9. Mettre à jour `app/components/partial/todo/list.vue`
 
 Toggle et suppression passent par l'API, avec un état de chargement
 par item pour ne pas bloquer l'interface :
@@ -538,7 +575,7 @@ seul **cet item** affiche un indicateur de chargement, pas toute la liste.
 
 ---
 
-##### 9. Mettre à jour `app/pages/todo.vue`
+##### 10. Mettre à jour `app/pages/todo.vue`
 
 Ajoutez le chargement des scopes et items au montage de la page :
 
@@ -607,7 +644,7 @@ un flash de contenu vide. Une fois les données chargées, la page s'affiche.
 
 ---
 
-##### 10. Mettre à jour `app/app.vue`
+##### 11. Mettre à jour `app/app.vue`
 
 Ajoutez le bouton de déconnexion dans la barre de navigation :
 
@@ -757,6 +794,7 @@ git push origin main
 | Dépôt | Fichier | Action | Rôle |
 |-------|---------|--------|------|
 | Backend | `db/seeds.rb` | ➕ Nouveau | 4 scopes par défaut |
+| Backend | `config/environments/development.rb` | ✏️ Modifié | Autorise le hostname Docker interne `backend` |
 | Frontend | `app/types/todo.ts` | ✏️ Modifié | `ITodoScope`, `scopeApiId` |
 | Frontend | `app/stores/todo.ts` | ✏️ Modifié | `scopes` + `setScopes` |
 | Frontend | `server/api/todo/items.*` | ➕ 4 routes | Proxy items → Rails |
