@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="tests/components/articles/categories.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/bar/bottom.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/bar/top.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/button/article.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/button/back_to_top.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/page/snackbar.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/page/title.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/about_me.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/articles.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/contact_me.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/legal_notices.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/presentation.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/skills.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/components/partial/main/technologies.nuxt.spec.ts">
+
+  </file>
+  <file path="tests/composables/numberFormat.nuxt.spec.ts">
+    <testCase name="Composable: numberFormat - return 1k" duration="4" />
+  </file>
+  <file path="tests/composables/setTheme.nuxt.spec.ts">
+    <testCase name="Composable: SetTheme - set theme dark" duration="16" />
+    <testCase name="Composable: SetTheme - set theme dark" duration="3" />
+    <testCase name="Composable: SetTheme - set theme light" duration="2" />
+    <testCase name="Composable: SetTheme - set theme light" duration="2" />
+  </file>
+  <file path="tests/stores/application.nuxt.spec.ts">
+    <testCase name="Store: User - initializes with correct values" duration="9" />
+    <testCase name="Store: User - can change isPhone value" duration="2" />
+    <testCase name="Store: User - can change isDarkTheme value" duration="1" />
+    <testCase name="Store: User - can change category value" duration="1" />
+    <testCase name="Store: User - can change message value" duration="1" />
+    <testCase name="Store: User - can change show value" duration="1" />
+    <testCase name="Store: User - can toggle isDarkTheme value" duration="1" />
+  </file>
+</testExecutions>
