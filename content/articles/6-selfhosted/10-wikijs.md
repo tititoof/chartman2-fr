@@ -7,7 +7,7 @@ color: "blue"
 draft: false
 publishedAt: '2026-08-26'
 ---
-#### 📌 Wiki.js ![Wiki.js](/img/wikijs.png){ width=30px }
+#### 📌 Wiki.js ![Wiki.js](/img/content/wikijs-logo.svg){ width=80px }
 
 OpenProject centralise déjà les tâches et le suivi de projet dans cette stack — mais où vit la documentation qui ne bouge pas au jour le jour : procédures d'astreinte, schémas d'architecture, notes de configuration ? [Wiki.js](https://js.wiki){:target="_blank"} est un moteur de wiki open-source qui remplit ce rôle, avec une interface nettement plus moderne que les wikis traditionnels :
 
@@ -143,8 +143,6 @@ Dans **Administration** → **Login** :
 - Activez le fournisseur souhaité (Google, GitHub, LDAP…)
 - Renseignez les identifiants applicatifs (client ID / secret pour un OAuth2, ou les paramètres du serveur pour un LDAP)
 - Optionnel : désactivez l'inscription locale une fois le fournisseur externe en place, pour éviter d'avoir deux façons différentes de se connecter
-
-![Wiki.js - Auth](/img/content/wikijs-auth.png)
 
 > 💡 Si vous utilisez déjà un fournisseur OAuth2/OIDC ailleurs dans votre stack (par exemple pour OpenProject), le réutiliser ici évite de multiplier les comptes et centralise la gestion des accès à un seul endroit.
 
