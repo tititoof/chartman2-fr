@@ -21,6 +21,7 @@ export default defineConfig({
     'i-mdi:note-multiple-outline',
     'i-mdi:link-variant',
     'i-mdi:database-eye',
+    'i-mdi:book-open-page-variant',
   ],
   presets: [
     presetIcons({
