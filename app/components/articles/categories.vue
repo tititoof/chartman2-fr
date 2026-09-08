@@ -37,8 +37,8 @@
         </v-card-title>
         <v-card-text class="title font-weight-light mb-5">
           <v-sheet
-            :height="30"
             color="background"
+            class="description-scroll"
           >
             {{ text }}
           </v-sheet>
@@ -118,5 +118,25 @@ const articles = reactive([
 .card-title-wrap {
   white-space: normal;
   word-break: break-word;
+}
+
+.description-scroll {
+  max-height: 96px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--v-theme-info)) transparent;
+}
+
+.description-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.description-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--v-theme-info));
+  border-radius: 999px;
 }
 </style>
