@@ -4,7 +4,7 @@ description: "Plusieurs semaines après avoir branché Ollama sur ma stack DevOp
 icon: 'i-mdi:robot-industrial-outline'
 article_id: 'mcp-infra-etat-des-lieux'
 color: 'teal'
-draft: true
+draft: false
 publishedAt: '2026-09-08'
 ---
 
