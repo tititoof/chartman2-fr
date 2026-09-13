@@ -115,7 +115,7 @@ const { data: articles } = await useAsyncData('content', () =>
   text-align: center;
   margin: 14px 0 10px;
   white-space: normal;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .article-card-desc {

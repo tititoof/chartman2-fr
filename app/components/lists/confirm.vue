@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="props.show"
+    v-model="show"
     width="auto"
   >
     <v-card
@@ -44,10 +44,6 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  show: {
-    type: Boolean,
-    default: false,
-  },
   okText: {
     type: String,
     default: 'Ok',
@@ -74,6 +70,7 @@ const props = defineProps({
   },
 })
 
+const show = defineModel('show', { type: Boolean, default: false })
 const emit = defineEmits(['submit-close', 'submit-action'])
 const handleClose = () => {
   emit('submit-close')

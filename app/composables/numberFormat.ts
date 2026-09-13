@@ -8,8 +8,9 @@ export const numberFormat = (num: number, digits: number) => {
     { value: 1e15, symbol: "P" },
     { value: 1e18, symbol: "E" }
   ];
-  const regexp = /\.0+$|(?<=\.\d*[1-9])0+$/;
+  const trimTrailingZeros = (value: string) =>
+    value.includes(".") ? value.replace(/0+$/, "").replace(/\.$/, "") : value;
   const item = lookup.findLast(item => num >= item.value);
-  
-  return item ? (num / item.value).toFixed(digits).replace(regexp, "").concat(item.symbol) : "0";
+
+  return item ? trimTrailingZeros((num / item.value).toFixed(digits)).concat(item.symbol) : "0";
 }

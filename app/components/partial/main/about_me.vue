@@ -147,9 +147,6 @@ onMounted(async () => {
 .about-me-link:hover {
   background-color: rgb(var(--v-theme-primary));
   color: rgb(var(--v-theme-on-primary));
-}
-
-.about-me-link:hover {
   text-decoration: underline;
 }
 </style>

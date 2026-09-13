@@ -102,7 +102,7 @@ const nameRules = [
 ]
 const emailRules = [
   v => !!v || 'Votre courriel (e-mail) est requis',
-  v => /.+@.+\..+/.test(v) || 'Votre courriel (e-mail) doit être valide',
+  v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || 'Votre courriel (e-mail) doit être valide',
 ]
 const subjectRules = [
   v => !!v || 'Le sujet est requis',
