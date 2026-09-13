@@ -49,7 +49,7 @@
           </v-row>
         </v-container>
         <section>
-          <NuxtParticles
+          <vue-particles
             id="tsparticles"
             :options="options"
           />
@@ -63,51 +63,54 @@
 const runtimeConfig = useRuntimeConfig()
 const { mobile } = useDisplay()
 const appUrl = runtimeConfig.public.appUrl
+
 const options = {
-  fullScreen: false,
+  fullScreen: { enable: false },
   fpsLimit: 60,
+  detectRetina: true,
   particles: {
     number: {
-      value: 15,
-      density: {
-        enable: true,
-        value_area: mobile ? '40vh' : '65vh',
-      },
+      value: mobile.value ? 10 : 20,
     },
     shape: {
       type: 'circle',
     },
-    preset: 'firefly',
     color: {
-      value: '#CCCC66',
+      value: '#FFD700',
     },
     life: {
       duration: {
-        value: 12,
+        value: 4,
         sync: false,
       },
-      count: 105,
+      count: 0,
     },
     opacity: {
-      value: { min: 0.1, max: 2 },
+      value: { min: 0.1, max: 0.9 },
       animation: {
         enable: true,
-        speed: 3,
+        speed: 1,
+        sync: false,
       },
     },
     size: {
-      value: {
-        min: 1,
-        max: 4,
+      value: { min: 1, max: 4 },
+      animation: {
+        enable: true,
+        speed: 4,
+        minimumValue: 0.5,
+        sync: false,
       },
     },
     move: {
       enable: true,
-      speed: 7,
+      speed: 1.5,
       random: true,
-      size: true,
+      straight: false,
+      outModes: {
+        default: 'out',
+      },
     },
-    retina_detect: true,
   },
 }
 

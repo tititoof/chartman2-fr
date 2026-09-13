@@ -17,16 +17,12 @@ export const useBackendApi = async (
   }
 
   if (! methods.includes(method)) {
-    return Promise.reject({
-      reason: 503
-    })
+    throw Object.assign(new Error('Unsupported HTTP method'), { reason: 503 })
   }
 
   if (isAuthenticateNeeded) {
     if (!cookies.get('token')) {
-      return Promise.reject({
-        reason: 503
-      })
+      throw Object.assign(new Error('Missing authentication token'), { reason: 503 })
     }
 
     headers.Authorization = 'Bearer ' + cookies.get('token')

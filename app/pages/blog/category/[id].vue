@@ -41,7 +41,7 @@
               </p>
               <v-card-actions class="mt-auto justify-center">
                 <v-btn
-                  class="font-weight-black mt-2 btn-lire"
+                  class="font-weight-black mt-2 btn-lire btn-outline-hover-fill"
                   color="primary"
                   variant="outlined"
                   rounded="lg"
@@ -115,7 +115,7 @@ const { data: articles } = await useAsyncData('content', () =>
   text-align: center;
   margin: 14px 0 10px;
   white-space: normal;
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .article-card-desc {

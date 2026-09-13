@@ -56,7 +56,7 @@ const emit = defineEmits(['addLoading', 'removeLoading'])
 
 const stats = reactive(CStats)
 const getStars = async (url, star_count) => {
-  const { data, status, error, refresh, clear } = await useFetch(url)
+  const { data, error } = await useFetch(url)
 
   if (! error) {
     const item = await data.json()

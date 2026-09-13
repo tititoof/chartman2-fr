@@ -23,6 +23,7 @@ export default defineConfig({
     'i-mdi:database-eye',
     'i-mdi:book-open-page-variant',
     'i-mdi:robot-industrial-outline',
+    'i-mdi:source-branch',
   ],
   presets: [
     presetIcons({

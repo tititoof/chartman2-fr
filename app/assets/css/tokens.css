@@ -29,3 +29,9 @@
   font-family: var(--font-display);
   line-height: var(--leading-heading);
 }
+
+/* Outlined buttons that turn "flat" (filled) on hover. */
+.btn-outline-hover-fill:hover {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+}

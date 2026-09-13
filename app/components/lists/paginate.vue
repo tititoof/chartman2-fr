@@ -84,11 +84,9 @@ watch(
 
 watch(() => [props.numberPerPage, props.numberOfItems, props.pageNumber],
   (
-    newValues: [number, number, number], 
-    oldValues: [number, number, number]
+    newValues: [number, number, number]
   ) => {
-    const [newNumberPerPage, newNumberOfItems, newPageNumber] = newValues
-    const [oldNumberPerPage, oldNumberOfItems, oldPageNumber] = oldValues || []
+    const [newNumberPerPage, newNumberOfItems] = newValues
 
     const recalculatedTotalPages = Math.max(1, Math.ceil(newNumberOfItems / newNumberPerPage))
 

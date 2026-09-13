@@ -1,5 +1,5 @@
 export const useArticleQuery = () => {
-  const isDev = process.dev
+  const isDev = import.meta.dev
 
   // Filtre standard à appliquer sur toutes les requêtes d'articles
   const applyPublishFilter = <T>(query: T & {
