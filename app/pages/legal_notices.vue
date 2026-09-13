@@ -1,17 +1,14 @@
 <template>
   <v-row class="d-flex align-self-start py-12">
     <v-container>
-      <button-article />
+      <button-article class="my-4" />
 
       <page-title
-        class="py-12"
         :title="$t('legal_notices.title')"
         icon="i-mdi:scale-balance"
       />
-
-      
-
-      <partial-main-legal-notices />
+      <br>
+      <partial-main-legal-notices class="py-12" />
     </v-container>
   </v-row>
 </template>

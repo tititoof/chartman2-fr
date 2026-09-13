@@ -1,7 +1,13 @@
 <template>
   <v-responsive>
-    <v-overlay v-if="loading">
-      <v-progress-circular indeterminate color="primary" size="64"/>
+    <v-overlay
+      :model-value="loading"
+      persistent
+      scroll-strategy="none"
+      scrim="rgb(var(--v-theme-background))"
+      opacity="1"
+    >
+      <v-progress-circular indeterminate color="primary" size="64" width="4" />
     </v-overlay>
     <lazy-partial-main-presentation @addLoading="addLoading" @removeLoading="removeLoading" />
     <lazy-partial-main-about-me @addLoading="addLoading" @removeLoading="removeLoading" />
@@ -29,13 +35,15 @@ useHead({
 })
 
 applicationStore.setIsPhone(mobile.value)
-const loading = computed(() => applicationStore.getComponentsLoading === 0)
+
+const componentsLoading = ref(0)
+const loading = computed(() => componentsLoading.value > 0)
 const addLoading = () => {
-  applicationStore.addComponentsLoading()
+  componentsLoading.value++
 }
 
 const removeLoading = () => {
-  applicationStore.removeComponentsLoading()
+  componentsLoading.value--
 }
 </script>
 

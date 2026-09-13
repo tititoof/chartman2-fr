@@ -1,11 +1,14 @@
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
 <template>
-  <v-card color="info-container">
+  <v-card color="surface" variant="flat">
     <v-container
       id="features"
       class="text-center py-12"
     >
-      <section-title title="Mes compétences" />
+      <section-title
+        eyebrow="Mes compétences"
+        title=""
+      />
 
       <section
         v-for="({ title, text, skill }, iSkills) in skills"
@@ -30,44 +33,40 @@
             <v-card
               v-aos="['animate__flipInY']"
               :data-aos-delay="`0.` + ((iSkills + 1) * (iSkill + 1) * 5) + `s`"
-              class="py-12 px-4"
-              :color="color"
-              flat
-              rounded="lg"
-              variant="outlined"
+              class="py-12 px-4 skill-card"
+              color="background"
+              variant="flat"
               max-height="300"
               min-height="300"
             >
               <v-avatar
                 v-if="type === 'icon'"
-                color="primary-container"
-                size="88"
-                rounded="2"
+                color="surface"
+                size="72"
+                class="skill-avatar"
               >
-                <v-icon size="x-large" :icon="src">
+                <v-icon size="x-large" color="primary" :icon="src">
                 </v-icon>
               </v-avatar>
               <v-avatar
                 v-else
-                color="primary-container"
-                size="88"
-                rounded="2"
+                color="surface"
+                size="72"
+                class="skill-avatar"
               >
                 <v-avatar
-                  color="primary-container"
+                  color="surface"
                   size="42"
-                  rounded="2"
+                  rounded="lg"
                   :image="src"
                 />
               </v-avatar>
-              <v-card-title
-                class="justify-center text-subtitle-1 font-weight-black text-uppercase"
-              >
+              <p class="skill-card-title">
                 {{ skillTitle }}
-              </v-card-title>
-              <v-card-text class="subtitle-1">
+              </p>
+              <p class="skill-card-desc">
                 {{ skillText }}
-              </v-card-text>
+              </p>
             </v-card>
           </v-col>
         </v-row>
@@ -75,7 +74,7 @@
           class="mx-auto"
           width="112"
         >
-          <v-divider class="mt-4" />
+          <v-divider color="border" class="mt-4" />
 
         </v-responsive>
       </section>
@@ -85,18 +84,46 @@
 
 <script setup>
 import { CSkills, CSkillsCICD } from '~/utils/common'
-import { useApplicationStore } from '~/stores/application'
 
-const applicationStore = useApplicationStore()
-const color = computed(() => applicationStore.isDarkTheme ? 'white' : 'black')
 const skills = reactive([...CSkills, CSkillsCICD])
 const emit = defineEmits(['addLoading', 'removeLoading'])
+
+const imageSrcs = skills
+  .flatMap(({ skill }) => skill)
+  .filter(({ type }) => type === 'image')
+  .map(({ src }) => src)
 
 onBeforeMount(() => {
   emit('addLoading')
 })
 
-onMounted(() => {
+onMounted(async () => {
+  await preloadImages(imageSrcs)
   emit('removeLoading')
 })
 </script>
+
+<style lang="css" scoped>
+.skill-card {
+  border: 1px solid rgb(var(--v-theme-border));
+  border-radius: 12px;
+}
+
+.skill-avatar {
+  border-radius: 12px !important;
+}
+
+.skill-card-title {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 16px 0 8px;
+}
+
+.skill-card-desc {
+  color: rgb(var(--v-theme-muted));
+  font-size: 13px;
+  margin: 0;
+}
+</style>

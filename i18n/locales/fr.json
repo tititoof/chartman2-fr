@@ -44,17 +44,17 @@
         "title": "Liste des tests"
       },
       "new": {
-        "title": "Création d'un tests"
+        "title": "Création d'un test"
       },
       "edit": {
-        "title": "Modification d'un tests"
+        "title": "Modification d'un test"
       },
       "show": {
-        "title": "Visualisation d'un tests"
+        "title": "Visualisation d'un test"
       },
       "destroy": {
-        "title": "Suppression d'un tests",
-        "confirm": "Êtes vous sûr de vouloir supprimer '{ name }'"
+        "title": "Suppression d'un test",
+        "confirm": "Êtes-vous sûr de vouloir supprimer '{ name }'"
       },
       "form": {
         "fields": {
@@ -81,7 +81,7 @@
       },
       "destroy": {
         "title": "Suppression d'un cours",
-        "confirm": "Êtes vous sûr de vouloir supprimer '{ name }'",
+        "confirm": "Êtes-vous sûr de vouloir supprimer '{ name }'",
         "success": "Suppression du cours effectuée",
         "fail": "Erreur lors de la suppression du cours"
       },
@@ -93,26 +93,26 @@
     },
     "ages": {
       "list": {
-        "title": "Liste des age"
+        "title": "Liste des âges"
       },
       "new": {
-        "title": "Création d'un age",
-        "success": "Création du age effectuée",
-        "fail": "Erreur lors de la création du age"
+        "title": "Création d'un âge",
+        "success": "Création de l'âge effectuée",
+        "fail": "Erreur lors de la création de l'âge"
       },
       "edit": {
-        "title": "Modification d'un age",
-        "success": "Modification du age effectuée",
-        "fail": "Erreur lors de la modification du age"
+        "title": "Modification d'un âge",
+        "success": "Modification de l'âge effectuée",
+        "fail": "Erreur lors de la modification de l'âge"
       },
       "show": {
-        "title": "Visualisation d'un age"
+        "title": "Visualisation d'un âge"
       },
       "destroy": {
-        "title": "Suppression d'un age",
-        "confirm": "Êtes vous sûr de vouloir supprimer '{ name }'",
-        "success": "Suppression du age effectuée",
-        "fail": "Erreur lors de la suppression du age"
+        "title": "Suppression d'un âge",
+        "confirm": "Êtes-vous sûr de vouloir supprimer '{ name }'",
+        "success": "Suppression de l'âge effectuée",
+        "fail": "Erreur lors de la suppression de l'âge"
       },
       "form": {
         "fields": {

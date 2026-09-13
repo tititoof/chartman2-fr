@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex justify-space-around text-center">
+    <v-row class="d-flex justify-space-around text-center">
     <v-col
       v-for="({ type, src, color, text, title, link }, i) in articles"
       :key="i"
@@ -9,48 +9,45 @@
     >
       <v-card
         v-aos="['animate__flipInX']"
-        class="mx-auto d-flex flex-column"
+        class="mx-auto d-flex flex-column article-card"
         max-width="400"
-        min-height="480"
-        max-height="480"
-        color="secondary-container"
-        variant="outlined"
-        rounded="xl"
+        height="340"
+        color="article-card"
+        variant="flat"
       >
         <v-icon
           v-if="type === 'icon'"
-          class="mx-auto"
+          class="mx-auto mt-2"
           role="img"
-          size="280"
+          size="88"
           :icon="src"
           :color="color"
         />
 
         <v-img
           v-else
+          class="mx-auto mt-2"
           color="primary"
-          size="300"
+          size="88"
           :image="src"
         />
-        <v-card-title class="font-weight-black text-uppercase text-secondary text-wrap card-title-wrap">
+        <p class="article-card-cat text-wrap">
           {{ title }}
-        </v-card-title>
-        <v-card-text class="title font-weight-light mb-5">
-          <v-sheet
-            color="background"
-            class="description-scroll"
-          >
-            {{ text }}
-          </v-sheet>
-        </v-card-text>
-        <v-card-actions class="mt-auto">
+        </p>
+        <p class="article-card-desc description-scroll">
+          {{ text }}
+        </p>
+        <v-card-actions class="mt-auto justify-center">
           <v-btn
-            class="font-weight-black"
-            color="info"
+            class="font-weight-black btn-lire"
+            color="primary"
+            variant="outlined"
+            rounded="lg"
+            size="large"
+            min-width="180"
+            append-icon="i-mdi:arrow-right"
             :nuxt="true"
             :to="link"
-            variant="outlined"
-            block
           >
             <span class="font-weight-bold">
               Lire
@@ -109,34 +106,61 @@ const articles = reactive([
     src: 'i-mdi:shield-home',
     color: 'teal',
     title: 'Self-Hosted',
-    text: 'Divers services que l\'on peut self hosted.',
+    text: 'Divers services que l\'on peut auto-héberger.',
     link: '/blog/category/selfhosted',
   },
 ])
 </script>
 <style lang="css" scoped>
-.card-title-wrap {
+.article-card {
+  border: 1px solid rgb(var(--v-theme-border));
+  border-radius: 20px;
+  padding: 28px 22px;
+}
+
+.article-card-cat {
+  color: rgb(var(--v-theme-secondary));
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin: 14px 0 10px;
   white-space: normal;
   word-break: break-word;
+}
+
+.article-card-desc {
+  color: rgb(var(--v-theme-muted));
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0 0 18px;
 }
 
 .description-scroll {
   max-height: 96px;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgb(var(--v-theme-info)) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .description-scroll::-webkit-scrollbar {
-  width: 6px;
+  display: none;
+  width: 0;
+  height: 0;
 }
 
-.description-scroll::-webkit-scrollbar-track {
-  background: transparent;
+.btn-lire {
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.description-scroll::-webkit-scrollbar-thumb {
-  background-color: rgb(var(--v-theme-info));
-  border-radius: 999px;
+.btn-lire:hover {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+
+.btn-lire:hover :deep(.v-icon) {
+  color: rgb(var(--v-theme-on-primary)) !important;
 }
 </style>

@@ -57,7 +57,7 @@ export const CSkills = [
   },
   {
     title: 'Backend',
-    text: 'C\'est la partie invisible pour les visiteurs mais qui donne vie au site. Le backend conserve toutes les données du webmaster et de ses clients, un peu comme un grand tableau. les langages comme PHP, Ruby, Python, SQL etc...',
+    text: 'C\'est la partie invisible pour les visiteurs mais qui donne vie au site. Le backend conserve toutes les données du webmaster et de ses clients, un peu comme un grand tableau. Les langages comme PHP, Ruby, Python, SQL etc...',
     skill: [
       {
         type: 'icon',
@@ -102,7 +102,7 @@ export const CSkillsCICD = {
       type: 'image',
       src: '/img/Jenkins-logo.png',
       title: 'Jenkins',
-      text: 'Outil de build automation qui permet aux développeurs de automatiser les processus de construction, de test et de déploiement de leurs applications.',
+      text: 'Outil de build automation qui permet aux développeurs d\'automatiser les processus de construction, de test et de déploiement de leurs applications.',
     },
     {
       type: 'image',

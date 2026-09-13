@@ -3,6 +3,7 @@
     app
     min-height="72"
     color="background"
+    class="bottom-bar-shell"
   >
     <v-container>
       <v-row>
@@ -16,11 +17,10 @@
           >
             <v-btn
               :href="s.route"
-              color="background"
-              variant="flat"
+              variant="text"
               target="_blank"
               size="small"
-              class="px-0"
+              class="px-0 bottom-bar-link"
             >
               <v-icon
                 v-if="s.icon === 'i-mdi:facebook'"
@@ -37,13 +37,13 @@
         </v-col>
         <v-col
           :cols="!mobile ? 4 : 6"
-          class="align-self-center text-center"
+          class="align-self-center text-center bottom-bar-copyright"
         >
           {{ currentRangeYears }}
         </v-col>
         <v-col
           v-if="!mobile"
-          class="d-flex flex-wrap justify-end align-center flex-shrink-1 text-white"
+          class="d-flex flex-wrap justify-end align-center flex-shrink-1"
           cols="4"
         >
           <v-btn-group
@@ -52,11 +52,10 @@
           >
             <v-btn
               :href="s.href"
-              color="background"
-              variant="flat"
+              variant="text"
               target="_blank"
               size="small"
-              class="px-0"
+              class="px-0 bottom-bar-link"
             >
               <v-icon
                 size="large"
@@ -108,3 +107,22 @@ const links = reactive([
   },
 ])
 </script>
+
+<style lang="css" scoped>
+.bottom-bar-shell {
+  border-top: 1px solid rgb(var(--v-theme-border));
+}
+
+.bottom-bar-copyright {
+  color: rgb(var(--v-theme-muted));
+  font-size: 13px;
+}
+
+.bottom-bar-link {
+  color: rgb(var(--v-theme-muted));
+}
+
+.bottom-bar-link:hover {
+  color: rgb(var(--v-theme-on-background));
+}
+</style>

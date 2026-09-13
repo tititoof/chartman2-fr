@@ -11,7 +11,6 @@ export const useApplicationStore = defineStore('application', {
         message: '' as string,
         show: false as boolean,
         isLoading: true as boolean,
-        componentsLoading: 1 as number
     }),
     getters: {
         getIsDarkTheme: state => state.isDarkTheme,
@@ -21,7 +20,6 @@ export const useApplicationStore = defineStore('application', {
         getShow: (state) => state.show,
         getIsPhone: (state) => state.isPhone,
         getIsLoading: (state) => state.isLoading,
-        getComponentsLoading: (state) => state.componentsLoading
     },
     actions: {
         setIsPhone(isPhone: boolean) {
@@ -52,12 +50,6 @@ export const useApplicationStore = defineStore('application', {
         stopLoading() {
             this.isLoading = false
         },
-        addComponentsLoading() {
-            this.componentsLoading++
-        },
-        removeComponentsLoading() {
-            this.componentsLoading--
-        }
     },
     persist: true,
     // persist: {

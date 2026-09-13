@@ -1,14 +1,15 @@
 <template>
   <v-toolbar
-    color="info-container"
+    color="surface"
     rounded="lg"
-    class="px-4"
+    class="px-4 page-title-bar"
   >
     <v-icon
       size="x-large"
+      color="primary"
       :icon="icon"
     />
-    <span class="text-h6 font-weight-bold align-center pl-2">
+    <span class="page-title-text pl-2">
       {{ props.title }}
     </span>
     <v-spacer />
@@ -53,3 +54,16 @@ const icon = computed(() => {
   return props.icon
 })
 </script>
+
+<style lang="css" scoped>
+.page-title-bar {
+  border: 1px solid rgb(var(--v-theme-border));
+}
+
+.page-title-text {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  align-self: center;
+}
+</style>

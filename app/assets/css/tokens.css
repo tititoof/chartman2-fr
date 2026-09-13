@@ -1,0 +1,31 @@
+/*
+  Typography tokens from the "Ch2fr" Open Design brand system.
+  Fluid scale replacing the legacy Vuetify 2 display-1…display-4 utility classes.
+*/
+:root {
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+  --text-body: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+  --text-h3: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --text-h2: clamp(2rem, 1.6rem + 1.8vw, 2.75rem);
+  --text-h1: clamp(2.5rem, 1.9rem + 2.8vw, 4rem);
+
+  --leading-tight: 1.15;
+  --leading-heading: 1.25;
+  --leading-body: 1.6;
+}
+
+.v-application {
+  font-family: var(--font-body) !important;
+  line-height: var(--leading-body);
+}
+
+.v-application h1,
+.v-application h2,
+.v-application h3,
+.v-application h4 {
+  font-family: var(--font-display);
+  line-height: var(--leading-heading);
+}

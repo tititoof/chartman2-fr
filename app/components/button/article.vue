@@ -1,9 +1,9 @@
 <template>
-  <v-toolbar flat color="info-container">
+  <v-toolbar flat color="surface" class="button-article-bar">
     <v-btn
       @click="$router.back()"
       variant="tonal"
-      color="info"
+      color="primary"
       class="mr-2 ml-2"
     >
       <v-icon icon="i-mdi:arrow-left-circle" />
@@ -11,7 +11,7 @@
     <v-btn
       to="/"
       variant="tonal"
-      color="info"
+      color="primary"
     >
       <v-icon icon="i-mdi-home" />
     </v-btn>
@@ -22,7 +22,7 @@
       v-if="route.name != 'articles'"
       to="/articles"
       variant="tonal"
-      color="info"
+      color="primary"
       class="mr-2"
     >
       <v-icon icon="i-mdi:book-open-variant-outline" />
@@ -32,3 +32,10 @@
 <script setup>
 const route = useRoute()
 </script>
+
+<style lang="css" scoped>
+.button-article-bar {
+  border: 1px solid rgb(var(--v-theme-border));
+  border-radius: 8px;
+}
+</style>
