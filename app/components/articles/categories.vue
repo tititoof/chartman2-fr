@@ -39,7 +39,7 @@
         </p>
         <v-card-actions class="mt-auto justify-center">
           <v-btn
-            class="font-weight-black btn-lire"
+            class="font-weight-black btn-lire btn-outline-hover-fill"
             color="primary"
             variant="outlined"
             rounded="lg"

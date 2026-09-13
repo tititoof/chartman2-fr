@@ -1,6 +1,7 @@
 <template>
   <v-btn
     variant="outlined"
+    class="btn-outline-hover-fill"
     :color="props.color || 'success'"
     :to="props.to"
   >

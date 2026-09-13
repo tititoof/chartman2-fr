@@ -2,16 +2,17 @@
   <v-toolbar flat color="surface" class="button-article-bar">
     <v-btn
       @click="$router.back()"
-      variant="tonal"
+      variant="outlined"
       color="primary"
-      class="mr-2 ml-2"
+      class="mr-2 ml-2 btn-outline-hover-fill"
     >
       <v-icon icon="i-mdi:arrow-left-circle" />
     </v-btn>
     <v-btn
       to="/"
-      variant="tonal"
+      variant="outlined"
       color="primary"
+      class="btn-outline-hover-fill"
     >
       <v-icon icon="i-mdi-home" />
     </v-btn>
@@ -21,9 +22,9 @@
     <v-btn
       v-if="route.name != 'articles'"
       to="/articles"
-      variant="tonal"
+      variant="outlined"
       color="primary"
-      class="mr-2"
+      class="mr-2 btn-outline-hover-fill"
     >
       <v-icon icon="i-mdi:book-open-variant-outline" />
     </v-btn>
