@@ -7,7 +7,17 @@
     "legal_notices": "Mentions légales",
     "login": "Connexion",
     "register": "Inscription",
-    "articles": "Articles"
+    "articles": "Articles",
+    "cv": "Mon CV"
+  },
+  "cv": {
+    "title": "Mon CV",
+    "subtitle": "Architecte Solutions Web & DevOps",
+    "skills": ["Ruby on Rails", "Vue.js / Nuxt", "Docker", "CI/CD"],
+    "actions": {
+      "view": "Voir le CV",
+      "download": "Télécharger (PDF)"
+    }
   },
   "legal_notices": {
     "title": "Mentions Légales",

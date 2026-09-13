@@ -79,11 +79,22 @@
 
     <v-avatar
       v-aos="['animate__fadeInDown']"
-      class="elevation-12 mb-12"
+      class="elevation-12 mb-8"
       size="128"
     >
       <v-img src="/img/visage.webp" />
     </v-avatar>
+
+    <div>
+      <v-btn
+        variant="outlined"
+        color="primary"
+        prepend-icon="i-mdi:file-account-outline"
+        to="/cv"
+      >
+        Voir mon CV
+      </v-btn>
+    </div>
   </v-container>
 </template>
 

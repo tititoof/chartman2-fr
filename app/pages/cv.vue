@@ -1,40 +1,57 @@
 <template>
-  <v-container class="py-12">
-    <v-row justify="center">
-      <v-col cols="12" md="8" class="text-center">
+  <v-row class="d-flex align-self-start py-12">
+    <v-container>
+      <button-article class="my-4" />
 
-        <v-icon icon="i-mdi:file-account-outline" size="64" color="primary" class="mb-4" />
-        <h1 class="text-h4 font-weight-bold mb-2">Christophe Hartmann</h1>
-        <p class="text-body-1 text-medium-emphasis mb-8">
-          Architecte Solutions Web & DevOps
-        </p>
+      <page-title
+        :title="$t('cv.title')"
+        icon="i-mdi:file-account-outline"
+      />
 
-        <div class="d-flex gap-4 justify-center flex-wrap">
-          <v-btn
-            color="primary"
-            size="large"
-            variant="flat"
-            prepend-icon="mdi-eye-outline"
-            href="/cv-christophe-hartmann.pdf"
-            target="_blank"
-          >
-            Voir le CV
-          </v-btn>
+      <v-row justify="center" class="mt-8">
+        <v-col cols="12" md="8" class="text-center">
+          <p class="text-body-1 text-medium-emphasis mb-4">
+            {{ $t('cv.subtitle') }}
+          </p>
 
-          <v-btn
-            size="large"
-            variant="outlined"
-            prepend-icon="mdi-download-outline"
-            href="/cv-christophe-hartmann.pdf"
-            download
-          >
-            Télécharger (PDF)
-          </v-btn>
-        </div>
+          <div class="d-flex gap-2 justify-center flex-wrap mb-8">
+            <v-chip
+              v-for="(skill, index) in $tm('cv.skills')"
+              :key="index"
+              color="secondary"
+              variant="tonal"
+              size="small"
+            >
+              {{ $rt(skill) }}
+            </v-chip>
+          </div>
 
-      </v-col>
-    </v-row>
-  </v-container>
+          <div class="d-flex gap-4 justify-center flex-wrap">
+            <v-btn
+              color="primary"
+              size="large"
+              variant="flat"
+              prepend-icon="i-mdi:eye-outline"
+              href="/cv-christophe-hartmann.pdf"
+              target="_blank"
+            >
+              {{ $t('cv.actions.view') }}
+            </v-btn>
+
+            <v-btn
+              size="large"
+              variant="outlined"
+              prepend-icon="i-mdi:download-outline"
+              href="/cv-christophe-hartmann.pdf"
+              download
+            >
+              {{ $t('cv.actions.download') }}
+            </v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-row>
 </template>
 
 <script setup lang="ts">
