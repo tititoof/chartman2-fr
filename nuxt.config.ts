@@ -51,7 +51,6 @@ export default defineNuxtConfig({
     '@dargmuesli/nuxt-cookie-control',
     'nuxt-resend',
     '@nuxt/image',
-    'nuxt-particles',
     'nuxt-snackbar',
     '@nuxt/image',
     process.env.APP_ENVIRONMENT === 'production' && '@sentry/nuxt/module',
@@ -194,10 +193,6 @@ export default defineNuxtConfig({
     defaultLocaleRouteNameSuffix: 'false',
     vueI18n: 'i18n.config.js',
     langDir: './locales'
-  },
-  particles: {
-    mode: 'full', // 'full' | 'slim' | 'basic' | 'custom'
-    lazy: true,
   },
   sentry: {
     autoInjectServerSentry: 'experimental_dynamic-import',
