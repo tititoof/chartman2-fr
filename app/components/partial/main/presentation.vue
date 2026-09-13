@@ -4,14 +4,12 @@
       id="hero"
       color="blue lighten-1"
     >
-
       <v-img
         :min-height="mobile ? '45vh' : '70vh'"
         :max-height="mobile ? '45vh' : '70vh'"
-        src="/backgrounds/background.jpeg"
+        src="/backgrounds/weasley.png"
         cover
       >
-
         <v-container
           class="d-flex align-self-center pt-12"
           fluid
@@ -30,7 +28,7 @@
                 :class="[mobile ? 'display-1' : 'display-2']"
                 class="font-weight-light pb-4 align-self-center"
               >
-                Bienvenu sur
+                Bienvenue sur
               </span>
 
               <span
@@ -118,7 +116,8 @@ onBeforeMount(() => {
   emit('addLoading')
 })
 
-onMounted(() => {
+onMounted(async () => {
+  await preloadImage('/backgrounds/weasley.png')
   emit('removeLoading')
 })
 </script>

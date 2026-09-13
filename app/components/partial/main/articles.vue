@@ -1,7 +1,10 @@
 <template>
   <section id="articles">
     <v-container class="text-center py-12">
-      <section-title title="Articles" />
+      <section-title
+        eyebrow="Articles"
+        title=""
+      />
       <articles-categories />
     </v-container>
 

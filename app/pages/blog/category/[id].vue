@@ -20,42 +20,36 @@
           >
             <v-card
               v-aos="['animate__flipInX']"
-              class="mx-auto d-flex flex-column"
+              class="mx-auto d-flex flex-column article-card"
               max-width="400"
-              min-height="480"
-              max-height="480"
-              color="secondary-container"
-              variant="outlined"
-              rounded="xl"
+              height="340"
+              color="article-card"
+              variant="flat"
             >
               <v-icon
                 role="img"
-                class="mx-auto"
-                size="280"
+                class="mx-auto mt-2"
+                size="88"
                 :icon="icon"
                 :color="color"
               />
-              <v-card-title>
-                <div class="font-weight-black text-uppercase text-secondary text-wrap ">
-                  {{ title }}
-                </div>
-              </v-card-title>
-              <v-card-text class="title font-weight-light mb-5">
-                <v-sheet
-                  :height="30"
-                  color="background"
-                >
-                  {{ description }}
-                </v-sheet>
-              </v-card-text>
-              <v-card-actions class="mt-auto">
+              <p class="article-card-cat text-wrap">
+                {{ title }}
+              </p>
+              <p class="article-card-desc description-scroll">
+                {{ description }}
+              </p>
+              <v-card-actions class="mt-auto justify-center">
                 <v-btn
-                  class="font-weight-black mt-2"
-                  color="info"
+                  class="font-weight-black mt-2 btn-lire"
+                  color="primary"
+                  variant="outlined"
+                  rounded="lg"
+                  size="large"
+                  min-width="180"
+                  append-icon="i-mdi:arrow-right"
                   :nuxt="true"
                   :to="`/blog/article/` + article_id"
-                  variant="outlined"
-                  block
                 >
                   <span class="font-weight-bold">
                     Lire
@@ -104,3 +98,57 @@ const { data: articles } = await useAsyncData('content', () =>
   ).all()
 )
 </script>
+
+<style lang="css" scoped>
+.article-card {
+  border: 1px solid rgb(var(--v-theme-border));
+  border-radius: 20px;
+  padding: 28px 22px;
+}
+
+.article-card-cat {
+  color: rgb(var(--v-theme-secondary));
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin: 14px 0 10px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.article-card-desc {
+  color: rgb(var(--v-theme-muted));
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0 0 18px;
+}
+
+.description-scroll {
+  max-height: 96px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.description-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.btn-lire {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-lire:hover {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+
+.btn-lire:hover :deep(.v-icon) {
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+</style>
