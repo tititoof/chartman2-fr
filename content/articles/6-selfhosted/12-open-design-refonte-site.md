@@ -10,7 +10,7 @@ publishedAt: '2026-09-15'
 
 #### 🎨 La suite promise
 
-Dans [l'article précédent](/blog/article/mcp-infra-etat-des-lieux){:target="_blank"}, je terminais sur une
+Dans [l'article précédent](/blog/article/mcp-infra-etat-des-lieux){:target="_blank"}, je terminais sur un
 teaser : un MCP auto-hébergé de conception visuelle, **Open Design**, tout juste
 branché sur mon poste de dev, pas encore assez éprouvé pour en parler sérieusement.
 
@@ -23,11 +23,11 @@ les vrais bugs rencontrés en chemin.
 Avant de brancher quoi que ce soit, le cahier des charges tenait en quelques
 lignes :
 
-- partir du design existant du site, pas d'une page blanche ;
-- formaliser les couleurs et les tokens plutôt que les garder à l'œil dans ma tête ;
-- prendre en compte le light **et** le dark dès le départ, pas en rattrapage ;
-- produire un design system réellement exploitable dans `vuetify.config.ts` ;
-- appliquer les changements progressivement, vérifiés un par un ;
+- partir du design existant du site, pas d'une page blanche
+- formaliser les couleurs et les tokens plutôt que les garder à l'œil dans ma tête
+- prendre en compte le light **et** le dark dès le départ, pas en rattrapage
+- produire un design system réellement exploitable dans `vuetify.config.ts`
+- appliquer les changements progressivement, vérifiés un par un
 - garder le développeur dans la boucle — pas de « génère-moi le site », mais un
   outil qui structure le travail sans le remplacer.
 
@@ -119,14 +119,14 @@ Rien d'exotique côté volumes : un volume pour les données persistantes du dae
 Le daemon est pensé pour tourner en local sur un poste de dev : il ne dispense
 de bearer token que pour les appels venant littéralement de `127.0.0.1`. Tant
 que je restais sur la machine qui héberge le conteneur, pas besoin de token du
-tout. Mais je voulais aussi pouvoir ouvrir l'UI depuis n'importe quel appareil,
+tout. Mais je voulais aussi pouvoir ouvrir l'UI depuis n'importe quel appareil de mon réseau,
 via un domaine public (`${OPEN_DESIGN_DOMAIN}`) — et dès que Traefik
 reverse-proxifie cette UI, la requête n'arrive plus depuis `127.0.0.1` du point
 de vue du conteneur. Sans rien de plus, chaque appel `/api/*` prend un `401`.
 
 La solution est dans les labels Traefik eux-mêmes : un middleware qui injecte
 l'en-tête `Authorization` sur chaque requête, avant qu'elle n'atteigne le
-conteneur —
+conteneur.
 
 ```yaml
 labels:
@@ -134,7 +134,7 @@ labels:
   - "traefik.http.routers.open-design-secure.middlewares=open-design-auth"
 ```
 
-Le navigateur n'a donc jamais besoin de connaître le token lui-même — il n'a
+Le navigateur n'a donc jamais besoin de connaître le token lui-même, il n'a
 d'ailleurs aucun moyen de l'envoyer, l'UI web n'expose pas de champ pour ça. Le
 token reste côté infrastructure, injecté par Traefik dans chaque requête qui
 franchit le reverse-proxy vers le daemon.
@@ -142,7 +142,7 @@ franchit le reverse-proxy vers le daemon.
 > ⚠️ Nuance importante : ce n'est pas une authentification d'utilisateur.
 > Quiconque atteint `${OPEN_DESIGN_DOMAIN}` à travers Traefik hérite du token
 > sur ses appels `/api/*`. Il protège le daemon contre un accès direct qui
-> contournerait Traefik — pas contre un visiteur non authentifié qui passerait
+> contournerait Traefik, pas contre un visiteur non authentifié qui passerait
 > par le domaine public lui-même.
 
 ##### 3. Démarrer
@@ -165,7 +165,7 @@ Restait le point qui m'intéressait le plus : brancher Open Design sur Claude
 Code **sans avoir à lui fournir de clé API supplémentaire** — pas de clé
 Anthropic en jeu ici, juste éviter d'en ajouter une de plus.
 
-C'est ce même daemon, et lui seul, qui détient les identifiants tiers — pour la
+C'est ce même daemon, et lui seul, qui détient les identifiants tiers, pour la
 génération d'images (`imagegen`) par exemple. La connexion à Claude Code, elle,
 passe uniquement par un petit proxy MCP en ligne de commande, exécuté dans le
 conteneur :
@@ -177,7 +177,7 @@ docker exec -i projects-open-design-1 node /app/apps/daemon/dist/cli.js mcp \
 
 Ce process ne parle que stdio en JSON-RPC (le protocole MCP) : il relaie les appels
 de Claude Code vers le daemon en HTTP local. Aucune clé Anthropic, aucun compte
-Claude à renseigner à cet endroit — Claude Code utilise ici Open Design comme
+Claude à renseigner à cet endroit. Claude Code utilise ici Open Design comme
 serveur MCP, au même titre qu'un autre serveur MCP configuré dans son
 environnement.
 
@@ -233,7 +233,7 @@ docker exec projects-open-design-1 node /app/apps/daemon/dist/cli.js mcp \
 Le binaire plantait sur un flag qui n'existe pas. Ce `--scope user` avait été ajouté
 dans la config MCP **spécifique à ce projet** (dans `~/.claude.json`), en plus de la
 config globale qui n'avait pas ce flag et fonctionnait très bien. Reste à savoir
-comment il est arrivé là — mais le correctif était immédiat : le retirer.
+comment il est arrivé là, mais le correctif était immédiat : *le retirer*.
 
 ```json
 {
@@ -273,14 +273,14 @@ terracotta plus soutenu :
 | Rôle | Clair | Sombre | Origine |
 |------|-------|--------|---------|
 | `primary` (accent) | `#00658e` | `#85cfff` | Valeur mesurée dans `vuetify.config.ts` |
-| `secondary` (Ginger) | `#bd4500` | `#ff781b` | Logo + terracotta (🐈 **Weasley**, mon chat) |
+| `secondary` (Ginger) | `#bd4500` | `#ff781b` | Logo + terracotta |
 | `background` | `#c7e7ff` | `#001f25` | Décision produit, ajustée en cours de route |
 | `muted` / `border` | `#566670` / `#d4dce2` | `#91a8b8` / `#243541` | Dérivées de la teinte de l'accent |
 ::
 
-Le brief a ensuite servi de référence pendant toute la refonte — mais pas comme une
+Le brief a ensuite servi de référence pendant toute la refonte, mais pas comme une
 vérité figée : quand j'ai demandé de pousser l'orange un peu plus (directement dans
-l'app Open Design, hors de cette session), le fichier de tokens a changé tout seul.
+l'app Open Design, hors de la session claude), le fichier de tokens a changé tout seul.
 Je l'ai découvert en re-synchronisant : le `secondary` mesuré n'était plus le même
 qu'au début de la session. Bon réflexe à prendre : **relire le design system avant
 de l'appliquer**, jamais faire confiance à un cache mental de sa dernière valeur.
@@ -294,11 +294,12 @@ Design, un par un, avec le même chemin que dans le repo.
 
 C'est là qu'est apparu le seul vrai frein rencontré côté outillage : passé une
 douzaine d'écritures d'affilée vers ce service externe, le classifieur de sécurité de
-l'agent a bloqué l'action avec la raison `Data Exfiltration` — le motif ressemblait à
-un envoi en masse de code source vers un tiers, même si ce tiers tournait en local
+l'agent a bloqué l'action avec la raison `Data Exfiltration`. 
+
+Le motif ressemblait à un envoi en masse de code source vers un tiers, même si ce tiers tournait en local
 sur ma propre machine. Pas de contournement : reprise fichier par fichier, avec
 confirmation utilisateur à chaque blocage. Un bon rappel que ces garde-fous
-regardent le *pattern* d'une action, pas son contexte — et que c'est plutôt
+regardent le *pattern* d'une action, pas son contexte, et que c'est plutôt
 rassurant que le garde-fou existe, même quand il me ralentit sur un cas légitime.
 
 #### 🖌️ Appliquer le design, étape par étape
@@ -316,8 +317,8 @@ Fond de card = secondary-container = #c7e7ff
 Fond de page = background          = #c7e7ff   ← identique !
 ```
 
-Le survol d'un bouton de menu était bien fonctionnel — confirmé en JS, la couleur du
-texte passait bien de `muted` à `primary` — mais le fond de survol restait invisible
+Le survol d'un bouton de menu était bien fonctionnel, confirmé en JS, la couleur du
+texte passait bien de `muted` à `primary`, mais le fond de survol restait invisible
 puisqu'il retombait sur la même teinte que le fond ambiant. Dans ce genre de cas, un
 screenshot ne suffit pas à trancher : j'ai fini par échantillonner les pixels
 directement (`PIL.Image.getpixel`) pour départager « c'est cassé » de « c'est juste
@@ -332,7 +333,7 @@ img.getpixel((1050, 87))  # (199, 231, 255) des deux côtés → pas de survol v
 Autre correctif utile pour la suite : le texte au survol des boutons était codé en
 noir en dur (`#000`). Ça se lisait bien en thème clair, mais perdait du contraste en
 sombre. Le bon réflexe Vuetify : utiliser le token sémantique associé, pas une valeur
-absolue —
+absolue
 
 ```css
 /* avant */
@@ -349,15 +350,27 @@ thème.
 
 #### 🖼️ Le résultat
 
-**Avant / Après**
+*(cliquez sur une image pour l'agrandir, puis cliquez dessus pour zoomer sur les détails)*
 
-![Le site avant la refonte](/img/content/open-design-before.png){ width=100% }
-![Le site après la refonte](/img/content/open-design-after.png){ width=100% }
+**Avant / Après — la page compétences**
+
+![Page compétences avant la refonte](/img/content/refonte/competences_avant.webp){ width=100% }
+![Page compétences après la refonte](/img/content/refonte/competences_apres.webp){ width=100% }
+
+**Avant / Après — la liste des articles**
+
+![Liste des articles avant la refonte](/img/content/refonte/liste_articles_avant.webp){ width=100% }
+![Liste des articles après la refonte](/img/content/refonte/liste_articles_apres.webp){ width=100% }
+
+**Avant / Après — accueil, section articles**
+
+![Section articles de l'accueil avant la refonte](/img/content/refonte/articles_avant.webp){ width=100% }
+![Section articles de l'accueil après la refonte](/img/content/refonte/articles_apres.webp){ width=100% }
 
 **Light / Dark**
 
-![Version claire du site refondu](/img/content/open-design-light.png){ width=100% }
-![Version sombre du site refondu](/img/content/open-design-dark.png){ width=100% }
+![Page compétences en thème clair](/img/content/refonte/light.webp){ width=100% }
+![Page compétences en thème sombre](/img/content/refonte/competences_apres.webp){ width=100% }
 
 #### 🧰 Pour aller plus loin : automatiser l'import
 
@@ -404,22 +417,22 @@ curl -s -X POST "${OD_URL}/api/import/folder" \
 ```
 
 Un `POST /api/import/folder` avec le chemin **côté conteneur** (celui monté sur
-`/workspace/Perso`, pas le chemin hôte) suffit à créer le projet — le token
+`/workspace/Perso`, pas le chemin hôte) suffit à créer le projet. Le token
 vient du même `.env` que le `docker-compose.yml`, jamais saisi à la main.
 
-Je l'ai écrit avant de me lancer, prêt à l'emploi — puis je ne m'en suis
+Je l'ai écrit avant de me lancer, prêt à l'emploi, puis je ne m'en suis
 finalement pas servi : le projet existait déjà, généré depuis un `DESIGN.md`
-collé directement dans l'UI (voir plus haut). Il reste au tiroir pour la
+collé directement dans l'UI. Il reste au tiroir pour la
 prochaine refonte, ou pour scripter la création d'un projet Open Design à
 chaque nouveau repo du homelab, sans passer par le navigateur.
 
 #### ✅ Ce que j'en retiens
 
-Open Design n'a pas fait la refonte à ma place — il a fourni un point de départ
+Open Design n'a pas fait la refonte à ma place, il a fourni un point de départ
 structuré (tokens de couleur, échelle typographique, principes de layout) que j'ai
 ensuite dû confronter au vrai rendu, thème par thème, pixel par pixel par moments.
 La vraie valeur n'était pas dans la génération automatique, mais dans le fait
-d'avoir un référentiel écrit et cohérent à appliquer — et à corriger quand deux
+d'avoir un référentiel écrit et cohérent à appliquer, et à corriger quand deux
 sessions de travail divergeaient sur une même couleur.
 
 L'IA m'a fait gagner du temps pour explorer et structurer le design. Elle ne
