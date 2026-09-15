@@ -267,6 +267,9 @@ premiers tests, pas encore à un usage maîtrisé — donc pas de section
 détaillée aujourd'hui. J'y consacrerai un article dédié une fois que
 j'aurai vraiment quelque chose à montrer.
 
+**Mise à jour** : c'est fait, avec les bugs de configuration au passage —
+[l'article est là](/blog/article/open-design-refonte-site).
+
 #### ✅ Conclusion
 
 Trois mois après la théorie, la réalité d'une stack MCP en production

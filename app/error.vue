@@ -45,7 +45,7 @@
       >
         <v-img
           :min-height="mobile ? '45vh' : '70vh'"
-          src="/backgrounds/hero-2.svg"
+          src="/backgrounds/weasley.png"
           contain
         >
           <v-container
