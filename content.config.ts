@@ -51,5 +51,10 @@ export default defineContentConfig({
       type: 'page',
       schema: articleSchema
     }),
+    blackstaff: defineCollection({
+      source: 'articles/8.blackstaff/**',
+      type: 'page',
+      schema: articleSchema
+    }),
   }
 })
