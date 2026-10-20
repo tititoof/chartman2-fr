@@ -19,20 +19,47 @@
     </v-app-bar-title>
 
     <template #append>
+      <nav
+        v-if="!mobile"
+        aria-label="Navigation principale"
+        class="d-flex align-center ga-1 mr-3"
+      >
+        <v-btn
+          v-for="(link, i) in navLinks"
+          :key="i"
+          variant="text"
+          rounded="lg"
+          class="app-bar-nav-link"
+          @click="goTo(link)"
+        >
+          {{ link.label }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="flat"
+          rounded="lg"
+          class="ml-2"
+          @click="goTo(contactLink)"
+        >
+          {{ contactLink.label }}
+        </v-btn>
+      </nav>
       <v-btn
         icon="i-mdi:theme-light-dark"
         variant="text"
         rounded="lg"
         class="app-bar-icon-btn"
+        aria-label="Changer de thème"
         @click="toggleTheme"
       />
       <v-menu>
         <template #activator="{ props }">
           <v-btn
-            icon="i-mdi:dots-vertical"
+            :icon="mobile ? 'i-mdi:menu' : 'i-mdi:dots-vertical'"
             variant="text"
             rounded="lg"
-            class="app-bar-icon-btn"
+            class="app-bar-icon-btn ml-2"
+            :aria-label="mobile ? 'Menu principal' : 'Plus d\'options'"
             v-bind="props"
           />
         </template>
@@ -41,6 +68,26 @@
           bg-color="background"
           class="app-bar-menu"
         >
+          <template v-if="mobile">
+            <v-list-item
+              v-for="(link, i) in [...navLinks, contactLink]"
+              :key="`nav-${i}`"
+              class="app-bar-menu-item"
+              @click="goTo(link)"
+            >
+              <template #prepend>
+                <v-icon
+                  size="large"
+                  :icon="link.icon"
+                  class="app-bar-menu-icon"
+                />
+              </template>
+              <v-list-item-title class="app-bar-menu-link">
+                {{ link.label }}
+              </v-list-item-title>
+            </v-list-item>
+            <v-divider class="my-1" />
+          </template>
           <v-list-item
             v-for="(item, i) in visibleMenuItems"
             :key="i"
@@ -69,6 +116,8 @@ import { useApplicationStore } from '~/stores/application'
 
 const applicationStore = useApplicationStore()
 const router = useRouter()
+const route = useRoute()
+const { smAndDown: mobile } = useDisplay()
 const src = ref('/img/logo.png')
 const menuItems = reactive([
   {
@@ -93,6 +142,15 @@ const menuItems = reactive([
   },
 ])
 
+// Liens directs de la barre (desktop) ; repliés dans le menu sur mobile
+const navLinks = [
+  { label: 'Réalisations', icon: 'i-mdi:briefcase-outline', anchor: 'realisations' },
+  { label: 'Services', icon: 'i-mdi:server-network', anchor: 'services' },
+  { label: 'Articles', icon: 'i-mdi:post-outline', to: '/articles' },
+  { label: 'CV', icon: 'i-mdi:file-account-outline', to: '/cv' },
+]
+const contactLink = { label: 'Contact', icon: 'i-mdi:email-outline', anchor: 'contact-me' }
+
 const token = useCookie('token')
 
 const visibleMenuItems = computed(() => {
@@ -112,6 +170,19 @@ const visibleMenuItems = computed(() => {
 
 const toggleTheme = () => {
   applicationStore.toggleDarkTheme()
+}
+
+// Les ancres n'existent que sur l'accueil : on y revient d'abord si besoin
+const goTo = async (link) => {
+  if (link.to) {
+    return navigateTo(link.to)
+  }
+
+  if (route.path === '/') {
+    return useScroll(link.anchor)
+  }
+
+  await navigateTo({ path: '/', hash: `#${link.anchor}` })
 }
 
 const backToHomePage = () => {
@@ -144,6 +215,16 @@ const backToHomePage = () => {
 }
 
 .app-bar-icon-btn:hover :deep(.v-icon) {
+  color: rgb(var(--v-theme-on-background));
+}
+
+.app-bar-nav-link {
+  color: rgb(var(--v-theme-muted));
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.app-bar-nav-link:hover {
   color: rgb(var(--v-theme-on-background));
 }
 

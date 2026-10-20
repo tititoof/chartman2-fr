@@ -1,5 +1,5 @@
 <template>
-    <v-row class="d-flex justify-space-around text-center">
+  <v-row class="d-flex justify-space-around text-center">
     <v-col
       v-for="({ type, src, color, text, title, link }, i) in articles"
       :key="i"
@@ -9,9 +9,9 @@
     >
       <v-card
         v-aos="['animate__flipInX']"
-        class="mx-auto d-flex flex-column article-card"
+        class="mx-auto d-flex flex-column article-card h-100"
         max-width="400"
-        height="340"
+        min-height="340"
         color="article-card"
         variant="flat"
       >
@@ -34,7 +34,7 @@
         <p class="article-card-cat text-wrap">
           {{ title }}
         </p>
-        <p class="article-card-desc description-scroll">
+        <p class="article-card-desc">
           {{ text }}
         </p>
         <v-card-actions class="mt-auto justify-center">
@@ -119,6 +119,7 @@ const articles = reactive([
   },
 ])
 </script>
+
 <style lang="css" scoped>
 .article-card {
   border: 1px solid rgb(var(--v-theme-border));
@@ -144,19 +145,10 @@ const articles = reactive([
   line-height: 1.5;
   text-align: center;
   margin: 0 0 18px;
-}
-
-.description-scroll {
-  max-height: 96px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.description-scroll::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .btn-lire {

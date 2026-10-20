@@ -1,118 +1,30 @@
 <template>
-  <ClientOnly>
-    <v-card
-      id="hero"
-      color="blue lighten-1"
+  <v-card
+    id="blog-hero"
+    color="blue lighten-1"
+    rounded="lg"
+  >
+    <v-img
+      :height="mobile ? 180 : 260"
+      src="/backgrounds/weasley.png"
+      cover
     >
-      <v-img
-        :min-height="mobile ? '45vh' : '70vh'"
-        :max-height="mobile ? '45vh' : '70vh'"
-        src="/backgrounds/weasley.png"
-        cover
-      >
-        <v-container
-          class="d-flex align-self-center pt-12"
-          fluid
-        >
-          <v-row
-            align="center"
-            class="mx-auto pt-12"
-            justify="center"
-          >
-            <v-col
-              class="text-center pt-12"
-              cols="12"
-              tag="h1"
-            >
-              <span
-                :class="[mobile ? 'display-1' : 'display-2']"
-                class="font-weight-light pb-4 align-self-center"
-              >
-                Bienvenue sur
-              </span>
-
-              <span
-                :class="[mobile ? 'display-3' : 'display-4']"
-                class="font-weight-black"
-              >
-                {{ appUrl }}
-              </span>
-            </v-col>
-
-            <v-btn
-              class="align-self-end"
-              fab
-              variant="outlined"
-              icon="i-mdi:chevron-double-down"
-              @click="useScroll('about-me')"
-            />
-          </v-row>
-        </v-container>
-        <section>
-          <vue-particles
-            id="tsparticles"
-            :options="options"
-          />
-        </section>
-      </v-img>
-    </v-card>
-  </ClientOnly>
+      <div class="d-flex flex-column justify-center align-center text-center fill-height px-4 blog-hero-content">
+        <h1 class="blog-hero-title">
+          Le blog
+        </h1>
+        <p class="blog-hero-subtitle">
+          Retours d'expérience Rails, Nuxt, Docker et self-hosted
+        </p>
+      </div>
+      <partial-main-particles v-if="reducedMotion !== 'reduce'" />
+    </v-img>
+  </v-card>
 </template>
 
 <script setup lang="ts">
-const runtimeConfig = useRuntimeConfig()
 const { mobile } = useDisplay()
-const appUrl = runtimeConfig.public.appUrl
-
-const options = {
-  fullScreen: { enable: false },
-  fpsLimit: 60,
-  detectRetina: true,
-  particles: {
-    number: {
-      value: mobile.value ? 10 : 20,
-    },
-    shape: {
-      type: 'circle',
-    },
-    color: {
-      value: '#FFD700',
-    },
-    life: {
-      duration: {
-        value: 4,
-        sync: false,
-      },
-      count: 0,
-    },
-    opacity: {
-      value: { min: 0.1, max: 0.9 },
-      animation: {
-        enable: true,
-        speed: 1,
-        sync: false,
-      },
-    },
-    size: {
-      value: { min: 1, max: 4 },
-      animation: {
-        enable: true,
-        speed: 4,
-        minimumValue: 0.5,
-        sync: false,
-      },
-    },
-    move: {
-      enable: true,
-      speed: 1.5,
-      random: true,
-      straight: false,
-      outModes: {
-        default: 'out',
-      },
-    },
-  },
-}
+const reducedMotion = usePreferredReducedMotion()
 
 const emit = defineEmits(['addLoading', 'removeLoading'])
 onBeforeMount(() => {
@@ -124,3 +36,21 @@ onMounted(async () => {
   emit('removeLoading')
 })
 </script>
+
+<style lang="css" scoped>
+.blog-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.blog-hero-title {
+  color: white;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+}
+
+.blog-hero-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--text-lg);
+}
+</style>

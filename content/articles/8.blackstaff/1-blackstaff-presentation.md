@@ -109,7 +109,7 @@ Garder un seul webhook a un avantage concret : toute la logique commune (chargem
 
 #### ☁️🏠 Cloud ou local ?
 
-Ma carte graphique est une **GTX 1650 Ti avec 4 Go de VRAM**. Un modèle de code de 7 milliards de paramètres y tient à peine, et un grand modèle n'y tient pas du tout. Blackstaff est donc **hybride**, et je l'assume :
+Ma carte graphique est une **GTX 1650 Ti avec 4 Go de VRAM**. Elle ne peut presque pas faire tourner un modèle très avancé, et les modèles plus gros sont tout simplement trop lourds pour elle. C'est pourquoi Blackstaff fonctionne en mode **hybride**, et je suis clair à ce sujet :
 
 ::tool-table
 | Tâche | Modèle | Où |
@@ -130,7 +130,9 @@ En construisant Blackstaff, une règle s'est imposée, et elle revient dans chaq
 
 > **Tout ce qui peut être calculé ou décidé une fois sort du prompt.**
 
-Le chemin d'une URL d'API à partir d'un nom de fichier ? Calculé dans un nœud n8n. La stratégie d'authentification du projet ? Déclarée une fois dans un fichier de configuration. La classe Ruby attendue pour un chemin ? Déduite par un script. Le modèle ne reçoit que ce qu'il doit vraiment **inventer** : la logique du code.
+Le chemin d'une URL d'API à partir d'un nom de fichier ? Calculé dans un nœud n8n. La stratégie d'authentification du projet ? Déclarée une fois dans un fichier de configuration. La classe Ruby attendue pour un chemin ? Déduite par un script. 
+
+Le modèle ne reçoit que ce qu'il doit vraiment **inventer** : la logique du code.
 
 Plus un modèle est petit, plus cette règle compte : il suit très bien une règle courte avec un exemple, mais il échoue souvent à **déduire** une information à partir du contexte.
 

@@ -5,7 +5,7 @@
   >
     <section-title
       eyebrow="À propos de moi"
-      title=""
+      title="L'exigence du code, la maîtrise de l'infrastructure"
     />
 
     <v-responsive
@@ -13,51 +13,15 @@
       max-width="720"
     >
       <p>
-        Bonjour, je m'appelle Christophe Hartmann. Développeur passionné depuis l'enfance,
+        Bonjour, je m'appelle Christophe Hartmann. Développeur depuis plus de 25 ans,
         j'aide les équipes à concevoir des applications solides et des infrastructures qui
         tiennent la charge.
       </p>
 
       <p>
-        Mon terrain de jeu :
-        <v-btn
-          variant="plain"
-          class="about-me-link"
-          @click="useScroll('features')"
-        >
-          Ruby on Rails
-        </v-btn>
-        pour la solidité du backend,
-        <v-btn
-          variant="plain"
-          class="about-me-link"
-          @click="useScroll('features')"
-        >
-          Vue.js / Nuxt
-        </v-btn>
-        pour des interfaces fluides, et
-        <v-btn
-          variant="plain"
-          class="about-me-link"
-          @click="useScroll('features')"
-        >
-          Docker
-        </v-btn>
-        /
-        <v-btn
-          variant="plain"
-          class="about-me-link"
-          @click="useScroll('features')"
-        >
-          CI/CD
-        </v-btn>
-        pour que tout tourne sans accroc en production.
-      </p>
-
-      <p>
-        J'ai monté ma propre infrastructure DevOps — Forgejo, Jenkins, SonarQube, OpenProject —
-        non par obligation, mais parce que comprendre les outils de l'intérieur change la façon
-        dont on les utilise.
+        Aujourd'hui en freelance, j'interviens aussi bien sur le code (Ruby on Rails, Vue.js / Nuxt)
+        que sur ce qui le fait tourner : Docker, CI/CD et une infrastructure DevOps que j'héberge
+        moi-même — parce que comprendre les outils de l'intérieur change la façon dont on les utilise.
       </p>
 
       <p>

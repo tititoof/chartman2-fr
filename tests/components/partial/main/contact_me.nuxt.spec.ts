@@ -1,15 +1,10 @@
 // @ts-nocheck
 // @vitest-environment nuxt
 import { describe, it, expect } from 'vitest'
-import { mountSuspended } from '@nuxt/test-utils/runtime'
+import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
+import { readBody } from 'h3'
 
 import TestResource from '~~/components/partial/main/contact_me.vue'
-
-global.fetch = vi.fn()
-
-function createFetchResponse(data) {
-  return { json: () => new Promise((resolve) => resolve(data)) }
-}
 
 describe('Components - partial/main/contact_me', async () => {
   it('is a Vue instance', async () => {
@@ -39,11 +34,15 @@ describe('Components - partial/main/contact_me', async () => {
       shallow: true,
     })
 
-    fetch.mockResolvedValue(createFetchResponse(true))
+    const handler = vi.fn(() => ({ error: null }))
+    registerEndpoint('/api/email', { method: 'POST', handler })
+    wrapper.vm.form = { validate: vi.fn().mockResolvedValue({ valid: false }) }
 
-    wrapper.vm.sendEmail()
+    await wrapper.vm.sendEmail()
 
-    expect(fetch).toHaveBeenCalledTimes(0)
+    expect(wrapper.vm.form.validate).toHaveBeenCalledTimes(1)
+    expect(handler).toHaveBeenCalledTimes(0)
+    expect(wrapper.vm.isSubmitting).toEqual(false)
   })
 
   it('can send email', async () => {
@@ -51,26 +50,29 @@ describe('Components - partial/main/contact_me', async () => {
       shallow: true
     })
 
-    const mockFetch = vi.fn().mockResolvedValue(createFetchResponse(true))
-    vi.stubGlobal('$fetch', mockFetch)
+    const handler = vi.fn(async event => {
+      return { body: await readBody(event), error: null }
+    })
+    registerEndpoint('/api/email', { method: 'POST', handler })
 
     wrapper.vm.name = 'test name'
     wrapper.vm.email = 'test@ŧest.com'
     wrapper.vm.subject = 'subject'
     wrapper.vm.message = 'This is a message test'
-    wrapper.vm.valid = true
+    wrapper.vm.form = { validate: vi.fn().mockResolvedValue({ valid: true }) }
 
-    wrapper.vm.sendEmail()
+    await wrapper.vm.sendEmail()
 
-    expect(mockFetch).toHaveBeenCalledTimes(1)
-    expect(mockFetch).toHaveBeenCalledWith('/api/email', {
-      method: 'post',
+    expect(handler).toHaveBeenCalledTimes(1)
+    expect(await handler.mock.results[0].value).toEqual({
       body: {
         name: 'test name',
         email: 'test@ŧest.com',
         subject: 'subject',
         message: 'This is a message test'
-      }
+      },
+      error: null,
     })
+    expect(wrapper.vm.isSubmitting).toEqual(false)
   })
 })

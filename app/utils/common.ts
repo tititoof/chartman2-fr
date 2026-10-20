@@ -1,8 +1,8 @@
 export const CSocial = [
   {
-    name: 'Facebook',
-    route: 'https://www.facebook.com/christophe.hartmann1/',
-    icon: 'i-mdi:facebook',
+    name: 'Démo DevOps',
+    route: 'https://oghma.chartman2-fr.ovh/',
+    icon: 'i-mdi:view-dashboard-outline',
   },
   {
     name: 'Linkedin',

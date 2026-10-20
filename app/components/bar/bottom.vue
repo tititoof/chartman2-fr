@@ -1,6 +1,5 @@
 <template>
   <v-footer
-    app
     min-height="72"
     color="background"
     class="bottom-bar-shell"
@@ -17,15 +16,17 @@
           >
             <v-btn
               :href="s.route"
+              :aria-label="s.name"
+              rel="noopener noreferrer"
               variant="text"
               target="_blank"
               size="small"
               class="px-0 bottom-bar-link"
             >
               <v-icon
-                v-if="s.icon === 'i-mdi:facebook'"
+                v-if="s.icon === 'i-mdi:view-dashboard-outline'"
                 size="large"
-                icon="i-mdi:facebook"
+                icon="i-mdi:view-dashboard-outline"
               />
               <v-icon
                 v-if="s.icon === 'i-mdi:linkedin'"
@@ -52,6 +53,8 @@
           >
             <v-btn
               :href="s.href"
+              :aria-label="s.name"
+              rel="noopener noreferrer"
               variant="text"
               target="_blank"
               size="small"
@@ -78,9 +81,9 @@ const currentRangeYears = ref(currentYear.value === 2022 ? '2022' : `2022-${curr
 
 const social = reactive([
   {
-    name: 'Facebook',
-    route: 'https://www.facebook.com/christophe.hartmann1/',
-    icon: 'i-mdi:facebook',
+    name: 'Démo DevOps',
+    route: 'https://oghma.chartman2-fr.ovh/',
+    icon: 'i-mdi:view-dashboard-outline',
   },
   {
     name: 'Linkedin',

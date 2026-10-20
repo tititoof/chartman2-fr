@@ -9,7 +9,7 @@ export function useFormValidator<T extends Record<string, any>>(formSchema: ZodS
 
     if (!result.success) {
       const formattedErrors = Object.fromEntries(
-        result.error.errors.map(err => [err.path[0], err.message])
+        result.error.issues.map(err => [err.path[0], err.message])
       )
 
       // Assure que chaque champ a une valeur null ou une erreur

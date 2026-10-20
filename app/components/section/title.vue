@@ -6,7 +6,10 @@
     {{ props.eyebrow }}
   </p>
 
-  <h2 class="section-title-heading mb-4">
+  <h2
+    v-if="props.title"
+    class="section-title-heading mb-4"
+  >
     {{ props.title }}
   </h2>
 
