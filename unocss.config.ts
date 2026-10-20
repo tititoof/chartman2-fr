@@ -2,7 +2,7 @@ import { defineConfig, presetIcons } from 'unocss'
 
 export default defineConfig({
   safelist: [
-    'i-mdi:facebook',
+    'i-mdi:view-dashboard-outline',
     'i-mdi:linkedin',
     'i-mdi:language-ruby-on-rails',
     'i-mdi:laravel',

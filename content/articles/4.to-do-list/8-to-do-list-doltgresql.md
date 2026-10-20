@@ -372,6 +372,67 @@ vite.
 
 ---
 
+#### 🔄 Mise à jour — retest sur 1.3.3 (16 septembre 2026)
+
+Un mois plus tard, quatre releases de plus (1.3.0 → 1.3.3). On rejoue
+exactement les mêmes tests sur la même branche `experiment/doltgresql`,
+juste l'image bumpée :
+
+```diff [docker-compose.doltgresql.yml]
+-    image: dolthub/doltgresql:1.2.0
++    image: dolthub/doltgresql:1.3.3
+```
+
+**Deux des trois blocages sont corrigés** :
+
+- ✅ `db:schema:load` / `db:migrate` sur base vide — le `CASCADE` sur
+  `DROP TABLE` passe maintenant nativement, plus besoin de rejouer les
+  migrations une par une.
+- ✅ `UPDATE` via ActiveRecord — vérifié à nouveau sur `Todo::Item#update!`,
+  plus d'erreur `column "k" could not be found`.
+
+**Le troisième (`uniqueness: { case_sensitive: false }`) est toujours
+bloquant**, mais le bug s'est déplacé et affiné. Le CAST simple isolé
+fonctionne désormais :
+
+```sql
+SELECT ARRAY['character varying'::regtype]::oidvector;
+-- {1043}  — OK
+```
+
+Mais la vraie requête que Rails envoie combine deux `EXISTS` avec un
+`OR`, et **chaque branche fonctionne isolément** — c'est seulement la
+combinaison qui casse :
+
+```sql
+SELECT exists(
+  SELECT * FROM pg_proc
+  WHERE proname = 'lower' AND proargtypes = ARRAY['character varying'::regtype]::oidvector
+)  -- OK seule
+OR exists(
+  SELECT * FROM pg_proc INNER JOIN pg_cast ON ARRAY[casttarget]::oidvector = proargtypes
+  WHERE proname = 'lower' AND castsource = 'character varying'::regtype
+); -- OK seule aussi
+-- mais les deux combinées avec OR : ERROR EXPLICIT CAST: regtype[] -> oidvector
+```
+
+> 💡 Régression de plan de requête plutôt qu'un CAST non implémenté cette
+> fois — le genre de bug qui se corrige vite une fois isolé comme ça.
+
+Suite RSpec complète avec le contournement encore en place (validation
+`case_sensitive: true`) : **52 examples sur 53**, le seul échec restant
+étant précisément le test de ce bug. Avant ce retest, 36 des 53 examples
+cascadaient en échec à cause de ce seul blocage — la casse en isolant le
+repro minimal a payé.
+
+Verdict inchangé pour l'usage réel aujourd'hui (un seul modèle utilisant
+`uniqueness: { case_sensitive: false }` suffit à tout bloquer), mais la
+trajectoire est claire : deux gaps fermés en un mois, le troisième
+réduit à un cas très précis. Les deux issues déposées sur le repo
+Doltgres seront mises à jour avec ce repro affiné.
+
+---
+
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

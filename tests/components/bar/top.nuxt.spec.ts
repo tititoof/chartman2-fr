@@ -21,6 +21,11 @@ describe('Components - bar/top', async () => {
 
     expect(wrapper.vm.menuItems).toEqual([
       {
+        name: 'global.cv',
+        icon: 'i-mdi:file-account-outline',
+        to: '/cv',
+      },
+      {
         name: 'legal_notices.title',
         icon: 'i-mdi:scale-balance',
         to: '/legal_notices',

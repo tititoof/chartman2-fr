@@ -9,15 +9,8 @@ export default defineNuxtConfig({
   app: {
     head: {
       meta: [
-        // <meta name="viewport" content="width=device-width, initial-scale=1">
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'title', content: 'chartman2.fr' },
-        { name: 'description', content: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality' },
-        { name: 'image', content: process.env.APP_URL + '/logo.webp' },
-        { name: 'og:title', content: 'chartman2.fr' },
-        { name: 'og:description', content: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality' },
-        { name: 'og:image', content: process.env.APP_URL + '/logo.webp' },
-        { name: 'og:url', content: process.env.APP_URL },
+        // viewport, description, og:title/description/url : générés page par page par @nuxtjs/seo
+        { property: 'og:image', content: '/img/logo.png' },
       ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -64,9 +57,9 @@ export default defineNuxtConfig({
   site: {
     url: process.env.APP_URL,
     name: 'chartman2.fr',
-    description: 'A personal site on web development, infrastructure and DevOps tools and technologies. Discover how to create robust applications with Nuxt.js, Ruby on Rails and Jenkins. Learn how to use Docker to create isolated environments. web development - Nuxt.js- Ruby on Rails- Jenkins- Forgejo- SonarQube- OpenProject - Docker - DevOps - code quality',
+    description: 'Christophe Hartmann, développeur Ruby on Rails / Nuxt et DevOps : applications maintenables, CI/CD, Docker et infrastructure auto-hébergée. Articles et retours d\'expérience.',
     defaultLocale: 'fr', // not needed if you have @nuxtjs/i18n installed
-    image: process.env.APP_URL + '/logo.webp',
+    image: '/img/logo.png',
   },
   content: {
     watch: {
@@ -159,6 +152,12 @@ export default defineNuxtConfig({
           name: 'Cookies par défaut',
           description: 'Préférence du thème (clair / sombre).',
         },
+        {
+          id: 'auth',
+          name: 'Session',
+          description: 'Maintien de la connexion à l’espace membre (uniquement si vous vous connectez).',
+          targetCookieIds: ['token', 'refresh_token'],
+        },
       ],
       optional: [],
     },
@@ -167,7 +166,7 @@ export default defineNuxtConfig({
     locales: ['fr'],
     localeTexts: {
       fr: {
-        bannerDescription: 'Nous utilisons des cookies d’origine. Ces cookies sont destinés à vous offrir une navigation optimisée sur ce site web. En poursuivant votre navigation, nous considérons que vous acceptez l’usage des cookies.',
+        bannerDescription: 'Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement (préférence de thème, session si vous vous connectez). Aucun cookie de mesure d’audience ni publicitaire n’est déposé.',
       },
     },
   },
@@ -186,10 +185,12 @@ export default defineNuxtConfig({
   i18n: {
     locales: 
     [
-      { "code": "en", "language": "en-US", "file": "en.json", "dir": "ltr" },
+      // Contenu uniquement en français : en.json est conservé mais la locale
+      // "en" est désactivée pour éviter des pages /en mêlant interface anglaise et articles français
       { "code": "fr", "language": "fr-FR", "file": "fr.json" }
     ],
     defaultLocale: 'fr',
+    detectBrowserLanguage: false,
     defaultLocaleRouteNameSuffix: 'false',
     vueI18n: 'i18n.config.js',
     langDir: './locales'

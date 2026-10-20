@@ -3,10 +3,7 @@
     <v-container>
       <button-article class="my-4" />
 
-      <page-title
-        :title="$t('global.articles')"
-        icon="i-mdi:book-open-variant-outline"
-      />
+      <partial-main-presentation />
       <articles-categories class="py-12" />
     </v-container>
   </v-row>

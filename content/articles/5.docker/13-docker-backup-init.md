@@ -263,6 +263,7 @@ Rendez-vous sur `https://postgresus.domain.tld`.
 
 Dans **Destinations** → **Add** :
 
+::tool-table
 | Champ | Valeur |
 |-------|--------|
 | Type | `S3 / MinIO` |
@@ -271,6 +272,7 @@ Dans **Destinations** → **Add** :
 | Secret Key | votre secret key RustFS |
 | Bucket | `postgresql-backups` |
 | Region | `auto` |
+::
 
 > 💡 RustFS étant compatible S3, sélectionnez le type `S3 / MinIO` dans Postgresus — il n'y a pas de type RustFS spécifique, c'est la même API.
 

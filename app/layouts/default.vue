@@ -6,18 +6,18 @@
       <NuxtLoadingIndicator color="primary" :height="4" />
       <v-main
         dark="isDark"
-        class="d-flex align-center fill-height pb-24"
+        class="d-flex align-center fill-height"
         background-color="background"
       >
         <slot /> 
 
         <button-back-to-top />
       </v-main>
-      
+
+      <bar-bottom />
     </v-app>
     <CookieControl locale="fr" />
 
-    <bar-bottom />
     <NuxtSnackbar />
   </v-layout>
 </template>
@@ -111,7 +111,10 @@
     filter: blur(1rem);
   }
 
-  .pb-24 {
-    padding-bottom: 96px !important;
+  /* v-app et v-main sont des éléments flex : sans min-width: 0, un contenu large
+     (bloc de code, tableau) élargit toute la page au-delà de l'écran */
+  .v-application,
+  .v-main {
+    min-width: 0;
   }
 </style>

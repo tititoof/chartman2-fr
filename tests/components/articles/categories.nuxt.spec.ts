@@ -65,8 +65,16 @@ describe('Components - articles/categories', async () => {
         src: 'i-mdi:shield-home',
         color: 'teal',
         title: 'Self-Hosted',
-        text: 'Divers services que l\'on peut self hosted.',
+        text: 'Divers services que l\'on peut auto-héberger.',
         link: '/blog/category/selfhosted',
+      },
+      {
+        type: 'icon',
+        src: 'i-mdi:wizard-hat',
+        color: 'purple',
+        title: 'Blackstaff',
+        text: 'Génération de code avec n8n, Ollama et un LLM local : architecture et retours de mesures.',
+        link: '/blog/category/blackstaff',
       },
     ])
   })

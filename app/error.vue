@@ -40,7 +40,7 @@
     <page-snackbar />
     <v-app>
       <v-main
-        class="d-flex align-center fill-height pb-24"
+        class="d-flex align-center fill-height"
         background-color="background"
       >
         <v-img
@@ -99,10 +99,10 @@
 
         <button-back-to-top />
       </v-main>
+
+      <bar-bottom />
     </v-app>
     <CookieControl locale="fr" />
-
-    <bar-bottom />
   </v-layout>
 </template>
 

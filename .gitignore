@@ -44,3 +44,4 @@ coverage
 .npm
 
 .storybook
+opencode.jsonc

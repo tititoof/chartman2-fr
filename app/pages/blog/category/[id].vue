@@ -20,9 +20,9 @@
           >
             <v-card
               v-aos="['animate__flipInX']"
-              class="mx-auto d-flex flex-column article-card"
+              class="mx-auto d-flex flex-column article-card h-100"
               max-width="400"
-              height="340"
+              min-height="340"
               color="article-card"
               variant="flat"
             >
@@ -36,7 +36,7 @@
               <p class="article-card-cat text-wrap">
                 {{ title }}
               </p>
-              <p class="article-card-desc description-scroll">
+              <p class="article-card-desc">
                 {{ description }}
               </p>
               <v-card-actions class="mt-auto justify-center">
@@ -59,8 +59,15 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-row v-else class="d-flex justify-center text-center py-8">
-          <v-col cols="12" sm="8" md="5">
+        <v-row
+          v-else
+          class="d-flex justify-center text-center py-8"
+        >
+          <v-col
+            cols="12"
+            sm="8"
+            md="5"
+          >
             <v-card
               flat
               color="transparent"
@@ -94,8 +101,8 @@ const route = useRoute()
 
 const { data: articles } = await useAsyncData('content', () =>
   applyPublishFilter(
-    queryCollection(route.params.id as string).order('publishedAt', 'ASC')
-  ).all()
+    queryCollection(route.params.id as string).order('publishedAt', 'ASC'),
+  ).all(),
 )
 </script>
 
@@ -124,19 +131,10 @@ const { data: articles } = await useAsyncData('content', () =>
   line-height: 1.5;
   text-align: center;
   margin: 0 0 18px;
-}
-
-.description-scroll {
-  max-height: 96px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.description-scroll::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .btn-lire {

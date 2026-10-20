@@ -9,11 +9,10 @@
     >
       <v-progress-circular indeterminate color="primary" size="64" width="4" />
     </v-overlay>
-    <lazy-partial-main-presentation @addLoading="addLoading" @removeLoading="removeLoading" />
+    <partial-main-hero />
+    <lazy-partial-main-case-studies />
+    <lazy-partial-main-services />
     <lazy-partial-main-about-me @addLoading="addLoading" @removeLoading="removeLoading" />
-    <lazy-partial-main-skills @addLoading="addLoading" @removeLoading="removeLoading" />
-    <lazy-partial-main-technologies @addLoading="addLoading" @removeLoading="removeLoading" />
-    <lazy-partial-main-articles @addLoading="addLoading" @removeLoading="removeLoading" />
     <lazy-partial-main-contact-me @addLoading="addLoading" @removeLoading="removeLoading" />
   </v-responsive>
 </template>
@@ -24,14 +23,13 @@ import { useApplicationStore } from '~/stores/application'
 const applicationStore = useApplicationStore()
 const { mobile } = useDisplay()
 
-useHead({
-  charset: 'UTF-8',
+useSeoMeta({
   author: 'Christophe Hartmann',
-  title: 'Accueil',
+  title: 'Christophe Hartmann — Développeur Ruby on Rails, Nuxt & DevOps',
   description:
-    'Web artisan, loving ruby on rails, nuxtjs, ci/cd, gitea, jenkins, sonarsource, openproject, php, laravel, symfony',
+    'Christophe Hartmann, développeur freelance Ruby on Rails / Nuxt et DevOps : applications maintenables, CI/CD, infrastructure auto-hébergée.',
   keywords:
-    'Christophe Hartmann, ruby, ruby on rails, nuxt, framework, ci/cd, gitea, sonarsource, openproject, jenkins',
+    'Christophe Hartmann, freelance, ruby on rails, nuxt, devops, ci/cd, docker, jenkins, sonarqube, forgejo, self-hosted',
 })
 
 applicationStore.setIsPhone(mobile.value)
