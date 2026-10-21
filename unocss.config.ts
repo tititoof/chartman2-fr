@@ -24,7 +24,9 @@ export default defineConfig({
     'i-mdi:book-open-page-variant',
     'i-mdi:robot-industrial-outline',
     'i-mdi:source-branch',
-    'i-mdi:palette-swatch-outline'
+    'i-mdi:palette-swatch-outline',
+    'i-mdi:book-open-variant',
+    'i-mdi:shield-alert-outline'
   ],
   presets: [
     presetIcons({
