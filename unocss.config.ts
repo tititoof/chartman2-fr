@@ -26,7 +26,11 @@ export default defineConfig({
     'i-mdi:source-branch',
     'i-mdi:palette-swatch-outline',
     'i-mdi:book-open-variant',
-    'i-mdi:shield-alert-outline'
+    'i-mdi:shield-alert-outline',
+    'i-mdi:cloud-cog-outline',
+    'i-mdi:karate',
+    'i-mdi:school-outline',
+    'i-mdi:server'
   ],
   presets: [
     presetIcons({
