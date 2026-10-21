@@ -166,7 +166,7 @@ export default defineNuxtConfig({
     locales: ['fr'],
     localeTexts: {
       fr: {
-        bannerDescription: 'Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement (préférence de thème, session si vous vous connectez). Aucun cookie de mesure d’audience ni publicitaire n’est déposé.',
+        bannerDescription: 'Ce site utilise uniquement les cookies nécessaires à son fonctionnement (thème et session). Aucun cookie publicitaire ou de mesure d’audience.',
       },
     },
   },
