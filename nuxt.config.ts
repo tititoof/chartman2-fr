@@ -145,6 +145,29 @@ export default defineNuxtConfig({
     }
   },
   cookieControl: {
+    colors: {
+      barBackground: 'rgb(var(--v-theme-surface))',
+      barTextColor: 'rgb(var(--v-theme-on-background))',
+      barButtonBackground: 'rgb(var(--v-theme-primary))',
+      barButtonColor: 'rgb(var(--v-theme-on-primary))',
+      barButtonHoverBackground: 'rgb(var(--v-theme-secondary))',
+      barButtonHoverColor: 'rgb(var(--v-theme-on-secondary))',
+      checkboxActiveBackground: 'rgb(var(--v-theme-primary))',
+      checkboxActiveCircleBackground: 'rgb(var(--v-theme-on-primary))',
+      checkboxInactiveBackground: 'rgb(var(--v-theme-muted))',
+      controlButtonBackground: 'rgb(var(--v-theme-surface))',
+      controlButtonHoverBackground: 'rgb(var(--v-theme-primary))',
+      controlButtonIconColor: 'rgb(var(--v-theme-on-background))',
+      controlButtonIconHoverColor: 'rgb(var(--v-theme-on-primary))',
+      focusRingColor: 'rgb(var(--v-theme-secondary))',
+      modalBackground: 'rgb(var(--v-theme-surface))',
+      modalButtonBackground: 'rgb(var(--v-theme-primary))',
+      modalButtonColor: 'rgb(var(--v-theme-on-primary))',
+      modalButtonHoverBackground: 'rgb(var(--v-theme-secondary))',
+      modalButtonHoverColor: 'rgb(var(--v-theme-on-secondary))',
+      modalTextColor: 'rgb(var(--v-theme-on-background))',
+      modalUnsavedColor: 'rgb(var(--v-theme-on-background))',
+    },
     cookies: {
       necessary: [
         {
