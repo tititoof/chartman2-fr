@@ -74,7 +74,7 @@
       </div>
       <div class="cv-timeline">
         <article v-for="job in experiences" :key="job.company" class="cv-job">
-          <div class="cv-job-marker"><v-icon icon="i-mdi:briefcase-outline" size="18" /></div>
+          <div class="cv-job-marker"><v-icon :icon="job.icon" size="18" /></div>
           <v-card class="cv-job-card pa-5 pa-md-6" rounded="xl" elevation="0">
             <div class="d-flex flex-wrap align-start justify-space-between ga-2 mb-3">
               <div>
@@ -169,13 +169,10 @@ const skillGroups = [
 ]
 
 const experiences = [
-  { company: 'AXN Informatique', role: 'Développeur Web & Référent DevOps', place: 'Saint-Avertin', period: 'Oct. 2023 – aujourd’hui', description: 'Conception et déploiement d’une infrastructure Docker standardisée, automatisée par scripts Bash. Gestion du backlog Redmine et mise en place d’outils d’IA (skills, agents, hooks) pour optimiser le développement.' },
-  { company: 'SupInfo', role: 'Intervenant PHP & Symfony', place: 'Tours', period: '2026', description: 'Conception et animation de formations sur l’écosystème PHP, évaluation de projets étudiants et participation aux jurys.' },
-  { company: 'Vermon', role: 'Développeur Web & Administrateur Systèmes', place: 'Tours', period: 'Oct. 2013 – juin 2022', description: 'Conception et maintenance évolutive du système d’information. Refonte de l’architecture serveur et migration vers Linux pour améliorer la stabilité et la sécurité. Encadrement technique et revues de code.' },
-  { company: 'b-flower', role: 'Développeur Web Full-stack', place: 'Cachan', period: 'Mars 2011 – mai 2012', description: 'Conception et développement d’outils CRM sur mesure pour un cabinet de conseil en efficacité commerciale.' },
-  { company: 'Netec', role: 'Analyste Développeur', place: 'Rennes', period: 'Janv. 2007 – mars 2011', description: 'Développement et maintenance d’applications de gestion pour l’Enseignement Catholique de Bretagne.' },
-  { company: 'DDEC 56', role: 'Technicien Informatique', place: 'Vannes', period: 'Août 2001 – janv. 2007', description: 'Gestion du parc informatique et support aux utilisateurs au sein du réseau scolaire.' },
-  { company: 'SAS Judo', role: 'Enseignant de Judo & Entraîneur', place: 'Saint-Avertin', period: 'Janv. 2019 – aujourd’hui', description: 'Enseignement et accompagnement des pratiquants au sein du club.' },
+  { company: 'AXN Informatique', role: 'Développeur Web & Référent DevOps', place: 'Saint-Avertin', period: 'Oct. 2023 – aujourd’hui', icon: 'i-mdi:cloud-cog-outline', description: 'Conception et déploiement d’une infrastructure Docker standardisée, automatisée par scripts Bash. Gestion du backlog Redmine et mise en place d’outils d’IA (skills, agents, hooks) pour optimiser le développement.' },
+  { company: 'SAS Judo', role: 'Enseignant de Judo & Entraîneur', place: 'Saint-Avertin', period: 'Janv. 2019 – aujourd’hui', icon: 'i-mdi:karate', description: 'Enseignement et accompagnement des pratiquants au sein du club.' },
+  { company: 'SupInfo', role: 'Intervenant PHP & Symfony', place: 'Tours', period: '2026', icon: 'i-mdi:school-outline', description: 'Conception et animation de formations sur l’écosystème PHP, évaluation de projets étudiants et participation aux jurys.' },
+  { company: 'Vermon', role: 'Développeur Web & Administrateur Systèmes', place: 'Tours', period: 'Oct. 2013 – juin 2022', icon: 'i-mdi:server', description: 'Conception et maintenance évolutive du système d’information. Refonte de l’architecture serveur et migration vers Linux pour améliorer la stabilité et la sécurité. Encadrement technique et revues de code.' },
 ]
 
 const projects = [
