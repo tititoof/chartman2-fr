@@ -175,6 +175,8 @@ export default defineNuxtConfig({
           name: 'Cookies par défaut',
           description: 'Préférence du thème (clair / sombre).',
         },
+      ],
+      optional: [
         {
           id: 'auth',
           name: 'Session',
@@ -182,14 +184,13 @@ export default defineNuxtConfig({
           targetCookieIds: ['token', 'refresh_token'],
         },
       ],
-      optional: [],
     },
 
     // The locales to include.
     locales: ['fr'],
     localeTexts: {
       fr: {
-        bannerDescription: 'Ce site utilise uniquement les cookies nécessaires à son fonctionnement (thème et session). Aucun cookie publicitaire ou de mesure d’audience.',
+        bannerDescription: 'Un cookie nécessaire mémorise le thème. Le cookie de session est utilisé uniquement si vous vous connectez. Aucun cookie publicitaire ou de mesure d’audience.',
       },
     },
   },
