@@ -35,3 +35,32 @@
   background-color: rgb(var(--v-theme-primary)) !important;
   color: rgb(var(--v-theme-on-primary)) !important;
 }
+
+/* Keep the cookie banner copy readable beside its action buttons. */
+.cookieControl__BarContainer {
+  align-items: center;
+  gap: 24px;
+}
+
+.cookieControl__BarContainer > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cookieControl__Bar p {
+  max-width: none !important;
+  line-height: 1.4 !important;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.cookieControl__BarButtons {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+  .cookieControl__BarContainer {
+    align-items: stretch;
+    gap: 10px;
+  }
+}
