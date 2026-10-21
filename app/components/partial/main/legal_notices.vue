@@ -36,7 +36,7 @@
           target="_blank"
           class="legal-link"
         >
-          {{ $t('global.name') }}
+          chartman2-fr.ovh
         </a>
       </span>
     </div>
