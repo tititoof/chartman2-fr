@@ -125,6 +125,8 @@ okf/
 └── contracts/      schémas JSON qui valident les fiches et les décisions
 ```
 
+![Arborescence des concepts OKF de Blackstaff](/img/content/blackstaff/blackstaff-okf-tree.png.png){ width=100% }
+
 Exemple d'en-tête :
 
 ```md [frameworks/rails.md]
@@ -138,6 +140,8 @@ tags: [rails, backend]
 ##### Choisir par chemin, pas par mots-clés
 
 Un détail fait une grosse différence : le choix des concepts à charger se fait par **motif de chemin de fichier**, pas par tags. Côté Nuxt, une route serveur `GET` de liste et une route `DELETE` peuvent partager les mêmes tags. Mais leurs fichiers ne se ressemblent pas : `server/api/articles/index.get.ts` d'un côté, `server/api/articles/[id].delete.ts` de l'autre. En lisant le verbe HTTP et la présence d'un segment dynamique dans le nom du fichier, le pipeline sait exactement **quelle** recette charger, sans ambiguïté.
+
+![Résolution des concepts à partir du chemin du fichier](/img/content/blackstaff/blackstaff-concept-resolver.png){ width=100% }
 
 > ⚠️ J'ai appris à mes dépens qu'une correspondance par mot-clé est fragile : pendant un temps, le pattern `auth` se chargeait dès qu'un ticket contenait le mot « authentication ». Les tags se comparent maintenant sur des mots entiers, et ne servent plus à trancher entre deux recettes.
 

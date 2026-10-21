@@ -73,6 +73,8 @@ Ce tableau n'a pas toujours été aussi propre. En rédigant cette série, j'ai 
 3. **Une injection shell.** Certains workflows construisent une commande `sh -c` qui contient le chemin du fichier à écrire, reçu dans la requête et simplement entouré d'apostrophes. Un chemin contenant lui-même une apostrophe sortait de la chaîne, et le reste devenait une commande.
 4. **Une écriture hors du projet.** L'étape d'écriture assemblait le chemin final à partir du dossier du projet et du chemin renvoyé… par le modèle. Un chemin en `../../` aurait écrit ailleurs : dans un autre dépôt, ou dans les données de n8n.
 
+![Requête refusée par le bridge sans authentification valide](/img/content/blackstaff/blackstaff-bridge-401.png){ width=100% }
+
 Les deux premiers se sont réglés avec le jeton et la suppression du port. Le troisième, avec une fonction d'échappement appliquée à chaque valeur venue de l'extérieur :
 
 ```js [nœud Code n8n « Build Patch Command » (extrait)]
@@ -135,6 +137,8 @@ Le **patch AST** décrit dans l'[article sur les mesures](/blog/article/generati
 
 Pour une tâche purement additive, l'option `"mergePolicy": "additive"` va plus loin : les lignes existantes modifiées sont **remises en place** avant l'écriture.
 
+![Détection des lignes modifiées par mergeCheck](/img/content/blackstaff/blackstaff-mergecheck.png){ width=100% }
+
 > ⚠️ Jamais pour une correction : là, modifier des lignes existantes est justement le but. Il faut alors lire la liste et vérifier que chaque changement a bien été demandé.
 
 #### 🧪 Contrôler les specs générées
@@ -163,6 +167,8 @@ Deux outils ferment la boucle :
 - **Une CI des prompts** : un script qui monte une infrastructure jetable, rejoue des tickets réels, passe le garde-fou, note avec les vraies specs et compare à une référence. Le code de sortie est exploitable par Jenkins. Un changement de prompt ou de modèle qui fait baisser le score ne passe pas.
 
 C'est cette CI qui a permis de rejeter, chiffres à l'appui, plusieurs « bonnes idées » : rappels dans le prompt, fiche de conventions, modèle plus récent.
+
+![Rejeu automatisé des générations dans la CI des prompts](/img/content/blackstaff/blackstaff-replay-ci.png){ width=100% }
 
 #### ✅ Conclusion
 

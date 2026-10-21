@@ -15,8 +15,8 @@
       </v-main>
 
       <bar-bottom />
+      <CookieControl locale="fr" />
     </v-app>
-    <CookieControl locale="fr" />
 
     <NuxtSnackbar />
   </v-layout>

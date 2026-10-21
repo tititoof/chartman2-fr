@@ -46,6 +46,8 @@ Ticket suivant : ajouter une méthode à un client Jenkins qui en contenait déj
 
 Avec une consigne explicite (« recopie à l'identique les méthodes X, Y et Z, sous peine de rejet »), on remonte à **12/13**. Mais la vraie correction est ailleurs : **ne plus jamais demander un fichier complet** quand le fichier existe déjà. La chaîne utilise maintenant un **patch AST** (en Ruby et en TypeScript) : le modèle génère une seule méthode, et un script l'insère ou la remplace dans le fichier sans toucher au reste. Quand un fichier complet doit malgré tout être renvoyé, un autre contrôle prend le relais (voir l'[article sur les garde-fous](/blog/article/blackstaff-garde-fous)).
 
+![Diff produit par le patch AST de Blackstaff](/img/content/blackstaff/blackstaff-patch-ast-diff.png){ width=100% }
+
 #### 🧩 Leçon n°1 : le modèle ne rate pas le code, il rate l'architecture
 
 Le ticket le plus difficile : un **rapport de progression de projet**, qui agrège trois sources (tickets OpenProject, builds Jenkins, qualité SonarQube) et y ajoute un résumé rédigé par un LLM. Nouveau client, nouveau service, contrôleur, serializer modifié.

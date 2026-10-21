@@ -47,6 +47,8 @@ graph LR
   class Agent,N8N,KB,Local,Tests containerStyle;
 </mermaid>
 
+![Workflow n8n du générateur Blackstaff](/img/content/blackstaff/blackstaff-n8n-workflow.png){ width=100% }
+
 #### 🧠 L'agent, chef d'orchestre
 
 n8n génère **un fichier à la fois**. Pour un ticket complet, il faut quelqu'un qui découpe, enchaîne et vérifie. C'est le rôle de l'agent de code, guidé par des instructions écrites (des « skills ») qui décrivent la boucle à suivre :
