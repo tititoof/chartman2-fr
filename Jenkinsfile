@@ -202,7 +202,7 @@ pipeline {
                              
                             sh """
                                 echo ${buildArgs}
-                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
+                                docker build --pull ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
                             """
                             scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:staging')
                             sh """
@@ -224,7 +224,7 @@ pipeline {
 
                             sh """
                                 echo ${buildArgs}
-                                docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
+                                docker build --pull ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
                             """
                             scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:latest')
                             sh """
