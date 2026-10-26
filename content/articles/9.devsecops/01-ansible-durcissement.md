@@ -362,7 +362,7 @@ Status for the jail: sshd
 
 Les règles s'appliquent aussi en **IPv6** : un oubli classique, quand le serveur a une adresse IPv6 publique et que seul l'IPv4 est filtré. Les deux échecs comptés par fail2ban sont mes propres tests de connexion par mot de passe et en root.
 
-> 💡 Retenez la ligne `deny (routed)` : UFW bloque aussi le trafic **routé** à travers le serveur. C'est sans effet pour l'instant, mais ce sera le piège de l'épisode 3, quand k3s devra faire circuler le trafic entre ses Pods.
+> 💡 Retenez la ligne `deny (routed)` : UFW bloque aussi le trafic **routé** à travers le serveur. C'est sans effet pour l'instant, mais on la retrouvera à l'épisode 3, quand k3s devra faire circuler le trafic entre ses Pods.
 
 #### 🔁 Idempotence : relancer le playbook
 

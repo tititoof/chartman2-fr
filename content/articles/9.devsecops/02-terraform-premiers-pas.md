@@ -355,7 +355,7 @@ Sur un exemple minuscule, on a vu l'essentiel de Terraform :
 
 Et au passage, une démonstration concrète que Docker contourne UFW.
 
-Le prochain épisode installe **k3s** avec Ansible : un vrai cluster Kubernetes sur bhaal, et un nouveau conflit avec le pare-feu.
+Le prochain épisode installe **k3s** avec Ansible : un vrai cluster Kubernetes sur bhaal, qui lui aussi passe devant UFW.
 
 ---
 
