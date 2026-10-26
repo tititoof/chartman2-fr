@@ -1,3 +1,46 @@
+// Scan Trivy de l'image, non bloquant, envoyé à DefectDojo (lab DevSecOps, épisode 5).
+// Le rapport sort sur stdout : avec le socket Docker de l'hôte, un volume monté
+// depuis le workspace de l'agent pointerait vers un dossier inexistant sur l'hôte.
+def scanImageToDefectDojo(String image) {
+    sh """
+        docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v trivy-cache:/root/.cache/ \
+            aquasec/trivy:0.76.1 image \
+            --exit-code 0 \
+            --ignore-unfixed \
+            --no-progress \
+            --quiet \
+            --format json \
+            ${image} > trivy-image.json
+    """
+    sh '''
+        python3 -c 'import json, collections
+d = json.load(open("trivy-image.json"))
+c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.get("Vulnerabilities") or [])
+print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
+    '''
+    archiveArtifacts artifacts: 'trivy-image.json', allowEmptyArchive: true
+    withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DD_TOKEN')]) {
+        // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
+        sh '''
+            curl -sS --fail-with-body -m 120 -o dd-response.json \
+                -X POST "http://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
+                -H "Authorization: Token $DD_TOKEN" \
+                -F "scan_type=Trivy Scan" \
+                -F "file=@trivy-image.json" \
+                -F "product_type_name=Sites web" \
+                -F "product_name=chartman2.fr" \
+                -F "engagement_name=CI $BRANCH_NAME" \
+                -F "test_title=Image Docker" \
+                -F "auto_create_context=true" \
+                -F "close_old_findings=true" \
+            && echo "Rapport envoyé à DefectDojo" \
+            || echo "Envoi à DefectDojo échoué (non bloquant)"
+        '''
+    }
+}
+
 pipeline {
     agent {
         node {
@@ -161,17 +204,7 @@ pipeline {
                                 echo ${buildArgs}
                                 docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
                             """
-                            sh """
-                                docker run --rm \
-                                    -v /var/run/docker.sock:/var/run/docker.sock \
-                                    -v trivy-cache:/root/.cache/ \
-                                    aquasec/trivy:0.76.1 image \
-                                    --exit-code 0 \
-                                    --severity HIGH,CRITICAL \
-                                    --ignore-unfixed \
-                                    --no-progress \
-                                    registry.chartman2-fr.ovh/frontend-chartman2fr:staging
-                            """
+                            scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:staging')
                             sh """
                                 docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
                             """
@@ -193,17 +226,7 @@ pipeline {
                                 echo ${buildArgs}
                                 docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
                             """
-                            sh """
-                                docker run --rm \
-                                    -v /var/run/docker.sock:/var/run/docker.sock \
-                                    -v trivy-cache:/root/.cache/ \
-                                    aquasec/trivy:0.76.1 image \
-                                    --exit-code 0 \
-                                    --severity HIGH,CRITICAL \
-                                    --ignore-unfixed \
-                                    --no-progress \
-                                    registry.chartman2-fr.ovh/frontend-chartman2fr:latest
-                            """
+                            scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:latest')
                             sh """
                                 docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
                             """
