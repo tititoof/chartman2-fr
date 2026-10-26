@@ -43,9 +43,7 @@ export default defineNuxtConfig({
     'nuxt3-aos',
     '@dargmuesli/nuxt-cookie-control',
     'nuxt-resend',
-    '@nuxt/image',
     'nuxt-snackbar',
-    '@nuxt/image',
     process.env.APP_ENVIRONMENT === 'production' && '@sentry/nuxt/module',
   ],
   vuetify: {

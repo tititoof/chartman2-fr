@@ -44,7 +44,6 @@
     "@iconify-json/mdi": "^1.2.3",
     "@nuxt/eslint": "1.5.2",
     "@nuxt/eslint-config": "^1.17.0",
-    "@nuxt/image": "^1.11.0",
     "@nuxt/test-utils": "^4.3.4",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/eslint-module": "^4.1.0",
