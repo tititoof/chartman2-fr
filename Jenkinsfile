@@ -162,6 +162,17 @@ pipeline {
                                 docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
                             """
                             sh """
+                                docker run --rm \
+                                    -v /var/run/docker.sock:/var/run/docker.sock \
+                                    -v trivy-cache:/root/.cache/ \
+                                    aquasec/trivy:0.76.1 image \
+                                    --exit-code 0 \
+                                    --severity HIGH,CRITICAL \
+                                    --ignore-unfixed \
+                                    --no-progress \
+                                    registry.chartman2-fr.ovh/frontend-chartman2fr:staging
+                            """
+                            sh """
                                 docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
                             """
 
@@ -181,6 +192,17 @@ pipeline {
                             sh """
                                 echo ${buildArgs}
                                 docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
+                            """
+                            sh """
+                                docker run --rm \
+                                    -v /var/run/docker.sock:/var/run/docker.sock \
+                                    -v trivy-cache:/root/.cache/ \
+                                    aquasec/trivy:0.76.1 image \
+                                    --exit-code 0 \
+                                    --severity HIGH,CRITICAL \
+                                    --ignore-unfixed \
+                                    --no-progress \
+                                    registry.chartman2-fr.ovh/frontend-chartman2fr:latest
                             """
                             sh """
                                 docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
