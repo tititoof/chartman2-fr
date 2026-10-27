@@ -56,5 +56,10 @@ export default defineContentConfig({
       type: 'page',
       schema: articleSchema
     }),
+    devsecops: defineCollection({
+      source: 'articles/9.devsecops/**',
+      type: 'page',
+      schema: articleSchema
+    }),
   }
 })

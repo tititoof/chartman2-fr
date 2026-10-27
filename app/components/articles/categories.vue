@@ -117,6 +117,14 @@ const articles = reactive([
     text: 'Génération de code avec n8n, Ollama et un LLM local : architecture et retours de mesures.',
     link: '/blog/category/blackstaff',
   },
+  {
+    type: 'icon',
+    src: 'i-mdi:server-security',
+    color: 'orange',
+    title: 'Lab DevSecOps',
+    text: 'Ansible, Terraform, k3s et DefectDojo : un lab d\'infrastructure as code monté pas à pas sur un serveur du homelab.',
+    link: '/blog/category/devsecops',
+  },
 ])
 </script>
 
