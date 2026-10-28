@@ -133,7 +133,8 @@ pipeline {
                                         -Dsonar.host.url=$SONAR_URL \
                                         -Dsonar.login=$SONAR_CREDENTIALS \
                                         -Dsonar.testExecutionReportPaths=sonar-report.xml \
-                                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info"
+                                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                                        -Dsonar.javascript.node.maxspace=4096"
                             }
                         }
                     }
