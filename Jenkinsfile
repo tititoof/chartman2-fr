@@ -25,7 +25,7 @@ print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
         // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
         sh '''
             curl -sS --fail-with-body -m 120 -o dd-response.json \
-                -X POST "http://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
+                -X POST "https://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
                 -H "Authorization: Token $DD_TOKEN" \
                 -F "scan_type=Trivy Scan" \
                 -F "file=@trivy-image.json" \
