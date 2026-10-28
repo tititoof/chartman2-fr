@@ -64,7 +64,9 @@ def buildAndPushImage(String tag) {
             sh """
                 set +x
                 BUILD_ARGS=\$(grep -vE '^[[:space:]]*#|^[[:space:]]*\$' "\$ENV_FILE" | sed 's/^/--opt build-arg:/' | tr '\\n' ' ')
-                DOCKER_CONFIG="\$WORKSPACE_TMP/docker" buildctl-daemonless.sh build \
+                # container() transmet l'environnement de l'agent (HOME=/home/jenkins, absent
+                # de l'image BuildKit) : buildkitd sans root a besoin de son propre HOME
+                HOME=/home/user DOCKER_CONFIG="\$WORKSPACE_TMP/docker" buildctl-daemonless.sh build \
                     --frontend dockerfile.v0 \
                     --local context=. \
                     --local dockerfile=. \
