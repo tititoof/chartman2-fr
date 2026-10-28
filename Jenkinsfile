@@ -1,19 +1,19 @@
 // Scan Trivy de l'image, non bloquant, envoyé à DefectDojo (lab DevSecOps, épisode 5).
-// Le rapport sort sur stdout : avec le socket Docker de l'hôte, un volume monté
-// depuis le workspace de l'agent pointerait vers un dossier inexistant sur l'hôte.
+// L'image est lue dans le registry, où BuildKit vient de la pousser : l'agent
+// n'a plus de démon Docker local.
 def scanImageToDefectDojo(String image) {
-    sh """
-        docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v trivy-cache:/root/.cache/ \
-            aquasec/trivy:0.76.1 image \
-            --exit-code 0 \
-            --ignore-unfixed \
-            --no-progress \
-            --quiet \
-            --format json \
-            ${image} > trivy-image.json
-    """
+    container('trivy') {
+        sh """
+            trivy image \
+                --exit-code 0 \
+                --ignore-unfixed \
+                --no-progress \
+                --quiet \
+                --format json \
+                --output trivy-image.json \
+                ${image}
+        """
+    }
     sh '''
         python3 -c 'import json, collections
 d = json.load(open("trivy-image.json"))
@@ -41,6 +41,45 @@ print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
     }
 }
 
+// Construit l'image avec BuildKit sans root (conteneur buildkit du pod), la pousse
+// vers le registry du homelab et vers ghcr.io, puis la scanne.
+def buildAndPushImage(String tag) {
+    def images = "registry.chartman2-fr.ovh/frontend-chartman2fr:${tag},ghcr.io/tititoof/frontend-chartman2fr:${tag}"
+    def cache = 'registry.chartman2-fr.ovh/frontend-chartman2fr:buildcache'
+    withCredentials([
+        file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE'),
+        string(credentialsId: 'ghcr-token', variable: 'CR_PAT'),
+    ]) {
+        container('buildkit') {
+            // Identifiants ghcr.io dans un fichier temporaire, jamais dans la ligne de commande.
+            // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy.
+            sh '''
+                umask 077
+                mkdir -p "$WORKSPACE_TMP/docker"
+                printf '{"auths":{"ghcr.io":{"auth":"%s"}}}' "$(printf 'tititoof:%s' "$CR_PAT" | base64 -w0)" \
+                    > "$WORKSPACE_TMP/docker/config.json"
+            '''
+            // Les variables du fichier d'environnement deviennent des build-args, sans être
+            // affichées : set +x coupe la trace de « sh -xe », qui montrerait leurs valeurs
+            sh """
+                set +x
+                BUILD_ARGS=\$(grep -vE '^[[:space:]]*#|^[[:space:]]*\$' "\$ENV_FILE" | sed 's/^/--opt build-arg:/' | tr '\\n' ' ')
+                DOCKER_CONFIG="\$WORKSPACE_TMP/docker" buildctl-daemonless.sh build \
+                    --frontend dockerfile.v0 \
+                    --local context=. \
+                    --local dockerfile=. \
+                    --opt filename=Dockerfile.prod \
+                    \$BUILD_ARGS \
+                    --import-cache type=registry,ref=${cache} \
+                    --export-cache type=registry,ref=${cache},mode=max \
+                    --output type=image,\\"name=${images}\\",push=true
+            """
+            sh 'rm -rf "$WORKSPACE_TMP/docker"'
+        }
+    }
+    scanImageToDefectDojo("registry.chartman2-fr.ovh/frontend-chartman2fr:${tag}")
+}
+
 pipeline {
     agent {
         node {
@@ -54,8 +93,6 @@ pipeline {
                 script {
                     echo 'Building..'
                     sh('''
-                        sudo npm install -g pnpm
-                        sudo npm install -g pm2
                         rm -Rf ./node_modules
                         pnpm install
                         pnpm build
@@ -134,7 +171,7 @@ pipeline {
                                     fi
                                     if [ -f ../.ssh/id_ed25519.pub ]
                                     then
-                                        sudo rm ../.ssh/id_ed25519.pub
+                                        rm ../.ssh/id_ed25519.pub
                                     fi
                                     git remote add github https://$GITHUB_CREDENTIALS@github.com/tititoof/chartman2-fr.git
                                 '''
@@ -159,11 +196,11 @@ pipeline {
                                 sh '''
                                     if [ -f ../.ssh/id_ed25519.pub ]
                                     then
-                                        sudo rm ../.ssh/id_ed25519.pub
+                                        rm ../.ssh/id_ed25519.pub
                                     fi
                                     if [ -f ~/.ssh/id_ed25519.pub ]
                                     then
-                                        sudo rm ~/.ssh/id_ed25519.pub
+                                        rm ~/.ssh/id_ed25519.pub
                                     fi
                                     if git remote | grep github > /dev/null; then
                                         git remote rm github
@@ -191,53 +228,10 @@ pipeline {
             }
         }
         stage('Build HomeLab') {
+            when { anyOf { branch 'develop'; branch 'main' } }
             steps {
-                withCredentials([file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE')]) {
-                    script {
-                        if (env.BRANCH_NAME == 'develop') {
-                            def buildArgs = sh(
-                                script: "grep -vE '^[[:space:]]*#|^[[:space:]]*\$' ${ENV_FILE} | sed 's/^/--build-arg /' | tr '\\n' ' '",
-                                returnStdout: true
-                            )
-                             
-                            sh """
-                                echo ${buildArgs}
-                                docker build --pull ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
-                            """
-                            scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:staging')
-                            sh """
-                                docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
-                            """
-
-                            withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
-                                sh """
-                                    echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
-                                    docker push ghcr.io/tititoof/frontend-chartman2fr:staging
-                                """
-                            }
-                        }
-                        if (env.BRANCH_NAME == 'main') {
-                            def buildArgs = sh(
-                                script: "grep -vE '^[[:space:]]*#|^[[:space:]]*\$' ${ENV_FILE} | sed 's/^/--build-arg /' | tr '\\n' ' '",
-                                returnStdout: true
-                            )
-
-                            sh """
-                                echo ${buildArgs}
-                                docker build --pull ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
-                            """
-                            scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:latest')
-                            sh """
-                                docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
-                            """
-                            withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
-                                sh """
-                                    echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
-                                    docker push ghcr.io/tititoof/frontend-chartman2fr:latest
-                                """
-                            }
-                        }
-                    }
+                script {
+                    buildAndPushImage(env.BRANCH_NAME == 'main' ? 'latest' : 'staging')
                 }
             }
         }
@@ -247,14 +241,14 @@ pipeline {
                     script {
                         if (env.BRANCH_NAME == 'develop') {
                             sh """
-                                curl -X POST http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-staging \
-                                --header "Authorization: Bearer ${COOLIFY_TOKEN}"
+                                curl -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-staging' \
+                                --header "Authorization: Bearer \$COOLIFY_TOKEN"
                             """
                         }
                         if (env.BRANCH_NAME == 'main') {
                             sh """
                                 curl -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-production' \
-                                --header 'Authorization: Bearer ${COOLIFY_TOKEN}'
+                                --header "Authorization: Bearer \$COOLIFY_TOKEN"
                             """
                         }
                     }
