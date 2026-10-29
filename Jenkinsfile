@@ -242,16 +242,18 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'coolify-token', variable: 'COOLIFY_TOKEN')]) {
                     script {
-                        if (env.BRANCH_NAME == 'develop') {
-                            sh """
-                                curl -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-staging' \
-                                --header "Authorization: Bearer \$COOLIFY_TOKEN"
-                            """
-                        }
-                        if (env.BRANCH_NAME == 'main') {
-                            sh """
-                                curl -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-production' \
-                                --header "Authorization: Bearer \$COOLIFY_TOKEN"
+                        // Tags portés par les applications dans Coolify
+                        def tags = [develop: 'chartman2-fr-staging', main: 'frontend-chartman2-fr-production']
+                        def tag = tags[env.BRANCH_NAME]
+                        if (tag) {
+                            // Un tag inconnu renvoie « No resources found with this tag » : l'étape
+                            // doit alors échouer, au lieu de laisser croire que le déploiement a eu lieu
+                            sh """#!/bin/bash
+                                set -eo pipefail
+                                resp=\$(curl -sS --fail-with-body -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=${tag}' \
+                                    --header "Authorization: Bearer \$COOLIFY_TOKEN")
+                                echo "\$resp"
+                                if echo "\$resp" | grep -q 'No resources found'; then exit 1; fi
                             """
                         }
                     }
