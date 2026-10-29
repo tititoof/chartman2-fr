@@ -1,6 +1,6 @@
 ---
 title: "Lab DevSecOps (6) : passer le homelab sous k3s, mesurer avant de migrer"
-description: "Trois vieux serveurs Dell, une quinzaine de stacks Docker Compose et des disques durs à plateaux : avant d'installer un cluster k3s à trois nœuds, on mesure. Ce que fio révèle des contrôleurs RAID, pourquoi trois serveurs etcd et pas quatre, et le plan de migration de Forgejo, Windshift et Jenkins."
+description: "Trois vieux serveurs Dell, une quinzaine de stacks Docker Compose et des disques durs à plateaux : avant d'installer un cluster k3s à trois nœuds, on mesure. Ce que fio révèle des contrôleurs RAID, pourquoi trois serveurs etcd et pas quatre, le plan de migration du homelab, et ce que la réalité y a changé."
 icon: "i-mdi:server-network"
 article_id: "06-devsecops-k3s-homelab"
 color: "orange"
@@ -91,7 +91,7 @@ Un `docker image prune -a` et un `docker builder prune` plus tard, le disque pas
 
 Les gros pics ont disparu, mais **le p99 n'a pas bougé**. La charge expliquait les pics, pas la lenteur de fond. Avec le même contrôleur qu'à côté et une machine au repos, le suspect restant est le cache du PERC : batterie morte, et contrôleur repassé en *write-through*, où chaque écriture attend les plateaux.
 
-<!-- TODO : vérification de la BBU (Ctrl+R au démarrage) et nouveau test fio -->
+La vérification se fait au démarrage, dans l'utilitaire du contrôleur (Ctrl+R) : état de la batterie (BBU) et politique du disque virtuel, *Write Back* ou *Write Through*. Au moment d'écrire ces lignes, elle n'est pas encore faite. On a donc construit le cluster **en tenant compte** de la lenteur d'ilmater, plutôt qu'en attendant de la corriger.
 
 > 💡 Leçon : sans la mesure, j'aurais conclu « vieux disques durs, donc etcd impossible » et acheté trois SSD. La mesure montre que deux machines sur trois sont excellentes, et que la troisième a probablement une batterie à 30 €.
 
@@ -119,22 +119,35 @@ Et bhaal ? Avec lui, on aurait quatre machines. Mais quatre membres etcd demande
 | 5 | 3 | 2 |
 ::
 
-Le piège symétrique : deux serveurs, c'est **pire** qu'un seul. La perte de l'un des deux bloque tout. bhaal restera donc un cluster séparé, qui servira de **préproduction** : on y teste une version de chart avant de l'appliquer au homelab.
+Le piège symétrique : deux serveurs, c'est **pire** qu'un seul. La perte de l'un des deux bloque tout.
+
+bhaal ne sera donc pas un quatrième **serveur**. Le plan initial le gardait comme cluster séparé, pour la préproduction. En pratique, il a rejoint le homelab comme **agent** : un nœud k3s qui fait tourner des pods, mais qui ne vote pas dans etcd. Le quorum reste à trois, et le cluster gagne le seul disque SSD du parc pour son stockage.
+
+::tool-table
+| Rôle k3s | Vote dans etcd | Fait tourner des pods | Ici |
+|---|---|---|---|
+| Serveur | ✅ | ✅ | cyric, baine, ilmater |
+| Agent | ❌ | ✅ | bhaal |
+::
 
 #### 🧭 Ce qui migre, et ce qui reste
 
-Tout ne passe pas sous k3s, et c'est volontaire :
+Tout ne passe pas sous k3s, et c'est volontaire. Voici le plan de départ, et ce qu'il est devenu deux jours plus tard :
 
 ::tool-table
-| Service | Décision | Pourquoi |
+| Service | Plan de départ | Ce qui s'est passé |
 |---|---|---|
-| Forgejo | ➡️ k3s | Chart officiel, données légères (68 Mo) |
-| Windshift | ➡️ k3s | Pas de chart : l'occasion d'écrire ses propres manifests |
-| Jenkins | ➡️ k3s | Agents en pods jetables, fin du `docker.sock` partagé |
-| PostgreSQL | ⏸️ Docker sur cyric | Toutes les applications en dépendent : on le migre en dernier, avec un opérateur |
-| Coolify | 🐳 Docker sur baine | Il pilote Docker lui-même : le mettre dans un pod n'aurait pas de sens |
-| OpenProject | ⏸️ plus tard | Usage à confirmer |
+| Forgejo | ➡️ k3s (chart officiel, 68 Mo de données) | ✅ migré |
+| Windshift | ➡️ k3s (pas de chart : des manifests à écrire) | ✅ migré, et passé de SQLite à PostgreSQL au passage |
+| Jenkins | ➡️ k3s (agents en pods, fin du `docker.sock` partagé) | ✅ migré, images construites sans Docker |
+| PostgreSQL | ⏸️ Docker sur cyric, migré en dernier avec un opérateur | ✅ CloudNativePG, 3 instances, sauvegardes hors du cluster |
+| Coolify | 🐳 Docker sur baine (il pilote Docker lui-même) | 🐳 resté en Docker, avec son Valkey à côté de lui |
+| OpenProject | ⏸️ plus tard (usage à confirmer) | ⏹️ arrêté : Windshift fait le même travail |
+| SonarQube, DefectDojo, mailpit, registry, Trilium | non prévus au départ | ✅ migrés aussi |
+| itsaplan | non prévu | 🗑️ migré, puis supprimé le jour même : un projet, aucun ticket |
 ::
+
+La décision la plus rentable n'est pas dans la colonne « migré » : c'est **mesurer l'usage avant de déménager**. Un service vide qu'on migre, c'est 5 pods et 460 Mo de RAM pour rien.
 
 #### 🏗️ L'architecture visée
 
@@ -159,8 +172,8 @@ graph TB
 Trois choix découlent de la cohabitation avec Docker :
 
 1. **MetalLB en mode L2** plutôt que l'équilibreur intégré de k3s. Ce dernier (`servicelb`) publie les ports 80/443 sur **tous** les nœuds, déjà occupés par les Traefik Docker et Coolify. MetalLB répond pour une **nouvelle IP** du réseau local, sans toucher aux ports des machines.
-2. **Une IP dédiée pour le SSH de Forgejo** : le port 22 de cette IP lui appartient, sans conflit avec le SSH des serveurs. Les URL de clone perdent leur `:222`.
-3. **Longhorn avec deux réplicas**, sur cyric (son disque vierge de 297 Go) et baine. Un volume suit son pod si un nœud tombe. ilmater ne stocke rien tant que son contrôleur est lent.
+2. **Le SSH de Forgejo sur le port 22 d'une IP de MetalLB**, sans conflit avec le SSH des serveurs. Les URL de clone perdent leur `:222`. Le plan prévoyait une IP dédiée. En pratique, Traefik (80/443), le SSH de Forgejo (22) et le SMTP de test (1025) **partagent la même IP**, ce que MetalLB autorise tant que les ports ne se chevauchent pas. Un seul nom sert le HTTPS et le SSH.
+3. **Longhorn avec deux réplicas**, sur cyric (son disque vierge de 297 Go), baine, puis bhaal. Un volume suit son pod si un nœud tombe. ilmater ne stocke rien, à cause de son contrôleur lent. Ce choix a eu une conséquence inattendue plus tard : pour PostgreSQL, qui veut une instance par serveur, il a fallu un autre type de stockage (on y reviendra).
 
 #### 🗺️ Le plan
 
@@ -172,13 +185,25 @@ Comme dans le reste de la série, tout passe par le dépôt : **Ansible** prépa
 4. **Briques du cluster** : MetalLB, Longhorn, le certificat wildcard.
 5. **Migrations**, de la plus simple à la plus délicate : Forgejo, puis Windshift, puis Jenkins.
 
-<!-- TODO : épisodes suivants, résultats réels de chaque phase -->
+Le plan a tenu dans les grandes lignes, et deux jours ont suffi. La suite de la série raconte chaque étape, avec ce qui a coincé :
+
+::tool-table
+| Épisode | Sujet |
+|---|---|
+| 7 | Le socle : k3s à trois serveurs, une seule IP pour tout, le stockage, les certificats |
+| 8 | Migrer un service sans le casser : une méthode en 8 temps |
+| 9 | Jenkins dans Kubernetes : des agents en pods, des images sans Docker |
+| 10 | PostgreSQL avec CloudNativePG : réplication, sauvegardes et pannes chronométrées |
+| 11 | Serveurs MCP : qui tient la clé ? |
+::
 
 #### ✅ Conclusion
 
 Cet épisode ne contient pas une ligne de Kubernetes, et c'est peut-être le plus utile. Une heure de mesures a évité deux erreurs : acheter des SSD inutiles pour deux machines sur trois, et construire un cluster à quatre serveurs etcd moins solide qu'à trois. Elle a aussi fait tomber 100 Go de cache Docker oublié et une batterie probablement morte, des problèmes qui existaient déjà avant k3s.
 
-Prochain épisode : le rôle Ansible k3s passe de un à trois serveurs.
+Et la mesure ne s'arrête pas au début du projet : c'est en mesurant l'**usage** qu'on a décidé de ne pas garder un service, et c'est en mesurant les **connexions** à l'ancienne base qu'on a trouvé, au dernier moment, un client que personne n'avait listé.
+
+Prochain épisode : le socle du cluster, de l'installation des trois serveurs à la première page servie en HTTPS.
 
 ---
 
