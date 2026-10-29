@@ -86,12 +86,12 @@ all:
     lab:
       hosts:
         bhaal:
-          ansible_host: bhaal.chartman2-fr.ovh
-          ansible_user: toofytroll
+          ansible_host: bhaal.homelab.example
+          ansible_user: admin
 ```
 
 ```yaml [group_vars/lab/vars.yml]
-admin_user: toofytroll
+admin_user: admin
 ssh_port: 22
 ufw_allowed_tcp: [80, 443]
 ```
@@ -263,7 +263,7 @@ ansible-playbook site.yml -K --check --diff --tags common,hardening
 +PermitRootLogin no
 +KbdInteractiveAuthentication no
 +MaxAuthTries 3
-+AllowUsers toofytroll
++AllowUsers admin
 ```
 
 La simulation s'arrête pourtant sur une erreur :
@@ -311,10 +311,10 @@ Le playbook dit que tout est appliqué. Reste à le vérifier du point de vue d'
 
 ```bash
 # Connexion par mot de passe
-ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password toofytroll@bhaal.chartman2-fr.ovh
+ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password admin@bhaal.homelab.example
 # Ports
-timeout 4 bash -c "</dev/tcp/bhaal.chartman2-fr.ovh/80"
-timeout 4 bash -c "</dev/tcp/bhaal.chartman2-fr.ovh/8080"
+timeout 4 bash -c "</dev/tcp/bhaal.homelab.example/80"
+timeout 4 bash -c "</dev/tcp/bhaal.homelab.example/8080"
 ```
 
 ::tool-table
@@ -398,9 +398,9 @@ Tout est `ok`, rien n'est `changed`, et le handler de redémarrage SSH ne s'est 
 ::
 
 ```ssh-config [~/.ssh/config]
-Host bhaal bhaal.chartman2-fr.ovh
-HostName bhaal.chartman2-fr.ovh
-User toofytroll
+Host bhaal bhaal.homelab.example
+HostName bhaal.homelab.example
+User admin
 IdentityFile ~/.ssh/id_ed25519
 IdentitiesOnly yes
 ```

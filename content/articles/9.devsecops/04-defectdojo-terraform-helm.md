@@ -65,7 +65,7 @@ defectdojo_namespace: defectdojo
 defectdojo_db_name: defectdojo
 defectdojo_db_user: defectdojo
 # Conteneur PostgreSQL existant sur cyric
-postgres_container: toofytroll-postgresql-1
+postgres_container: homelab-postgresql-1
 ```
 
 Et cyric rejoint l'inventaire, dans un groupe `db` :
@@ -74,8 +74,8 @@ Et cyric rejoint l'inventaire, dans un groupe `db` :
     db:
       hosts:
         cyric:
-          ansible_host: cyric.chartman2-fr.ovh
-          ansible_user: toofytroll
+          ansible_host: cyric.homelab.example
+          ansible_user: admin
 ```
 
 #### 🐘 La base sur le PostgreSQL partagé
@@ -271,13 +271,13 @@ variable "defectdojo_chart_version" {
 
 variable "defectdojo_host" {
   type    = string
-  default = "defectdojo.chartman2-fr.ovh"
+  default = "defectdojo.homelab.example"
 }
 
 variable "postgres_server" {
   type        = string
   description = "Serveur PostgreSQL existant (la base est créée par le rôle Ansible postgres_db)"
-  default     = "cyric.chartman2-fr.ovh"
+  default     = "cyric.homelab.example"
 }
 ```
 
@@ -358,13 +358,13 @@ helm template defectdojo defectdojo/defectdojo -n defectdojo -f values.yaml | gr
 ```
 
 ```text
-  DD_DATABASE_HOST: "cyric.chartman2-fr.ovh"
-  - host: defectdojo.chartman2-fr.ovh
+  DD_DATABASE_HOST: "cyric.homelab.example"
+  - host: defectdojo.homelab.example
         image: "defectdojo/defectdojo-django:3.4.202"
         image: 'defectdojo/defectdojo-nginx:3.4.202'
 ```
 
-Enfin, une entrée DNS locale dans le Pi-hole : `defectdojo.chartman2-fr.ovh` → bhaal.
+Enfin, une entrée DNS locale dans le Pi-hole : `defectdojo.homelab.example` → bhaal.
 
 #### 🔥 Cinq pannes, une à une
 
@@ -384,21 +384,21 @@ rc=2
 Premier `terraform apply`. Le Job d'initialisation de DefectDojo, qui crée les tables, échoue :
 
 ```text
-django.db.utils.OperationalError: failed to resolve host 'cyric.chartman2-fr.ovh': [Errno -2] Name or service not known
+django.db.utils.OperationalError: failed to resolve host 'cyric.homelab.example': [Errno -2] Name or service not known
 ```
 
 Pourtant, bhaal résout ce nom sans problème. Depuis un Pod de test, six essais :
 
 ```text
-** server can't find cyric.chartman2-fr.ovh: NXDOMAIN
-** server can't find cyric.chartman2-fr.ovh: NXDOMAIN
-** server can't find cyric.chartman2-fr.ovh: NXDOMAIN
-** server can't find cyric.chartman2-fr.ovh: NXDOMAIN
-** server can't find cyric.chartman2-fr.ovh: NXDOMAIN
-Address: 192.168.1.205
+** server can't find cyric.homelab.example: NXDOMAIN
+** server can't find cyric.homelab.example: NXDOMAIN
+** server can't find cyric.homelab.example: NXDOMAIN
+** server can't find cyric.homelab.example: NXDOMAIN
+** server can't find cyric.homelab.example: NXDOMAIN
+Address: 192.168.1.10
 ```
 
-Le `/etc/resolv.conf` de bhaal liste plusieurs serveurs DNS : le Pi-hole (`192.168.1.250`), qui connaît les noms du homelab, et la box (`192.168.1.254`), qui ne les connaît pas. Le système de bhaal les interroge **dans l'ordre** et tombe toujours sur le Pi-hole en premier. **CoreDNS**, le DNS interne de Kubernetes, transmet les requêtes à ces mêmes serveurs, mais **en choisissant au hasard**.
+Le `/etc/resolv.conf` de bhaal liste plusieurs serveurs DNS : le Pi-hole (`192.168.1.2`), qui connaît les noms du homelab, et la box (`192.168.1.1`), qui ne les connaît pas. Le système de bhaal les interroge **dans l'ordre** et tombe toujours sur le Pi-hole en premier. **CoreDNS**, le DNS interne de Kubernetes, transmet les requêtes à ces mêmes serveurs, mais **en choisissant au hasard**.
 
 k3s prévoit une ConfigMap `coredns-custom` pour ajouter des règles à CoreDNS. On y envoie la zone locale au seul Pi-hole, et le reste continue de passer par les serveurs habituels :
 
@@ -421,11 +421,11 @@ data:
 ```yaml [roles/k3s/defaults/main.yml (ajout)]
 # Zone locale résolue par le Pi-hole : CoreDNS choisit sinon au hasard parmi les
 # serveurs de /etc/resolv.conf, dont la box qui ne connaît pas ces noms
-k3s_local_dns_zone: chartman2-fr.ovh
-k3s_local_dns_server: 192.168.1.250
+k3s_local_dns_zone: homelab.example
+k3s_local_dns_server: 192.168.1.2
 ```
 
-Elle est appliquée par le rôle `k3s`, avec le même couple `diff` / `apply --server-side` que les Secrets. Après un redémarrage de CoreDNS : six résolutions sur six donnent `192.168.1.205`.
+Elle est appliquée par le rôle `k3s`, avec le même couple `diff` / `apply --server-side` que les Secrets. Après un redémarrage de CoreDNS : six résolutions sur six donnent `192.168.1.10`.
 
 > 💡 Ce genre de panne est le pire à diagnostiquer : **intermittente**, et invisible depuis le serveur lui-même. La méthode qui a marché : répéter le même test plusieurs fois depuis un Pod, puis interroger chaque serveur DNS directement avec `dig @serveur` pour trouver celui qui répond mal.
 
@@ -528,7 +528,7 @@ defectdojo-valkey-0                         1/1     Running   0          30m
 ```
 
 ```bash
-curl -s -o /dev/null -w "HTTP %{http_code} %{time_total}s\n" "http://defectdojo.chartman2-fr.ovh/login?next=/"
+curl -s -o /dev/null -w "HTTP %{http_code} %{time_total}s\n" "http://defectdojo.homelab.example/login?next=/"
 ```
 
 ```text

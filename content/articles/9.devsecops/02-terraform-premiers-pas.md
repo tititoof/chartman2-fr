@@ -72,8 +72,8 @@ variable "whoami_port" {
 ```
 
 ```hcl [terraform.tfvars]
-lab_host = "bhaal.chartman2-fr.ovh"
-ssh_user = "toofytroll"
+lab_host = "bhaal.homelab.example"
+ssh_user = "admin"
 ```
 
 ```hcl [main.tf]
@@ -237,7 +237,7 @@ Un conteneur Docker ne peut pas changer ses ports à chaud. Terraform le sait (`
 Après l'apply, depuis le poste de travail :
 
 ```bash
-curl http://bhaal.chartman2-fr.ovh:8081
+curl http://bhaal.homelab.example:8081
 ```
 
 ```text
@@ -329,9 +329,9 @@ L'identifiant du conteneur est le même avant et après : il a été **repris**,
 Le multiplexage se configure dans `~/.ssh/config`, à la suite de l'entrée créée à l'épisode 1 :
 
 ```ssh-config [~/.ssh/config]
-Host bhaal bhaal.chartman2-fr.ovh
-HostName bhaal.chartman2-fr.ovh
-User toofytroll
+Host bhaal bhaal.homelab.example
+HostName bhaal.homelab.example
+User admin
 IdentityFile ~/.ssh/id_ed25519
 IdentitiesOnly yes
 # Une seule connexion SSH réutilisée (UFW limit : 6 connexions / 30 s)

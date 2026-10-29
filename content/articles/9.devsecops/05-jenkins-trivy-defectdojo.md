@@ -35,13 +35,13 @@ DefectDojo n'est accessible que sur le réseau local. Avant d'écrire une ligne 
 
 ```bash
 docker exec jenkins_agent_vuejs sh -c '
-  getent hosts defectdojo.chartman2-fr.ovh
-  curl -s -o /dev/null -w "HTTP %{http_code}\n" http://defectdojo.chartman2-fr.ovh/login
+  getent hosts defectdojo.homelab.example
+  curl -s -o /dev/null -w "HTTP %{http_code}\n" http://defectdojo.homelab.example/login
   which curl python3 docker'
 ```
 
 ```text
-192.168.1.215   bhaal.chartman2-fr.ovh defectdojo.chartman2-fr.ovh
+192.168.1.20   bhaal.homelab.example defectdojo.homelab.example
 HTTP 200
 /usr/bin/curl
 /usr/bin/python3
@@ -88,7 +88,7 @@ print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
         // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
         sh '''
             curl -sS --fail-with-body -m 120 -o dd-response.json \
-                -X POST "http://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
+                -X POST "http://defectdojo.homelab.example/api/v2/reimport-scan/" \
                 -H "Authorization: Token $DD_TOKEN" \
                 -F "scan_type=Trivy Scan" \
                 -F "file=@trivy-image.json" \
@@ -106,9 +106,9 @@ print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
 ```
 
 ```groovy [Jenkinsfile (appel, branche develop)]
-docker build ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging ...
-scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:staging')
-docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
+docker build ${buildArgs} -t registry.homelab.example/frontend-chartman2fr:staging ...
+scanImageToDefectDojo('registry.homelab.example/frontend-chartman2fr:staging')
+docker push registry.homelab.example/frontend-chartman2fr:staging
 ```
 
 ##### Explications
@@ -137,7 +137,7 @@ Le détail le plus important tient aux guillemets du dernier `sh`. En Groovy, `"
 Résultat dans le log du build, où Jenkins masque la valeur :
 
 ```text
-+ curl -sS --fail-with-body -m 120 -o dd-response.json -X POST http://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/ -H Authorization: Token **** -F scan_type=Trivy Scan ...
++ curl -sS --fail-with-body -m 120 -o dd-response.json -X POST http://defectdojo.homelab.example/api/v2/reimport-scan/ -H Authorization: Token **** -F scan_type=Trivy Scan ...
 + echo Rapport envoyé à DefectDojo
 Rapport envoyé à DefectDojo
 ```
@@ -149,7 +149,7 @@ Rapport envoyé à DefectDojo
 Push sur `develop`, build #94 :
 
 ```text
-+ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v trivy-cache:/root/.cache/ aquasec/trivy:0.76.1 image --exit-code 0 --ignore-unfixed --no-progress --quiet --format json registry.chartman2-fr.ovh/frontend-chartman2fr:staging
++ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v trivy-cache:/root/.cache/ aquasec/trivy:0.76.1 image --exit-code 0 --ignore-unfixed --no-progress --quiet --format json registry.homelab.example/frontend-chartman2fr:staging
 Unable to find image 'aquasec/trivy:0.76.1' locally
 0.76.1: Pulling from aquasec/trivy
 Status: Downloaded newer image for aquasec/trivy:0.76.1

@@ -209,7 +209,7 @@ TASK [k3s : Configuration k3s]
 +# Ansible managed
 +write-kubeconfig-mode: "0600"
 +tls-san:
-+  - bhaal.chartman2-fr.ovh
++  - bhaal.homelab.example
 +cluster-cidr: 10.42.0.0/16
 +service-cidr: 10.43.0.0/16
 +# Chiffre les Secrets Kubernetes au repos dans la base du cluster
@@ -254,7 +254,7 @@ kubectl get pods -A
 
 ```text
 NAME    STATUS   ROLES           AGE    VERSION        INTERNAL-IP     OS-IMAGE                       CONTAINER-RUNTIME
-bhaal   Ready    control-plane   5m5s   v1.36.5+k3s1   192.168.1.215   Debian GNU/Linux 13 (trixie)   containerd://2.3.4-k3s1.36
+bhaal   Ready    control-plane   5m5s   v1.36.5+k3s1   192.168.1.20   Debian GNU/Linux 13 (trixie)   containerd://2.3.4-k3s1.36
 
 NAMESPACE     NAME                                      READY   STATUS      RESTARTS
 kube-system   coredns-7cfb7bc9c7-79dgb                  1/1     Running     0
@@ -453,13 +453,13 @@ NAME             TYPE        CLUSTER-IP     PORT(S)
 service/whoami   ClusterIP   10.43.80.254   80/TCP
 
 NAME                               CLASS     HOSTS              ADDRESS         PORTS
-ingress.networking.k8s.io/whoami   traefik   whoami.lab.local   192.168.1.215   80
+ingress.networking.k8s.io/whoami   traefik   whoami.lab.local   192.168.1.20   80
 ```
 
 Depuis le poste, en passant par l'Ingress sur le port 80 :
 
 ```bash
-curl -H "Host: whoami.lab.local" http://bhaal.chartman2-fr.ovh/
+curl -H "Host: whoami.lab.local" http://bhaal.homelab.example/
 ```
 
 ```text
