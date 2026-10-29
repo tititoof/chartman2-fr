@@ -1,5 +1,5 @@
 ---
-title: "Lab DevSecOps (8) : migrer un service sans le casser, une méthode en 8 temps"
+title: "Lab DevSecOps (8/11) : migrer un service sans le casser, une méthode en 8 temps"
 description: "Une même recette pour déplacer chaque service de Docker Compose vers k3s : inventaire, version figée, répétition, arrêt, copie contrôlée, bascule, retour arrière. Appliquée à Forgejo, à Windshift (passé de SQLite à PostgreSQL au passage), au registry Docker (21 Go devenus 1,2 Go) et à Trilium."
 icon: "i-mdi:truck-delivery-outline"
 article_id: "08-devsecops-migrer-sans-casser"

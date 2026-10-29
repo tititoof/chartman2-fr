@@ -1,5 +1,5 @@
 ---
-title: "Lab DevSecOps (1/5) : préparer et durcir un serveur Debian avec Ansible"
+title: "Lab DevSecOps (1/11) : préparer et durcir un serveur Debian avec Ansible"
 description: "Premier épisode d'un lab d'infrastructure as code sur un serveur du homelab : inventaire, rôles, durcissement SSH, UFW et fail2ban avec Ansible, et tout ce qui n'a pas marché du premier coup."
 icon: "i-mdi:ansible"
 article_id: "01-devsecops-ansible-durcissement"
@@ -30,9 +30,7 @@ Chaque épisode décrit ce qui a réellement tourné, sorties comprises, y compr
 | 5 | Envoyer les scans Trivy de Jenkins vers DefectDojo | Jenkins |
 ::
 
-La cible est **bhaal**, un serveur libre du homelab : Debian 13, 8 CPU, 7,7 Go de RAM. Le code est dans le dépôt [lab-iac](https://github.com/tititoof/lab-iac){:target="_blank"}.
-
-<!-- TODO : vérifier le lien une fois le dépôt publié -->
+La cible est **bhaal**, un serveur libre du homelab : Debian 13, 8 CPU, 7,7 Go de RAM. Tout le code vit dans un dépôt Git privé, `lab-iac`. Les extraits de chaque épisode en reprennent les fichiers, avec leur chemin dans le dépôt.
 
 #### 🧰 Ansible en deux minutes
 

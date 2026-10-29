@@ -1,5 +1,5 @@
 ---
-title: "Lab DevSecOps (11) : serveurs MCP, qui tient la clé ?"
+title: "Lab DevSecOps (11/11) : serveurs MCP, qui tient la clé ?"
 description: "Quatre serveurs MCP auto-hébergés, quatre variantes du même défaut : le serveur ou le proxy détenait le jeton à la place du client, et quiconque atteignait l'adresse héritait de ses droits. Comment on l'a vu, les trois tests à lancer, pourquoi un filtre par IP derrière Docker ne marche pas, et le modèle à suivre : OAuth."
 icon: "i-mdi:key-chain-variant"
 article_id: "11-devsecops-mcp-qui-tient-la-cle"

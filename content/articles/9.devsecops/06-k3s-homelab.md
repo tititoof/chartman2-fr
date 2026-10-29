@@ -1,5 +1,5 @@
 ---
-title: "Lab DevSecOps (6) : passer le homelab sous k3s, mesurer avant de migrer"
+title: "Lab DevSecOps (6/11) : passer le homelab sous k3s, mesurer avant de migrer"
 description: "Trois vieux serveurs Dell, une quinzaine de stacks Docker Compose et des disques durs à plateaux : avant d'installer un cluster k3s à trois nœuds, on mesure. Ce que fio révèle des contrôleurs RAID, pourquoi trois serveurs etcd et pas quatre, le plan de migration du homelab, et ce que la réalité y a changé."
 icon: "i-mdi:server-network"
 article_id: "06-devsecops-k3s-homelab"
@@ -9,7 +9,7 @@ publishedAt: '2026-10-28'
 ---
 #### 📌 Où on en est
 
-La [série](/blog/article/05-devsecops-jenkins-trivy-defectdojo) s'est terminée sur un serveur de lab, **bhaal**, avec k3s, DefectDojo et un pipeline Jenkins qui scanne chaque image. Mais bhaal reste un bac à sable. Les services que j'utilise tous les jours tournent ailleurs, sur trois autres machines du homelab, en Docker Compose :
+La [première étape](/blog/article/05-devsecops-jenkins-trivy-defectdojo) de la série s'est terminée sur un serveur de lab, **bhaal**, avec k3s, DefectDojo et un pipeline Jenkins qui scanne chaque image. Mais bhaal reste un bac à sable. Les services que j'utilise tous les jours tournent ailleurs, sur trois autres machines du homelab, en Docker Compose :
 
 - **cyric** : Forgejo, PostgreSQL, le registry Docker
 - **baine** : Windshift, Coolify, SonarQube…

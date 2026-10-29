@@ -1,5 +1,5 @@
 ---
-title: "Lab DevSecOps (5/5) : envoyer les scans Trivy de Jenkins vers DefectDojo"
+title: "Lab DevSecOps (5/11) : envoyer les scans Trivy de Jenkins vers DefectDojo"
 description: "Brancher un pipeline Jenkins sur DefectDojo : scan Trivy de l'image Docker en JSON, résumé dans le log, import automatique via l'API, sans jamais exposer le jeton. Et ce que révèle le premier scan."
 icon: "i-mdi:pipe"
 article_id: "05-devsecops-jenkins-trivy-defectdojo"
@@ -207,7 +207,7 @@ C'est exactement à ça que sert un outil de tri : sans ce regroupement, 251 lig
 
 C'est aussi la justification du scan non bloquant au départ : avec `--exit-code 1` sur les critiques, ce build aurait échoué, et le site n'aurait plus pu être déployé tant que les 4 CVE n'étaient pas traitées, même pour corriger une faute de frappe.
 
-#### ✅ Conclusion de la série
+#### ✅ Conclusion de la première étape
 
 En cinq épisodes, un serveur du placard est devenu une petite plateforme DevSecOps, entièrement décrite dans un dépôt :
 
@@ -228,6 +228,10 @@ Les prochaines étapes naturelles :
 3. **Ajouter les autres scanners** de l'[article sur la sécurité CI/CD](/blog/article/16-docker-cicd-securite) (Gitleaks, Opengrep…) : DefectDojo sait tous les importer.
 
 Mais le plus utile de ce lab n'est pas dans la liste des outils. Ce sont les pannes : un DNS qui répond une fois sur six, une sonde qui tue l'application qu'elle surveille, un pare-feu que deux outils contournent sans le dire. Aucune ne figurait dans les tutoriels de départ, et ce sont elles qui reviennent en production.
+
+##### La suite : tout le homelab
+
+Ce lab tournait sur une seule machine, à côté des services du quotidien. La suite de la série déplace **tout le homelab** dans un cluster k3s à trois serveurs, en commençant comme ici : en mesurant avant de toucher à quoi que ce soit. Rendez-vous dans l'[épisode 6](/blog/article/06-devsecops-k3s-homelab).
 
 ---
 
