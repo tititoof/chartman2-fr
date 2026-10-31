@@ -265,8 +265,6 @@ automatiquement ces images en production.
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

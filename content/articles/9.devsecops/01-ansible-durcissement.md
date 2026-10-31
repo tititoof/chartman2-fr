@@ -413,8 +413,6 @@ Le prochain épisode passe à **Terraform** : décrire des ressources, lire un `
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

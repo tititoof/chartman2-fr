@@ -18,8 +18,6 @@ Vous avez besoin d’un **pipeline d’automatisation** robuste, configurable et
 * **Sécurité** : ACL granulaire, chiffrement TLS, intégration LDAP/OAuth2  
 * **Interface web intuitive** : visualisation du pipeline, statistiques, réutilisation de jobs
 
-#####
-
 En quelques réglages simples avec Docker, Jenkins devient votre outil principal pour automatiser la création, le test et le déploiement de vos projets. Il peut facilement se connecter à des services comme Forgejo, SonarQube, OpenProject et Coolify.
 
 
@@ -577,8 +575,6 @@ Dans le prochain article, nous verrons comment configurer
 la qualité de votre code directement depuis le pipeline Jenkins.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

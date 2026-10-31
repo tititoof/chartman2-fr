@@ -18,8 +18,6 @@ OpenProject centralise déjà les tâches et le suivi de projet dans cette stack
 * **Structure hiérarchique** : organisation en arborescence, permissions par page ou par dossier
 * **Open-source** : licence AGPLv3, aucune dépendance à un service tiers
 
-#####
-
 Dans cette stack, Wiki.js s'appuie sur la même instance PostgreSQL partagée que les autres services — pas de base dédiée à provisionner en plus.
 
 <mermaid>
@@ -174,8 +172,6 @@ Avec Wiki.js, cette documentation rejoint le reste de la stack self-hosted : ell
 Après avoir organisé le code, les pipelines, les projets et les déploiements, l'infrastructure dispose désormais d'un endroit où conserver ce qui permet de comprendre l'ensemble.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

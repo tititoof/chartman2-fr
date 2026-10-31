@@ -542,8 +542,6 @@ Le prochain épisode déploie **DefectDojo** sur ce cluster avec **Terraform et 
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

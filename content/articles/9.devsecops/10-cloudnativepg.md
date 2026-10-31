@@ -384,8 +384,6 @@ Prochain et dernier épisode de cette série : les serveurs MCP, et une question
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

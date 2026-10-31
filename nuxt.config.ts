@@ -66,7 +66,9 @@ export default defineNuxtConfig({
     build: {
       markdown: {
         toc: {
-          depth: 3, // include h3 headings
+          // Les articles commencent leurs sections en h4 (####) : jusqu'à 3, le
+          // sommaire restait vide et ne s'affichait jamais
+          depth: 5,
         },
         highlight: {
           theme: {

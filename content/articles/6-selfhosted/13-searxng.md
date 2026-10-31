@@ -17,8 +17,6 @@ Chaque recherche sur Google ou Bing alimente un profil publicitaire : vos requê
 * **Des « bangs »** : `!gh traefik` pour chercher directement sur GitHub, `!wp` pour Wikipédia
 * **Une API JSON** : idéal pour donner un accès au web à un LLM local (Open WebUI, agents n8n…)
 
-#####
-
 Comme les résultats sont agrégés, vous ne dépendez plus d'un seul moteur, et aucun de ces moteurs ne vous voit directement.
 
 Dans cette stack, SearXNG se place derrière Traefik et fonctionne seul, sans base de données. Valkey (le fork open-source de Redis) peut s'y ajouter en option, si vous activez le limiteur anti-bots. Bonus : il devient le moteur de recherche web d'Open WebUI, ce qui permet à Ollama de répondre avec des informations à jour sans passer par une API tierce.
@@ -314,8 +312,6 @@ Et dans une stack déjà tournée vers l'IA locale, il comble le dernier manque 
 [Github](https://github.com/searxng/searxng){:target="_blank"} · [Documentation officielle](https://docs.searxng.org){:target="_blank"} · [Dépôt searxng-docker](https://github.com/searxng/searxng-docker){:target="_blank"}
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

@@ -212,8 +212,6 @@ Dans le prochain article, nous allons mettre Traefik à l'épreuve en déployant
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

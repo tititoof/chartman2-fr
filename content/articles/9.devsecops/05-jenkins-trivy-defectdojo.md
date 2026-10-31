@@ -235,8 +235,6 @@ Ce lab tournait sur une seule machine, à côté des services du quotidien. La s
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

@@ -17,8 +17,6 @@ Adminer accomplit efficacement sa mission depuis plusieurs années, tout en cons
 * **Explorateur de schéma** : visualisation interactive des tables et de leurs relations, sous forme de graphe
 * **Requêtes en langage naturel** : posez une question en français ou en anglais, WhoDB génère et exécute la requête SQL correspondante via Ollama, OpenAI ou Anthropic
 
-#####
-
 Dans cette configuration, WhoDB se connecte à la base PostgreSQL déjà partagée par les autres services et utilise l'instance Ollama locale pour l'assistant IA. Les requêtes peuvent ainsi être traitées sans envoyer le schéma ou les données à un fournisseur externe.
 
 <mermaid>
@@ -198,8 +196,6 @@ L'ajout d'Ollama ouvre également une autre façon d'interagir avec les données
 Dans cette stack, WhoDB devient donc la porte d'entrée vers les données, comme Portainer l'est pour les conteneurs : une interface légère au-dessus d'une infrastructure qui reste entièrement sous votre contrôle.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

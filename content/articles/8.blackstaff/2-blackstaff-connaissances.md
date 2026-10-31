@@ -167,8 +167,6 @@ Le modèle n'a plus qu'une seule chose à faire : écrire la logique. C'est just
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

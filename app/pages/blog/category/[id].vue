@@ -101,7 +101,11 @@ const route = useRoute()
 
 const { data: articles } = await useAsyncData('content', () =>
   applyPublishFilter(
-    queryCollection(route.params.id as string).order('publishedAt', 'ASC'),
+    queryCollection(route.params.id as string)
+      .order('publishedAt', 'ASC')
+      // Plusieurs articles d'une série partagent la même date : le nom de fichier
+      // (préfixe 01-, 02-…) départage, sinon l'ordre n'est pas garanti
+      .order('stem', 'ASC'),
   ).all(),
 )
 </script>
