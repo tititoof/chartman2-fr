@@ -25,8 +25,10 @@ export default defineVitestConfig({
     exclude: ['api', '.nuxt', 'server', 'middleware', 'layouts', 'pages', 'tests', '*.config.ts', '*.d.ts', 'app.vue'],
     // setupFiles: ['tests/setup/init.ts'],
     // unstubGlobals: true,
-    reporters: ['vitest-sonar-reporter'],
-    outputFile: 'sonar-report.xml',
+    // default : le détail des tests dans le journal de Jenkins ; le rapport Sonar
+    // seul n'affichait rien, même quand vitest sortait en erreur
+    reporters: ['default', 'vitest-sonar-reporter'],
+    outputFile: { 'vitest-sonar-reporter': 'sonar-report.xml' },
     coverage: {
       reporter: 'lcov',
       provider: 'v8',

@@ -134,15 +134,9 @@ pipeline {
         }
         stage('Test') {
             steps {
-                 echo 'Testing..'
-                script {
-                    def status = sh(
-                        script: 'pnpm run test:ci-cd',
-                        returnStatus: true
-                    )
-                    echo "Code de sortie : ${status}"
-                    echo 'Finished tests!'
-                }
+                // Bloquant : un test en échec arrête le pipeline avant l'analyse Sonar,
+                // la construction de l'image et le déploiement
+                sh 'pnpm run test:ci-cd'
             }
         }
         stage('SonarQube Quality Gate') {
