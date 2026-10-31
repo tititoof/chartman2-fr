@@ -1,5 +1,5 @@
 ---
-title: "Lab DevSecOps (2/5) : premiers pas avec Terraform, l'état et la dérive"
+title: "Lab DevSecOps (2/11) : premiers pas avec Terraform, l'état et la dérive"
 description: "Décrire des conteneurs Docker avec Terraform sur un serveur distant : plan, apply, détection de dérive, remplacement de ressource, import d'un conteneur créé à la main, et la démonstration que Docker contourne UFW."
 icon: "i-mdi:terraform"
 article_id: "02-devsecops-terraform-premiers-pas"
@@ -72,8 +72,8 @@ variable "whoami_port" {
 ```
 
 ```hcl [terraform.tfvars]
-lab_host = "bhaal.chartman2-fr.ovh"
-ssh_user = "toofytroll"
+lab_host = "bhaal.homelab.example"
+ssh_user = "admin"
 ```
 
 ```hcl [main.tf]
@@ -237,7 +237,7 @@ Un conteneur Docker ne peut pas changer ses ports à chaud. Terraform le sait (`
 Après l'apply, depuis le poste de travail :
 
 ```bash
-curl http://bhaal.chartman2-fr.ovh:8081
+curl http://bhaal.homelab.example:8081
 ```
 
 ```text
@@ -329,9 +329,9 @@ L'identifiant du conteneur est le même avant et après : il a été **repris**,
 Le multiplexage se configure dans `~/.ssh/config`, à la suite de l'entrée créée à l'épisode 1 :
 
 ```ssh-config [~/.ssh/config]
-Host bhaal bhaal.chartman2-fr.ovh
-HostName bhaal.chartman2-fr.ovh
-User toofytroll
+Host bhaal bhaal.homelab.example
+HostName bhaal.homelab.example
+User admin
 IdentityFile ~/.ssh/id_ed25519
 IdentitiesOnly yes
 # Une seule connexion SSH réutilisée (UFW limit : 6 connexions / 30 s)
@@ -358,8 +358,6 @@ Et au passage, une démonstration concrète que Docker contourne UFW.
 Le prochain épisode installe **k3s** avec Ansible : un vrai cluster Kubernetes sur bhaal, qui lui aussi passe devant UFW.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

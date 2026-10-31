@@ -1,19 +1,19 @@
 // Scan Trivy de l'image, non bloquant, envoyé à DefectDojo (lab DevSecOps, épisode 5).
-// Le rapport sort sur stdout : avec le socket Docker de l'hôte, un volume monté
-// depuis le workspace de l'agent pointerait vers un dossier inexistant sur l'hôte.
+// L'image est lue dans le registry, où BuildKit vient de la pousser : l'agent
+// n'a plus de démon Docker local.
 def scanImageToDefectDojo(String image) {
-    sh """
-        docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v trivy-cache:/root/.cache/ \
-            aquasec/trivy:0.76.1 image \
-            --exit-code 0 \
-            --ignore-unfixed \
-            --no-progress \
-            --quiet \
-            --format json \
-            ${image} > trivy-image.json
-    """
+    container('trivy') {
+        sh """
+            trivy image \
+                --exit-code 0 \
+                --ignore-unfixed \
+                --no-progress \
+                --quiet \
+                --format json \
+                --output trivy-image.json \
+                ${image}
+        """
+    }
     sh '''
         python3 -c 'import json, collections
 d = json.load(open("trivy-image.json"))
@@ -21,24 +21,73 @@ c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.g
 print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
     '''
     archiveArtifacts artifacts: 'trivy-image.json', allowEmptyArchive: true
-    withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DD_TOKEN')]) {
-        // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
-        sh '''
-            curl -sS --fail-with-body -m 120 -o dd-response.json \
-                -X POST "http://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
-                -H "Authorization: Token $DD_TOKEN" \
-                -F "scan_type=Trivy Scan" \
-                -F "file=@trivy-image.json" \
-                -F "product_type_name=Sites web" \
-                -F "product_name=chartman2.fr" \
-                -F "engagement_name=CI $BRANCH_NAME" \
-                -F "test_title=Image Docker" \
-                -F "auto_create_context=true" \
-                -F "close_old_findings=true" \
-            && echo "Rapport envoyé à DefectDojo" \
-            || echo "Envoi à DefectDojo échoué (non bloquant)"
-        '''
+    sendToDefectDojo('trivy-image.json', 'Trivy Scan', 'Image Docker')
+}
+
+// Envoie un rapport sur le même test à chaque build (reimport-scan) : DefectDojo
+// reconnaît les alertes connues et ferme celles qui ont disparu. Jamais bloquant.
+def sendToDefectDojo(String report, String scanType, String testTitle) {
+    withEnv(["DD_REPORT=${report}", "DD_SCAN_TYPE=${scanType}", "DD_TEST_TITLE=${testTitle}"]) {
+        withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DD_TOKEN')]) {
+            // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
+            sh '''
+                curl -sS --fail-with-body -m 120 -o dd-response.json \
+                    -X POST "https://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
+                    -H "Authorization: Token $DD_TOKEN" \
+                    -F "scan_type=$DD_SCAN_TYPE" \
+                    -F "file=@$DD_REPORT" \
+                    -F "product_type_name=Sites web" \
+                    -F "product_name=chartman2.fr" \
+                    -F "engagement_name=CI $BRANCH_NAME" \
+                    -F "test_title=$DD_TEST_TITLE" \
+                    -F "auto_create_context=true" \
+                    -F "close_old_findings=true" \
+                && echo "Rapport $DD_SCAN_TYPE envoyé à DefectDojo" \
+                || echo "Envoi à DefectDojo échoué (non bloquant)"
+            '''
+        }
     }
+}
+
+// Construit l'image avec BuildKit sans root (conteneur buildkit du pod), la pousse
+// vers le registry du homelab et vers ghcr.io, puis la scanne.
+def buildAndPushImage(String tag) {
+    def images = "registry.chartman2-fr.ovh/frontend-chartman2fr:${tag},ghcr.io/tititoof/frontend-chartman2fr:${tag}"
+    def cache = 'registry.chartman2-fr.ovh/frontend-chartman2fr:buildcache'
+    withCredentials([
+        file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE'),
+        string(credentialsId: 'ghcr-token', variable: 'CR_PAT'),
+    ]) {
+        container('buildkit') {
+            // Identifiants ghcr.io dans un fichier temporaire, jamais dans la ligne de commande.
+            // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy.
+            sh '''
+                umask 077
+                mkdir -p "$WORKSPACE_TMP/docker"
+                printf '{"auths":{"ghcr.io":{"auth":"%s"}}}' "$(printf 'tititoof:%s' "$CR_PAT" | base64 -w0)" \
+                    > "$WORKSPACE_TMP/docker/config.json"
+            '''
+            // Les variables du fichier d'environnement deviennent des build-args, sans être
+            // affichées : set +x coupe la trace de « sh -xe », qui montrerait leurs valeurs
+            sh """
+                set +x
+                BUILD_ARGS=\$(grep -vE '^[[:space:]]*#|^[[:space:]]*\$' "\$ENV_FILE" | sed 's/^/--opt build-arg:/' | tr '\\n' ' ')
+                # container() transmet l'environnement de l'agent (HOME=/home/jenkins, absent
+                # de l'image BuildKit) : buildkitd sans root a besoin de son propre HOME
+                HOME=/home/user DOCKER_CONFIG="\$WORKSPACE_TMP/docker" buildctl-daemonless.sh build \
+                    --frontend dockerfile.v0 \
+                    --local context=. \
+                    --local dockerfile=. \
+                    --opt filename=Dockerfile.prod \
+                    \$BUILD_ARGS \
+                    --import-cache type=registry,ref=${cache} \
+                    --export-cache type=registry,ref=${cache},mode=max \
+                    --output type=image,\\"name=${images}\\",push=true
+            """
+            sh 'rm -rf "$WORKSPACE_TMP/docker"'
+        }
+    }
+    scanImageToDefectDojo("registry.chartman2-fr.ovh/frontend-chartman2fr:${tag}")
 }
 
 pipeline {
@@ -49,13 +98,32 @@ pipeline {
     }
 
     stages {
+        // Secrets dans tout l'historique git (gitleaks, environ 1 s). Bloquant, contrairement
+        // à Trivy : un secret poussé est déjà un incident. Les alertes examinées et
+        // acceptées sont dans .gitleaksignore ; --redact garde les valeurs hors du rapport.
+        stage('Secrets') {
+            steps {
+                script {
+                    def status = 0
+                    container('gitleaks') {
+                        status = sh(returnStatus: true, script: '''
+                            gitleaks git . --redact --no-banner --exit-code 1 \
+                                --report-format json --report-path gitleaks.json
+                        ''')
+                    }
+                    archiveArtifacts artifacts: 'gitleaks.json', allowEmptyArchive: true
+                    sendToDefectDojo('gitleaks.json', 'Gitleaks Scan', 'Secrets (Gitleaks)')
+                    if (status != 0) {
+                        error("gitleaks : code ${status}, voir gitleaks.json ou DefectDojo")
+                    }
+                }
+            }
+        }
         stage('Build') {
             steps {
                 script {
                     echo 'Building..'
                     sh('''
-                        sudo npm install -g pnpm
-                        sudo npm install -g pm2
                         rm -Rf ./node_modules
                         pnpm install
                         pnpm build
@@ -66,15 +134,9 @@ pipeline {
         }
         stage('Test') {
             steps {
-                 echo 'Testing..'
-                script {
-                    def status = sh(
-                        script: 'pnpm run test:ci-cd',
-                        returnStatus: true
-                    )
-                    echo "Code de sortie : ${status}"
-                    echo 'Finished tests!'
-                }
+                // Bloquant : un test en échec arrête le pipeline avant l'analyse Sonar,
+                // la construction de l'image et le déploiement
+                sh 'pnpm run test:ci-cd'
             }
         }
         stage('SonarQube Quality Gate') {
@@ -96,7 +158,8 @@ pipeline {
                                         -Dsonar.host.url=$SONAR_URL \
                                         -Dsonar.login=$SONAR_CREDENTIALS \
                                         -Dsonar.testExecutionReportPaths=sonar-report.xml \
-                                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info"
+                                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                                        -Dsonar.javascript.node.maxspace=4096"
                             }
                         }
                     }
@@ -134,7 +197,7 @@ pipeline {
                                     fi
                                     if [ -f ../.ssh/id_ed25519.pub ]
                                     then
-                                        sudo rm ../.ssh/id_ed25519.pub
+                                        rm ../.ssh/id_ed25519.pub
                                     fi
                                     git remote add github https://$GITHUB_CREDENTIALS@github.com/tititoof/chartman2-fr.git
                                 '''
@@ -159,11 +222,11 @@ pipeline {
                                 sh '''
                                     if [ -f ../.ssh/id_ed25519.pub ]
                                     then
-                                        sudo rm ../.ssh/id_ed25519.pub
+                                        rm ../.ssh/id_ed25519.pub
                                     fi
                                     if [ -f ~/.ssh/id_ed25519.pub ]
                                     then
-                                        sudo rm ~/.ssh/id_ed25519.pub
+                                        rm ~/.ssh/id_ed25519.pub
                                     fi
                                     if git remote | grep github > /dev/null; then
                                         git remote rm github
@@ -191,53 +254,10 @@ pipeline {
             }
         }
         stage('Build HomeLab') {
+            when { anyOf { branch 'develop'; branch 'main' } }
             steps {
-                withCredentials([file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE')]) {
-                    script {
-                        if (env.BRANCH_NAME == 'develop') {
-                            def buildArgs = sh(
-                                script: "grep -vE '^[[:space:]]*#|^[[:space:]]*\$' ${ENV_FILE} | sed 's/^/--build-arg /' | tr '\\n' ' '",
-                                returnStdout: true
-                            )
-                             
-                            sh """
-                                echo ${buildArgs}
-                                docker build --pull ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:staging -t ghcr.io/tititoof/frontend-chartman2fr:staging -f Dockerfile.prod .
-                            """
-                            scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:staging')
-                            sh """
-                                docker push registry.chartman2-fr.ovh/frontend-chartman2fr:staging
-                            """
-
-                            withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
-                                sh """
-                                    echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
-                                    docker push ghcr.io/tititoof/frontend-chartman2fr:staging
-                                """
-                            }
-                        }
-                        if (env.BRANCH_NAME == 'main') {
-                            def buildArgs = sh(
-                                script: "grep -vE '^[[:space:]]*#|^[[:space:]]*\$' ${ENV_FILE} | sed 's/^/--build-arg /' | tr '\\n' ' '",
-                                returnStdout: true
-                            )
-
-                            sh """
-                                echo ${buildArgs}
-                                docker build --pull ${buildArgs} -t registry.chartman2-fr.ovh/frontend-chartman2fr:latest -t ghcr.io/tititoof/frontend-chartman2fr:latest -f Dockerfile.prod .
-                            """
-                            scanImageToDefectDojo('registry.chartman2-fr.ovh/frontend-chartman2fr:latest')
-                            sh """
-                                docker push registry.chartman2-fr.ovh/frontend-chartman2fr:latest
-                            """
-                            withCredentials([string(credentialsId: 'ghcr-token', variable: 'CR_PAT')]) {
-                                sh """
-                                    echo $CR_PAT | docker login ghcr.io -u tititoof --password-stdin
-                                    docker push ghcr.io/tititoof/frontend-chartman2fr:latest
-                                """
-                            }
-                        }
-                    }
+                script {
+                    buildAndPushImage(env.BRANCH_NAME == 'main' ? 'latest' : 'staging')
                 }
             }
         }
@@ -245,16 +265,18 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'coolify-token', variable: 'COOLIFY_TOKEN')]) {
                     script {
-                        if (env.BRANCH_NAME == 'develop') {
-                            sh """
-                                curl -X POST http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-staging \
-                                --header "Authorization: Bearer ${COOLIFY_TOKEN}"
-                            """
-                        }
-                        if (env.BRANCH_NAME == 'main') {
-                            sh """
-                                curl -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=frontend-chartman2-fr-production' \
-                                --header 'Authorization: Bearer ${COOLIFY_TOKEN}'
+                        // Tags portés par les applications dans Coolify
+                        def tags = [develop: 'chartman2-fr-staging', main: 'frontend-chartman2-fr-production']
+                        def tag = tags[env.BRANCH_NAME]
+                        if (tag) {
+                            // Un tag inconnu renvoie « No resources found with this tag » : l'étape
+                            // doit alors échouer, au lieu de laisser croire que le déploiement a eu lieu
+                            sh """#!/bin/bash
+                                set -eo pipefail
+                                resp=\$(curl -sS --fail-with-body -X POST 'http://coolify.chartman2-fr.ovh:8000/api/v1/deploy?tag=${tag}' \
+                                    --header "Authorization: Bearer \$COOLIFY_TOKEN")
+                                echo "\$resp"
+                                if echo "\$resp" | grep -q 'No resources found'; then exit 1; fi
                             """
                         }
                     }

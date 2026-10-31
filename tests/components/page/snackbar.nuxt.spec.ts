@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { createI18n } from 'vue-i18n'
 
-import TestResource from '~~/components/page/snackbar.vue'
+import TestResource from '~/components/page/snackbar.vue'
 
 const i18n = createI18n({
   legacy: false,

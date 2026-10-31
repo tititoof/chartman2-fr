@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 
-import TestResource from '~~/components/bar/top.vue'
+import TestResource from '~/components/bar/top.vue'
 
 describe('Components - bar/top', async () => {
   it('is a Vue instance', async () => {

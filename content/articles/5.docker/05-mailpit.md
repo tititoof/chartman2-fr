@@ -189,8 +189,6 @@ Dans le prochain article, nous allons mettre en place [Forgejo](/blog/article/6-
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

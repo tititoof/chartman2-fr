@@ -30,7 +30,8 @@ export default defineConfig({
     'i-mdi:cloud-cog-outline',
     'i-mdi:karate',
     'i-mdi:school-outline',
-    'i-mdi:server'
+    'i-mdi:server',
+    'i-mdi:server-network',
   ],
   presets: [
     presetIcons({

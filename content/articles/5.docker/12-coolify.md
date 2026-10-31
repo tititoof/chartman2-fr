@@ -388,8 +388,6 @@ inaccessible.
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

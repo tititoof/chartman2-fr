@@ -184,8 +184,6 @@ Le seul vrai piège est celui de l'IP source : **Traefik filtre sur l'IP qu'il v
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

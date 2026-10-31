@@ -45,3 +45,7 @@ coverage
 
 .storybook
 opencode.jsonc
+# Rapports de la CI : le stage « Github update » fait « git add . » vers le dépôt public
+gitleaks.json
+trivy-image.json
+dd-response.json

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Refuse le commit si les fichiers indexés contiennent un secret (gitleaks).
+# Activation, une fois par clone : git config core.hooksPath .githooks
+# Faux positif : ajouter l'empreinte affichée dans .gitleaksignore
+set -e
+GITLEAKS_IMAGE=ghcr.io/gitleaks/gitleaks:v8.24.2
+root=$(git rev-parse --show-toplevel)
+if command -v gitleaks >/dev/null 2>&1; then
+    exec gitleaks git --staged --redact --no-banner "$root"
+fi
+exec docker run --rm -u "$(id -u):$(id -g)" -v "$root:/repo:ro" "$GITLEAKS_IMAGE" \
+    git --staged --redact --no-banner /repo

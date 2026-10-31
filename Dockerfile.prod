@@ -46,6 +46,13 @@ WORKDIR /app
 # (esbuild, happy-dom…) et leurs CVE à l'image de production.
 COPY --from=build /app/.output /app/.output
 
+# Lus au démarrage par sentry.server.config (le DSN n'est pas un secret : il est
+# aussi dans le JavaScript envoyé au navigateur)
+ARG SENTRY_DSN
+ARG APP_ENVIRONMENT
+ARG APP_VERSION
+ENV SENTRY_DSN=$SENTRY_DSN APP_ENVIRONMENT=$APP_ENVIRONMENT APP_VERSION=$APP_VERSION
+
 # npm et corepack (fournis par l'image node) ne servent pas à lancer le site,
 # et embarquent leurs propres dépendances vulnérables
 RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \

@@ -364,8 +364,6 @@ Si Docker permet de faire tourner vos applications, Docker Compose est comme le 
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

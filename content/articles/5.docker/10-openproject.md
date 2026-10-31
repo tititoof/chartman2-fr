@@ -332,8 +332,6 @@ Dans le prochain article, nous verrons comment mettre en place un [Registry Dock
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

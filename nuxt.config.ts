@@ -66,7 +66,9 @@ export default defineNuxtConfig({
     build: {
       markdown: {
         toc: {
-          depth: 3, // include h3 headings
+          // Les articles commencent leurs sections en h4 (####) : jusqu'à 3, le
+          // sommaire restait vide et ne s'affichait jamais
+          depth: 5,
         },
         highlight: {
           theme: {
@@ -110,6 +112,7 @@ export default defineNuxtConfig({
       appName: process.env.APP_NAME,
       environment: process.env.APP_ENVIRONMENT,
       appVersion: process.env.APP_VERSION,
+      sentryDsn: process.env.SENTRY_DSN,
     },
   },
   sourcemap: { client: 'hidden' },
@@ -219,6 +222,8 @@ export default defineNuxtConfig({
   },
   sentry: {
     autoInjectServerSentry: 'experimental_dynamic-import',
+    // Pas d'envoi des sourcemaps pour l'instant (Bugsink sait les recevoir via sentry-cli)
+    sourceMapsUploadOptions: { enabled: false },
   },
   components: [
     '~/components', {

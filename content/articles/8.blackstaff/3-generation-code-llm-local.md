@@ -162,8 +162,6 @@ Au final, la chaîne n'est pas « une IA qui code ». C'est un **atelier** : un 
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

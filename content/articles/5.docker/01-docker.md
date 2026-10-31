@@ -148,8 +148,6 @@ le premier outil indispensable de notre future plateforme.
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::
