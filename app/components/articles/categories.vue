@@ -122,7 +122,7 @@ const articles = reactive([
     src: 'i-mdi:server-security',
     color: 'orange',
     title: 'Lab DevSecOps',
-    text: 'Ansible, Terraform, k3s et DefectDojo : un lab d\'infrastructure as code monté pas à pas sur un serveur du homelab.',
+    text: 'Ansible, Terraform, k3s, DefectDojo et CloudNativePG : un lab d\'infrastructure as code, puis la migration de tout le homelab sous Kubernetes.',
     link: '/blog/category/devsecops',
   },
 ])

@@ -20,8 +20,6 @@ Au fil des articles de la série sur le CI/CD, votre `docker-compose.yml` s'est 
 * **Gestion multi-environnements** : plusieurs hôtes Docker, un seul dashboard
 * **Open-source** : édition Community gratuite, largement suffisante pour un usage personnel ou freelance
 
-#####
-
 Pourquoi l'ajouter à la stack ? Pas pour remplacer le `docker-compose.yml` — vous continuerez à versionner vos fichiers comme avant — mais pour les journées où vous avez juste besoin de vérifier rapidement pourquoi un conteneur redémarre en boucle, sans rouvrir un terminal SSH pour ça.
 
 <mermaid>
@@ -158,8 +156,6 @@ Il ne remplace pas votre `docker-compose.yml` versionné — il vient simplement
 Combiné à Traefik pour l'accès HTTPS, il referme une dernière brique pratique de la stack : celle qui rend la supervision au quotidien plus rapide, sans jamais devenir indispensable.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

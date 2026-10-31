@@ -266,8 +266,6 @@ Prochain épisode : la dernière brique, et la plus sensible, PostgreSQL dans le
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

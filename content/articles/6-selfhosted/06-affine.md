@@ -40,8 +40,6 @@ peut s'intégrer dans une page de notes — le tout dans la même interface.
 | **Prix** | ~10€/user/mois | ~8€/user/mois | Gratuit |
 ::
 
-#####
-
 > ⚠️ À savoir
 
 > Le projet est encore tout frais, mais certaines fonctionnalités continuent de s'améliorer à toute vitesse ! L'écosystème est un peu plus petit que celui de Notion, mais ça ne cesse de grandir. Et comme c'est encore en développement, il peut arriver que quelques petits bugs apparaissent selon la version que vous utilisez.

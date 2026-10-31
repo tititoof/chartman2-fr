@@ -118,8 +118,6 @@ Dans le prochain article, nous allons mettre en place [Mailpit](/blog/article/5-
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

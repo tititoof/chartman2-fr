@@ -176,8 +176,6 @@ Côté DefectDojo, tout a été créé au premier envoi :
 
 Les 3 `UNKNOWN` de Trivy (CVE dont la sévérité n'est pas encore évaluée) deviennent `Info` dans DefectDojo.
 
-<!-- TODO capture : produit chartman2.fr dans DefectDojo, liste des findings → /img/content/defectdojo-findings.png -->
-
 #### 🧐 Ce que révèle le premier scan
 
 **251 vulnérabilités corrigeables**, dont 4 critiques, dans l'image qui part en production. Le chiffre seul ne dit rien : DefectDojo enregistre pour chacune le composant et le fichier concernés, ce qui permet de les regrouper par origine.
@@ -207,6 +205,24 @@ C'est exactement à ça que sert un outil de tri : sans ce regroupement, 251 lig
 
 C'est aussi la justification du scan non bloquant au départ : avec `--exit-code 1` sur les critiques, ce build aurait échoué, et le site n'aurait plus pu être déployé tant que les 4 CVE n'étaient pas traitées, même pour corriger une faute de frappe.
 
+#### 🔁 Le scan suivant
+
+Les deux lignes ont été revues. L'étape finale ne copie plus `node_modules`, seulement `.output`. Et comme le site n'utilise jamais `NuxtImg`, `libvips` est parti aussi, et ImageMagick avec lui. Mesuré avec Trivy au moment du changement :
+
+::tool-table
+| Mesure | Avant | Après |
+|---|:---:|:---:|
+| CVE corrigeables | 251 | 4 |
+| dont critiques | 4 | 0 |
+| Taille de l'image | 1,19 Go | 332 Mo |
+::
+
+Le build suivant a envoyé son rapport sur le **même test** (`reimport-scan`), et `close_old_findings` a fermé tout ce que Trivy ne trouvait plus :
+
+![DefectDojo - les vulnérabilités du premier scan, fermées par le réimport](/img/content/defectdojo-findings.png){ width=100% }
+
+Les 251 restent dans l'historique, avec le statut **Mitigated** : on sait ce qui a été corrigé, et quand. C'est la différence entre un rapport qu'on lit une fois et un suivi.
+
 #### ✅ Conclusion de la première étape
 
 En cinq épisodes, un serveur du placard est devenu une petite plateforme DevSecOps, entièrement décrite dans un dépôt :
@@ -223,9 +239,8 @@ En cinq épisodes, un serveur du placard est devenu une petite plateforme DevSec
 
 Les prochaines étapes naturelles :
 
-1. **Alléger l'image de production** : ne plus y copier `node_modules`, revoir le besoin de `libvips`, puis comparer les deux scans dans DefectDojo, où `close_old_findings` fermera les vulnérabilités disparues.
-2. **Rendre le scan bloquant sur les CVE critiques**, une fois ce stock traité : `--severity CRITICAL --exit-code 1`, en plus de l'envoi à DefectDojo.
-3. **Ajouter les autres scanners** de l'[article sur la sécurité CI/CD](/blog/article/16-docker-cicd-securite) (Gitleaks, Opengrep…) : DefectDojo sait tous les importer.
+1. **Rendre le scan bloquant sur les CVE critiques**, maintenant que ce stock est traité : `--severity CRITICAL --exit-code 1`, en plus de l'envoi à DefectDojo.
+2. **Ajouter les autres scanners** de l'[article sur la sécurité CI/CD](/blog/article/16-docker-cicd-securite) (Gitleaks, Opengrep…) : DefectDojo sait tous les importer.
 
 Mais le plus utile de ce lab n'est pas dans la liste des outils. Ce sont les pannes : un DNS qui répond une fois sur six, une sonde qui tue l'application qu'elle surveille, un pare-feu que deux outils contournent sans le dire. Aucune ne figurait dans les tutoriels de départ, et ce sont elles qui reviennent en production.
 
@@ -234,8 +249,6 @@ Mais le plus utile de ce lab n'est pas dans la liste des outils. Ce sont les pan
 Ce lab tournait sur une seule machine, à côté des services du quotidien. La suite de la série déplace **tout le homelab** dans un cluster k3s à trois serveurs, en commençant comme ici : en mesurant avant de toucher à quoi que ce soit. Rendez-vous dans l'[épisode 6](/blog/article/06-devsecops-k3s-homelab).
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

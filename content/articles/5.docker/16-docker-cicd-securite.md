@@ -326,8 +326,6 @@ L'essentiel est ailleurs : **toutes les analyses du code convergent vers le mêm
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

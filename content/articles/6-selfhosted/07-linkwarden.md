@@ -17,8 +17,6 @@ Combien de favoris dorment dans votre navigateur, jamais retrouvés ? [Linkwarde
 * **Collections partageables** : organisez vos favoris en dossiers, seuls ou en équipe
 * **Auto-hébergé** : vos favoris et vos archives restent chez vous, sans dépendance à un service tiers
 
-#####
-
 L'objectif n'est plus seulement de mémoriser une URL, mais de conserver durablement l'information qu'elle contient.
 
 Dans cette stack, Linkwarden s'appuie sur PostgreSQL pour la persistance et sur une instance Ollama déjà en place pour générer les tags — sans clé API OpenAI, sans donnée qui sort de votre infrastructure.
@@ -236,8 +234,6 @@ C'est toute la différence entre les favoris d'un navigateur et Linkwarden : les
 Combiné à l'instance Ollama déjà présente dans la stack, aucune donnée ne transite par un service tiers : l'analyse du contenu comme l'archivage restent entièrement chez vous.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

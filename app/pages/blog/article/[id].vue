@@ -156,6 +156,8 @@ const { data: siblings } = await useAsyncData('siblings-' + route.params.id, () 
     queryCollection('content')
       .where('stem', 'LIKE', `${categoryDir.value}/%`)
       .order('publishedAt', 'ASC')
+      // Même départage que la page catégorie (dates identiques dans une série)
+      .order('stem', 'ASC')
   )
     .select('title', 'article_id')
     .all(),

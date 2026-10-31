@@ -153,8 +153,6 @@ Et c'est surtout un bon moyen d'apprendre ce qu'un LLM sait faire, et ce qu'il n
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

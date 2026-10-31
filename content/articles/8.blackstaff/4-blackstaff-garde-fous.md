@@ -178,8 +178,6 @@ Si je ne devais retenir qu'une chose : **un générateur de code doit être auss
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

@@ -207,8 +207,6 @@ Prochain épisode : le socle du cluster, de l'installation des trois serveurs à
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

@@ -537,7 +537,7 @@ HTTP 200 0.105218s
 HTTP 200 0.107679s
 ```
 
-<!-- TODO capture : page de connexion ou tableau de bord DefectDojo → /img/content/defectdojo-login.png -->
+![DefectDojo - page de connexion](/img/content/defectdojo-login.png)
 
 Et les deux outils confirment qu'ils décrivent exactement ce qui tourne :
 
@@ -564,11 +564,9 @@ Le partage des responsabilités tient : Ansible pour ce qui touche aux serveurs 
 
 Mais surtout, cet épisode montre ce qu'un tutoriel « qui marche du premier coup » cache : un DNS qui répond une fois sur six, un Job qui abandonne, une sonde qui tue l'application qu'elle surveille. Chaque panne s'est diagnostiquée de la même façon : **mesurer plutôt que deviner**, depuis l'intérieur du cluster.
 
-Dernier épisode : brancher le pipeline Jenkins de ce site sur DefectDojo, pour que chaque scan Trivy y arrive automatiquement.
+Prochain épisode, le dernier de cette première étape : brancher le pipeline Jenkins de ce site sur DefectDojo, pour que chaque scan Trivy y arrive automatiquement.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

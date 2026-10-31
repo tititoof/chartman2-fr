@@ -302,8 +302,6 @@ Prochain épisode : Jenkins, le service le plus délicat, avec des agents qui de
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

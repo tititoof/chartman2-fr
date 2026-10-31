@@ -422,8 +422,6 @@ Dans le prochain article, nous verrons comment mettre en place [OpenProject](/bl
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

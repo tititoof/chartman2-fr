@@ -359,8 +359,6 @@ Le prochain épisode installe **k3s** avec Ansible : un vrai cluster Kubernetes 
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::

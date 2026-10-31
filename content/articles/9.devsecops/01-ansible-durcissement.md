@@ -24,11 +24,19 @@ Chaque épisode décrit ce qui a réellement tourné, sorties comprises, y compr
 | # | Épisode | Outil |
 |---|---------|-------|
 | 1 | Préparer et durcir le serveur | Ansible |
-| 2 | Premiers pas, état et dérive | Terraform |
-| 3 | Un cluster Kubernetes léger, et le piège du pare-feu | k3s + Ansible |
-| 4 | DefectDojo sur k3s avec une base PostgreSQL externe | Terraform + Helm |
-| 5 | Envoyer les scans Trivy de Jenkins vers DefectDojo | Jenkins |
+| [2](/blog/article/02-devsecops-terraform-premiers-pas) | Premiers pas, état et dérive | Terraform |
+| [3](/blog/article/03-devsecops-k3s-ansible) | Un cluster Kubernetes léger, et le piège du pare-feu | k3s + Ansible |
+| [4](/blog/article/04-devsecops-defectdojo-terraform-helm) | DefectDojo sur k3s avec une base PostgreSQL externe | Terraform + Helm |
+| [5](/blog/article/05-devsecops-jenkins-trivy-defectdojo) | Envoyer les scans Trivy de Jenkins vers DefectDojo | Jenkins |
+| [6](/blog/article/06-devsecops-k3s-homelab) | Passer le homelab sous k3s, mesurer avant de migrer | fio + etcd |
+| [7](/blog/article/07-devsecops-k3s-socle) | Le socle du cluster, trois serveurs et une seule IP | k3s, MetalLB, Longhorn, cert-manager |
+| [8](/blog/article/08-devsecops-migrer-sans-casser) | Migrer un service sans le casser, une méthode en 8 temps | Ansible + Kustomize |
+| [9](/blog/article/09-devsecops-jenkins-kubernetes) | Jenkins dans Kubernetes, des agents en pods | Jenkins + BuildKit |
+| [10](/blog/article/10-devsecops-cloudnativepg) | PostgreSQL dans le cluster | CloudNativePG |
+| [11](/blog/article/11-devsecops-mcp-qui-tient-la-cle) | Serveurs MCP, qui tient la clé ? | MCP + OAuth |
 ::
+
+Les épisodes 1 à 5 montent un lab sur un seul serveur. Les épisodes 6 à 11 appliquent la même démarche à **tout le homelab**, migré dans un cluster k3s à trois serveurs.
 
 La cible est **bhaal**, un serveur libre du homelab : Debian 13, 8 CPU, 7,7 Go de RAM. Tout le code vit dans un dépôt Git privé, `lab-iac`. Les extraits de chaque épisode en reprennent les fichiers, avec leur chemin dans le dépôt.
 
@@ -412,8 +420,6 @@ En une trentaine de lignes de YAML, le serveur est passé d'une installation par
 Le prochain épisode passe à **Terraform** : décrire des ressources, lire un `plan`, et voir ce qui se passe quand quelqu'un modifie l'infrastructure à la main.
 
 ---
-
-#####
 
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.

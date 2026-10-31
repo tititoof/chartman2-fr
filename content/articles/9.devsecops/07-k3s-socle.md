@@ -399,8 +399,6 @@ Prochain épisode : la méthode pour migrer un service sans le casser, appliqué
 
 ---
 
-#####
-
 ::right-note
 Cet article a été rédigé avec l'assistance d'IA.
 ::
