@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import { mountSuspended, registerEndpoint } from '@nuxt/test-utils/runtime'
 import { readBody } from 'h3'
 
-import TestResource from '~~/components/partial/main/contact_me.vue'
+import TestResource from '~/components/partial/main/contact_me.vue'
 
 describe('Components - partial/main/contact_me', async () => {
   it('is a Vue instance', async () => {
