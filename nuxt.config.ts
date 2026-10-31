@@ -112,6 +112,7 @@ export default defineNuxtConfig({
       appName: process.env.APP_NAME,
       environment: process.env.APP_ENVIRONMENT,
       appVersion: process.env.APP_VERSION,
+      sentryDsn: process.env.SENTRY_DSN,
     },
   },
   sourcemap: { client: 'hidden' },
@@ -221,6 +222,8 @@ export default defineNuxtConfig({
   },
   sentry: {
     autoInjectServerSentry: 'experimental_dynamic-import',
+    // Pas d'envoi des sourcemaps pour l'instant (Bugsink sait les recevoir via sentry-cli)
+    sourceMapsUploadOptions: { enabled: false },
   },
   components: [
     '~/components', {
