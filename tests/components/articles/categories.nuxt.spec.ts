@@ -76,6 +76,14 @@ describe('Components - articles/categories', async () => {
         text: 'Génération de code avec n8n, Ollama et un LLM local : architecture et retours de mesures.',
         link: '/blog/category/blackstaff',
       },
+      {
+        type: 'icon',
+        src: 'i-mdi:server-security',
+        color: 'orange',
+        title: 'Lab DevSecOps',
+        text: 'Ansible, Terraform, k3s, DefectDojo et CloudNativePG : un lab d\'infrastructure as code, puis la migration de tout le homelab sous Kubernetes.',
+        link: '/blog/category/devsecops',
+      },
     ])
   })
 })
