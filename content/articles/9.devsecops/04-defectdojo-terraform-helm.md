@@ -537,7 +537,7 @@ HTTP 200 0.105218s
 HTTP 200 0.107679s
 ```
 
-<!-- TODO capture : page de connexion ou tableau de bord DefectDojo → /img/content/defectdojo-login.png -->
+![DefectDojo - page de connexion](/img/content/defectdojo-login.png)
 
 Et les deux outils confirment qu'ils décrivent exactement ce qui tourne :
 
