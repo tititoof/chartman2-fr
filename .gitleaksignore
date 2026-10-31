@@ -1,0 +1,3 @@
+# Alertes examinées, ignorées en connaissance de cause (une empreinte par ligne).
+# Jeton Coolify en clair dans le Jenkinsfile (15/11/2025), public sur GitHub : révoqué et remplacé
+385e15115679c564fe01958f33a56b7eec04409c:Jenkinsfile:curl-auth-header:203

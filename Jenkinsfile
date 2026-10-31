@@ -21,23 +21,31 @@ c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.g
 print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
     '''
     archiveArtifacts artifacts: 'trivy-image.json', allowEmptyArchive: true
-    withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DD_TOKEN')]) {
-        // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
-        sh '''
-            curl -sS --fail-with-body -m 120 -o dd-response.json \
-                -X POST "https://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
-                -H "Authorization: Token $DD_TOKEN" \
-                -F "scan_type=Trivy Scan" \
-                -F "file=@trivy-image.json" \
-                -F "product_type_name=Sites web" \
-                -F "product_name=chartman2.fr" \
-                -F "engagement_name=CI $BRANCH_NAME" \
-                -F "test_title=Image Docker" \
-                -F "auto_create_context=true" \
-                -F "close_old_findings=true" \
-            && echo "Rapport envoyé à DefectDojo" \
-            || echo "Envoi à DefectDojo échoué (non bloquant)"
-        '''
+    sendToDefectDojo('trivy-image.json', 'Trivy Scan', 'Image Docker')
+}
+
+// Envoie un rapport sur le même test à chaque build (reimport-scan) : DefectDojo
+// reconnaît les alertes connues et ferme celles qui ont disparu. Jamais bloquant.
+def sendToDefectDojo(String report, String scanType, String testTitle) {
+    withEnv(["DD_REPORT=${report}", "DD_SCAN_TYPE=${scanType}", "DD_TEST_TITLE=${testTitle}"]) {
+        withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DD_TOKEN')]) {
+            // Guillemets simples : le jeton est lu par le shell, jamais interpolé par Groovy
+            sh '''
+                curl -sS --fail-with-body -m 120 -o dd-response.json \
+                    -X POST "https://defectdojo.chartman2-fr.ovh/api/v2/reimport-scan/" \
+                    -H "Authorization: Token $DD_TOKEN" \
+                    -F "scan_type=$DD_SCAN_TYPE" \
+                    -F "file=@$DD_REPORT" \
+                    -F "product_type_name=Sites web" \
+                    -F "product_name=chartman2.fr" \
+                    -F "engagement_name=CI $BRANCH_NAME" \
+                    -F "test_title=$DD_TEST_TITLE" \
+                    -F "auto_create_context=true" \
+                    -F "close_old_findings=true" \
+                && echo "Rapport $DD_SCAN_TYPE envoyé à DefectDojo" \
+                || echo "Envoi à DefectDojo échoué (non bloquant)"
+            '''
+        }
     }
 }
 
@@ -90,6 +98,27 @@ pipeline {
     }
 
     stages {
+        // Secrets dans tout l'historique git (gitleaks, environ 1 s). Bloquant, contrairement
+        // à Trivy : un secret poussé est déjà un incident. Les alertes examinées et
+        // acceptées sont dans .gitleaksignore ; --redact garde les valeurs hors du rapport.
+        stage('Secrets') {
+            steps {
+                script {
+                    def status = 0
+                    container('gitleaks') {
+                        status = sh(returnStatus: true, script: '''
+                            gitleaks git . --redact --no-banner --exit-code 1 \
+                                --report-format json --report-path gitleaks.json
+                        ''')
+                    }
+                    archiveArtifacts artifacts: 'gitleaks.json', allowEmptyArchive: true
+                    sendToDefectDojo('gitleaks.json', 'Gitleaks Scan', 'Secrets (Gitleaks)')
+                    if (status != 0) {
+                        error("gitleaks : code ${status}, voir gitleaks.json ou DefectDojo")
+                    }
+                }
+            }
+        }
         stage('Build') {
             steps {
                 script {
