@@ -2,9 +2,13 @@
 // L'image est lue dans le registry, où BuildKit vient de la pousser : l'agent
 // n'a plus de démon Docker local.
 def scanImageToDefectDojo(String image) {
+    def status = 0
     container('trivy') {
-        sh """
+        // --server : la base de vulnérabilités est celle du serveur Trivy du
+        // cluster (lab-iac, k8s/trivy), rien à télécharger depuis l'agent
+        status = sh(returnStatus: true, script: """
             trivy image \
+                --server http://trivy.trivy.svc:4954 \
                 --exit-code 0 \
                 --ignore-unfixed \
                 --no-progress \
@@ -12,7 +16,12 @@ def scanImageToDefectDojo(String image) {
                 --format json \
                 --output trivy-image.json \
                 ${image}
-        """
+        """)
+    }
+    // Non bloquant, même si Trivy échoue (serveur injoignable, registry…)
+    if (status != 0) {
+        echo "Trivy en échec (code ${status}) : scan de l'image sauté, non bloquant"
+        return
     }
     sh '''
         python3 -c 'import json, collections
