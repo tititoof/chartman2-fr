@@ -6,6 +6,10 @@ export default defineVitestConfig({
   ],
   test: {
     environment: 'nuxt',
+    // L'environnement Nuxt met 9 à 10 s à démarrer par fichier sur l'agent Jenkins
+    // (21 workers en parallèle) : le délai par défaut des hooks (10 s) faisait échouer
+    // des fichiers au hasard (main #39 et #40)
+    hookTimeout: 30000,
     mockReset: true,
     // server: {
     //     deps: { inline: ['vuetify'] },
