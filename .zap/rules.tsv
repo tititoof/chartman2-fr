@@ -1,0 +1,4 @@
+# Règles de ZAP baseline examinées et acceptées (stage « DAST » du Jenkinsfile).
+# Une ligne par règle, séparée par des tabulations : <id>	IGNORE|WARN|FAIL	<raison>
+# Les identifiants sont dans le rapport (zap-report.html) ou sur
+# https://www.zaproxy.org/docs/alerts/
