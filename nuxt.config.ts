@@ -44,7 +44,8 @@ export default defineNuxtConfig({
     '@dargmuesli/nuxt-cookie-control',
     'nuxt-resend',
     'nuxt-snackbar',
-    process.env.APP_ENVIRONMENT === 'production' && '@sentry/nuxt/module',
+    // Staging et prod (DSN fourni au build) ; rien en local sans DSN
+    !!process.env.SENTRY_DSN && '@sentry/nuxt/module',
   ],
   vuetify: {
     moduleOptions: {
