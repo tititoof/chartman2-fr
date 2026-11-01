@@ -6,3 +6,11 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+
+# Les processeurs du cluster (Xeon X34x0, i7-2630QM) n'ont pas d'AVX2 : le
+# binaire natif de rollup >= 4.67 y plante (« Illegal instruction »), vu sur
+# candlekeep-frontend. La version WebAssembly tourne partout, un peu plus
+# lentement. Seul rollup 4 est concerné : rollup 2 (dépendance d'un plugin)
+# est en pur JavaScript.
+overrides:
+  "rollup@>=4": npm:@rollup/wasm-node@^4.64.10
