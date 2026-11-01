@@ -298,5 +298,50 @@ pipeline {
                 }
             }
         }
+        // Scan DAST passif (ZAP baseline) du staging, une fois la nouvelle version en ligne :
+        // ZAP parcourt le site et analyse les réponses (en-têtes, cookies, CSP…) sans rien
+        // attaquer. Non bloquant pour l'instant : les alertes vont dans DefectDojo, les
+        // règles acceptées (avec leur raison) dans .zap/rules.tsv.
+        stage('DAST') {
+            // beforeAgent : ne pas démarrer le pod ZAP (image ≈ 1,5 Go) sur les autres branches
+            when {
+                beforeAgent true
+                branch 'develop'
+            }
+            agent { label 'agent_zap' }
+            steps {
+                script {
+                    def version = (env.GIT_COMMIT ?: '').take(7)
+                    def target = 'https://staging-frontend.chartman2-fr.ovh'
+                    def status = 0
+                    container('zap') {
+                        status = sh(returnStatus: true, script: """#!/bin/bash
+                            # Coolify déploie en asynchrone : attendre que le staging serve ce commit
+                            ok=0
+                            for i in \$(seq 1 60); do
+                                if curl -sf --max-time 10 ${target}/ | grep -q 'appVersion:"${version}"'; then ok=1; break; fi
+                                sleep 15
+                            done
+                            if [ \$ok != 1 ]; then echo "Le staging ne sert pas ${version} après 15 min"; exit 3; fi
+                            cp .zap/rules.tsv /zap/wrk/rules.tsv
+                            # -I : les avertissements ne font pas échouer ; -m 2 : 2 min d'exploration
+                            zap-baseline.py -t ${target} -c rules.tsv -m 2 -I \
+                                -x zap-report.xml -r zap-report.html
+                            code=\$?
+                            cp /zap/wrk/zap-report.xml /zap/wrk/zap-report.html . 2>/dev/null || true
+                            exit \$code
+                        """)
+                        // 0 : rien à signaler ; 1 : règles en FAIL ; 2 : avertissements ; 3 : erreur
+                        if (status == 3 || !fileExists('zap-report.xml')) {
+                            echo "ZAP n'a pas pu scanner le staging (code ${status}) : non bloquant"
+                        } else {
+                            echo "ZAP baseline terminé (code ${status}, non bloquant)"
+                            archiveArtifacts artifacts: 'zap-report.xml,zap-report.html', allowEmptyArchive: true
+                            sendToDefectDojo('zap-report.xml', 'ZAP Scan', 'ZAP (staging)')
+                        }
+                    }
+                }
+            }
+        }
     }
 }
