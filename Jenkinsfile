@@ -58,15 +58,24 @@ def sendToDefectDojo(String report, String scanType, String testTitle) {
     }
 }
 
+// Versions CalVer AAAA.M.N (.ci/calver.sh) : « next » donne la prochaine version
+// d'après les tags Forgejo, « release VERSION » crée le tag et la release.
+def calver(String args) {
+    withCredentials([string(credentialsId: 'forgejo-release-token', variable: 'FORGEJO_TOKEN')]) {
+        return sh(returnStdout: true, script: "bash .ci/calver.sh ${args}").trim()
+    }
+}
+
 // Construit l'image avec BuildKit sans root (conteneur buildkit du pod), la pousse
-// vers le registry du homelab et vers ghcr.io, puis la scanne.
-def buildAndPushImage(String tag) {
-    def images = "registry.chartman2-fr.ovh/frontend-chartman2fr:${tag},ghcr.io/tititoof/frontend-chartman2fr:${tag}"
+// vers le registry du homelab et vers ghcr.io sous chacun des tags, puis la scanne.
+def buildAndPushImage(List<String> tags, String appVersion) {
+    def images = tags.collect { t ->
+        "registry.chartman2-fr.ovh/frontend-chartman2fr:${t},ghcr.io/tititoof/frontend-chartman2fr:${t}"
+    }.join(',')
     def cache = 'registry.chartman2-fr.ovh/frontend-chartman2fr:buildcache'
     // Bugsink : environnement et version dépendent de la branche, pas du fichier
     // d'environnement (commun au staging et à la prod)
     def appEnvironment = env.BRANCH_NAME == 'main' ? 'production' : 'staging'
-    def appVersion = (env.GIT_COMMIT ?: 'unknown').take(7)
     withCredentials([
         file(credentialsId: 'frontend-chartman2-fr-env', variable: 'ENV_FILE'),
         string(credentialsId: 'ghcr-token', variable: 'CR_PAT'),
@@ -101,7 +110,7 @@ def buildAndPushImage(String tag) {
             sh 'rm -rf "$WORKSPACE_TMP/docker"'
         }
     }
-    scanImageToDefectDojo("registry.chartman2-fr.ovh/frontend-chartman2fr:${tag}")
+    scanImageToDefectDojo("registry.chartman2-fr.ovh/frontend-chartman2fr:${tags[0]}")
 }
 
 pipeline {
@@ -109,6 +118,10 @@ pipeline {
         node {
             label 'agent_vuejs_1'
         }
+    }
+
+    environment {
+        FORGEJO_REPO = 'toofytroll/frontend-chartman2-fr.ovh'
     }
 
     stages {
@@ -271,7 +284,16 @@ pipeline {
             when { anyOf { branch 'develop'; branch 'main' } }
             steps {
                 script {
-                    buildAndPushImage(env.BRANCH_NAME == 'main' ? 'latest' : 'staging')
+                    if (env.BRANCH_NAME == 'main') {
+                        // La version n'existe qu'une fois la release créée, après le
+                        // déploiement : un build en échec ne consomme pas de numéro
+                        env.APP_RELEASE = calver('next')
+                        echo "Version ${env.APP_RELEASE}"
+                        buildAndPushImage(['latest', env.APP_RELEASE], env.APP_RELEASE)
+                    } else {
+                        // Staging : le SHA court, attendu tel quel par le stage DAST
+                        buildAndPushImage(['staging'], (env.GIT_COMMIT ?: 'unknown').take(7))
+                    }
                 }
             }
         }
@@ -295,6 +317,16 @@ pipeline {
                         }
                     }
                     echo 'Deploy finished'
+                }
+            }
+        }
+        // Tag et release Forgejo de la version déployée en prod, avec la liste des
+        // commits depuis la version précédente
+        stage('Release') {
+            when { branch 'main' }
+            steps {
+                script {
+                    echo calver("release ${env.APP_RELEASE}")
                 }
             }
         }
