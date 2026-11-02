@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nuxt'
+import { dropClientErrors } from './app/utils/sentry'
 
 // Erreurs envoyées à Bugsink (beshaba.chartman2-fr.ovh), qui accepte le
 // protocole Sentry. Le DSN n'est pas un secret : il finit de toute façon dans
@@ -14,5 +15,7 @@ if (config.public.sentryDsn) {
     tracesSampleRate: 0,
     // Ni IP ni cookies dans les événements
     sendDefaultPii: false,
+    // Pas d'issue (ni d'email) pour les 4xx : robots, liens morts
+    beforeSend: dropClientErrors,
   })
 }
