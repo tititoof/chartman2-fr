@@ -104,6 +104,36 @@ export default defineNuxtConfig({
       },
     },
   },
+  // En-têtes de sécurité (alertes ZAP baseline du stage DAST). frame-ancestors
+  // est ignoré en Report-Only, d'où X-Frame-Options. HSTS sans includeSubDomains :
+  // tous les sous-domaines de chartman2.fr ne sont pas forcément en HTTPS.
+  routeRules: {
+    '/**': {
+      headers: {
+        'Strict-Transport-Security': 'max-age=31536000',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        // Report-Only d'abord : les violations s'affichent dans la console du
+        // navigateur sans rien bloquer. À durcir (nonces au lieu de
+        // 'unsafe-inline') puis passer en Content-Security-Policy.
+        'Content-Security-Policy-Report-Only': [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' data: https://fonts.gstatic.com",
+          "img-src 'self' data: https:",
+          "connect-src 'self' https://api.github.com https://*.chartman2-fr.ovh",
+          "frame-ancestors 'none'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "object-src 'none'",
+        ].join('; '),
+      },
+    },
+  },
   runtimeConfig: {
     public: {
       appUrl: process.env.APP_URL,
