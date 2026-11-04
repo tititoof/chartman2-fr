@@ -2,6 +2,7 @@
 title: "PHP – WeakMap & Enum"
 description: "Utiliser les WeakMap et Enum en PHP moderne avec Laravel et Symfony"
 icon: "i-mdi:language-php"
+color: "indigo"
 article_id: "1-php-weakmap-enum"
 ---
 

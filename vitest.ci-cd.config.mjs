@@ -10,6 +10,9 @@ export default defineVitestConfig({
     // (21 workers en parallèle) : le délai par défaut des hooks (10 s) faisait échouer
     // des fichiers au hasard (main #39 et #40)
     hookTimeout: 30000,
+    // Le montage Nuxt dépasse parfois le timeout de test par défaut sur les
+    // workers Jenkins fortement parallélisés.
+    testTimeout: 15000,
     mockReset: true,
     // server: {
     //     deps: { inline: ['vuetify'] },
