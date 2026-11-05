@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="tests/components/articles/categories.nuxt.spec.ts">
+    <testCase name="Components - articles/categories - is a Vue instance" duration="5038" />
+    <testCase name="Components - articles/categories - has initialized values" duration="83" />
+  </file>
+  <file path="tests/components/bar/bottom.nuxt.spec.ts">
+    <testCase name="Components - bar/bottom - is a Vue instance" duration="5026" />
+    <testCase name="Components - bar/bottom - has initialized values" duration="53" />
+  </file>
+  <file path="tests/components/bar/top.nuxt.spec.ts">
+    <testCase name="Components - bar/top - is a Vue instance" duration="1426" />
+    <testCase name="Components - bar/top - has initialized values" duration="53" />
+  </file>
+  <file path="tests/components/button/article.nuxt.spec.ts">
+    <testCase name="Components - button/article - is a Vue instance" duration="910" />
+  </file>
+  <file path="tests/components/button/back_to_top.nuxt.spec.ts">
+    <testCase name="Components - button/back_to_top - is a Vue instance" duration="1406" />
+    <testCase name="Components - button/back_to_top - has initialized values" duration="62" />
+    <testCase name="Components - button/back_to_top - has functions worked" duration="86" />
+  </file>
+  <file path="tests/components/page/snackbar.nuxt.spec.ts">
+    <testCase name="Components - page/snackbar - is a Vue instance" duration="1469" />
+  </file>
+  <file path="tests/components/page/title.nuxt.spec.ts">
+    <testCase name="Components - page/title - is a Vue instance" duration="1881" />
+  </file>
+  <file path="tests/components/partial/main/about_me.nuxt.spec.ts">
+    <testCase name="Components - partial/main/about_me - is a Vue instance" duration="1089" />
+  </file>
+  <file path="tests/components/partial/main/articles.nuxt.spec.ts">
+    <testCase name="Components - partial/main/articles - is a Vue instance" duration="1041" />
+  </file>
+  <file path="tests/components/partial/main/case_studies.nuxt.spec.ts">
+    <testCase name="Components - partial/main/case_studies - is a Vue instance" duration="1204" />
+  </file>
+  <file path="tests/components/partial/main/contact_me.nuxt.spec.ts">
+    <testCase name="Components - partial/main/contact_me - is a Vue instance" duration="5147" />
+    <testCase name="Components - partial/main/contact_me - has initialized values" duration="75" />
+    <testCase name="Components - partial/main/contact_me - cannot send email" duration="68" />
+    <testCase name="Components - partial/main/contact_me - can send email" duration="179" />
+  </file>
+  <file path="tests/components/partial/main/hero.nuxt.spec.ts">
+    <testCase name="Components - partial/main/hero - is a Vue instance" duration="865" />
+  </file>
+  <file path="tests/components/partial/main/legal_notices.nuxt.spec.ts">
+    <testCase name="Components - partial/legal_notices - is a Vue instance" duration="1499" />
+  </file>
+  <file path="tests/components/partial/main/presentation.nuxt.spec.ts">
+    <testCase name="Components - partial/main/presentation - is a Vue instance" duration="1230" />
+  </file>
+  <file path="tests/components/partial/main/services.nuxt.spec.ts">
+    <testCase name="Components - partial/main/services - is a Vue instance" duration="1272" />
+  </file>
+  <file path="tests/components/partial/main/skills.nuxt.spec.ts">
+    <testCase name="Components - partial/main/skills - is a Vue instance" duration="1393" />
+    <testCase name="Components - partial/main/skills - has initialized values" duration="74" />
+  </file>
+  <file path="tests/components/partial/main/technologies.nuxt.spec.ts">
+    <testCase name="Components - partial/main/technologies - is a Vue instance" duration="5227" />
+    <testCase name="Components - partial/main/technologies - has initialized values" duration="122" />
+  </file>
+  <file path="tests/composables/numberFormat.nuxt.spec.ts">
+    <testCase name="Composable: numberFormat - return 1k" duration="15" />
+  </file>
+  <file path="tests/composables/setTheme.nuxt.spec.ts">
+    <testCase name="Composable: SetTheme - set theme dark" duration="50" />
+    <testCase name="Composable: SetTheme - set theme dark" duration="8" />
+    <testCase name="Composable: SetTheme - set theme light" duration="6" />
+    <testCase name="Composable: SetTheme - set theme light" duration="6" />
+  </file>
+  <file path="tests/composables/useArticleQuery.nuxt.spec.ts">
+    <testCase name="Composable: useArticleQuery - produit un WHERE accepté par le contrôle de sécurité de Nuxt Content" duration="37" />
+    <testCase name="Composable: useArticleQuery - ne filtre rien en développement" duration="3" />
+  </file>
+  <file path="tests/content/articles.nuxt.spec.ts">
+    <testCase name="articles content - contains Markdown articles" duration="19" />
+    <testCase name="articles content - content/articles/1.ror/1.routes.md has valid frontmatter and required metadata" duration="77" />
+    <testCase name="articles content - content/articles/1.ror/2.structure-code.md has valid frontmatter and required metadata" duration="15" />
+    <testCase name="articles content - content/articles/1.ruby/1.introduction.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/1.ruby/2.conditions.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/1.ruby/3.loops.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/1.ruby/4.irb.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/1.ruby/5.classes.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/2.nuxt/1.manage-components.md has valid frontmatter and required metadata" duration="11" />
+    <testCase name="articles content - content/articles/4.to-do-list/0-to-do-list-architecture.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/4.to-do-list/1-initialisation.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/4.to-do-list/2-to-do-list-auth.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/4.to-do-list/3-to-do-list-taches.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/4.to-do-list/4-to-do-list-backend.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/4.to-do-list/5-to-do-list-backend-auth.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/4.to-do-list/6-to-do-list-backend-todo.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/4.to-do-list/7-to-do-list-frontend-backend.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/4.to-do-list/8-to-do-list-doltgresql.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/5.docker/00-souverainete-numerique.md has valid frontmatter and required metadata" duration="11" />
+    <testCase name="articles content - content/articles/5.docker/01-docker.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/5.docker/02-docker-compose.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/5.docker/03-traefik.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/5.docker/04-postgresql.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/5.docker/05-mailpit.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/5.docker/06-forgejo.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/5.docker/07-jenkins.md has valid frontmatter and required metadata" duration="15" />
+    <testCase name="articles content - content/articles/5.docker/08-sonarqube.md has valid frontmatter and required metadata" duration="13" />
+    <testCase name="articles content - content/articles/5.docker/10-openproject.md has valid frontmatter and required metadata" duration="11" />
+    <testCase name="articles content - content/articles/5.docker/11-registry.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/5.docker/12-coolify.md has valid frontmatter and required metadata" duration="17" />
+    <testCase name="articles content - content/articles/5.docker/13-docker-backup-init.md has valid frontmatter and required metadata" duration="14" />
+    <testCase name="articles content - content/articles/5.docker/14-docker-demo-cicd.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/5.docker/15-traefik-middlewares.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/5.docker/16-docker-cicd-securite.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/6-selfhosted/01-reactive-resume.md has valid frontmatter and required metadata" duration="7" />
+    <testCase name="articles content - content/articles/6-selfhosted/02-grist.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/6-selfhosted/03-n8n.md has valid frontmatter and required metadata" duration="6" />
+    <testCase name="articles content - content/articles/6-selfhosted/04-ollama-openwebui-self-hosted.md has valid frontmatter and required metadata" duration="5" />
+    <testCase name="articles content - content/articles/6-selfhosted/05-mcp-ollama.md has valid frontmatter and required metadata" duration="7" />
+    <testCase name="articles content - content/articles/6-selfhosted/06-affine.md has valid frontmatter and required metadata" duration="7" />
+    <testCase name="articles content - content/articles/6-selfhosted/07-linkwarden.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/6-selfhosted/08-portainer.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/6-selfhosted/09-whodb.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/6-selfhosted/10-wikijs.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/6-selfhosted/11-mcp-infra-etat-des-lieux.md has valid frontmatter and required metadata" duration="10" />
+    <testCase name="articles content - content/articles/6-selfhosted/12-open-design-refonte-site.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/6-selfhosted/13-searxng.md has valid frontmatter and required metadata" duration="5" />
+    <testCase name="articles content - content/articles/7.php/1-php-weakmap-enum.md has valid frontmatter and required metadata" duration="5" />
+    <testCase name="articles content - content/articles/8.blackstaff/1-blackstaff-presentation.md has valid frontmatter and required metadata" duration="6" />
+    <testCase name="articles content - content/articles/8.blackstaff/2-blackstaff-connaissances.md has valid frontmatter and required metadata" duration="5" />
+    <testCase name="articles content - content/articles/8.blackstaff/3-generation-code-llm-local.md has valid frontmatter and required metadata" duration="5" />
+    <testCase name="articles content - content/articles/8.blackstaff/4-blackstaff-garde-fous.md has valid frontmatter and required metadata" duration="6" />
+    <testCase name="articles content - content/articles/9.devsecops/01-ansible-durcissement.md has valid frontmatter and required metadata" duration="6" />
+    <testCase name="articles content - content/articles/9.devsecops/02-terraform-premiers-pas.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/9.devsecops/03-k3s-ansible.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/9.devsecops/04-defectdojo-terraform-helm.md has valid frontmatter and required metadata" duration="7" />
+    <testCase name="articles content - content/articles/9.devsecops/05-jenkins-trivy-defectdojo.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/9.devsecops/06-k3s-homelab.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/9.devsecops/07-k3s-socle.md has valid frontmatter and required metadata" duration="8" />
+    <testCase name="articles content - content/articles/9.devsecops/08-migrer-sans-casser.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/9.devsecops/09-jenkins-kubernetes.md has valid frontmatter and required metadata" duration="7" />
+    <testCase name="articles content - content/articles/9.devsecops/10-cloudnativepg.md has valid frontmatter and required metadata" duration="9" />
+    <testCase name="articles content - content/articles/9.devsecops/11-mcp-qui-tient-la-cle.md has valid frontmatter and required metadata" duration="6" />
+    <testCase name="articles content - uses unique article IDs" duration="187" />
+  </file>
+  <file path="tests/stores/application.nuxt.spec.ts">
+    <testCase name="Store: User - initializes with correct values" duration="41" />
+    <testCase name="Store: User - can change isPhone value" duration="10" />
+    <testCase name="Store: User - can change isDarkTheme value" duration="7" />
+    <testCase name="Store: User - can change category value" duration="8" />
+    <testCase name="Store: User - can change message value" duration="6" />
+    <testCase name="Store: User - can change show value" duration="7" />
+    <testCase name="Store: User - can toggle isDarkTheme value" duration="5" />
+  </file>
+  <file path="tests/utils/sentry.nuxt.spec.ts">
+    <testCase name="dropClientErrors - écarte une page introuvable (404)" duration="18" />
+    <testCase name="dropClientErrors - écarte les autres erreurs 4xx" duration="5" />
+    <testCase name="dropClientErrors - garde les erreurs serveur (5xx)" duration="5" />
+    <testCase name="dropClientErrors - garde les exceptions sans code HTTP" duration="7" />
+  </file>
+</testExecutions>
