@@ -27,7 +27,7 @@ graph LR
   Registry --> Coolify["🚀 Coolify"]
 </mermaid>
 
-Le scan reste **non bloquant** : il informe, il ne casse pas le déploiement. C'est un choix assumé pour commencer, on y revient en conclusion.
+Le scan reste **non bloquant** : il informe, il ne casse pas le déploiement. Le build reste vert même si Trivy plante ou si DefectDojo est injoignable : il faut lire le log pour le savoir. C'est un choix assumé pour commencer, on y revient en conclusion.
 
 #### 🔍 Prérequis : l'agent peut-il joindre DefectDojo ?
 
@@ -65,7 +65,7 @@ Une fonction en tête du `Jenkinsfile`, appelée juste avant chaque `docker push
 // Le rapport sort sur stdout : avec le socket Docker de l'hôte, un volume monté
 // depuis le workspace de l'agent pointerait vers un dossier inexistant sur l'hôte.
 def scanImageToDefectDojo(String image) {
-    sh """
+    def status = sh(returnStatus: true, script: """
         docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v trivy-cache:/root/.cache/ \
@@ -76,7 +76,12 @@ def scanImageToDefectDojo(String image) {
             --quiet \
             --format json \
             ${image} > trivy-image.json
-    """
+    """)
+    // Non bloquant, même si Trivy échoue (socket Docker, registry, disque plein…)
+    if (status != 0) {
+        echo "Trivy en échec (code ${status}) : scan de l'image sauté, non bloquant"
+        return
+    }
     sh '''
         python3 -c 'import json, collections
 d = json.load(open("trivy-image.json"))
@@ -121,6 +126,7 @@ docker push registry.homelab.example/frontend-chartman2fr:staging
 | `> trivy-image.json` | Le rapport sort sur la **sortie standard**. Avec le socket de l'hôte, `-v $WORKSPACE:/src` monterait un chemin qui n'existe que dans le conteneur de l'agent, pas sur l'hôte : le fichier serait écrit ailleurs ou nulle part |
 | `--ignore-unfixed` | Seules les CVE qui ont un correctif. Une alerte impossible à corriger ne fait que du bruit |
 | Pas de `--severity` | Toutes les sévérités partent vers DefectDojo, où on filtre. Le tri se fait dans l'outil fait pour ça, pas dans le pipeline |
+| `returnStatus: true` | Un `sh` qui échoue fait échouer le build. Ici, on récupère le code de sortie : si Trivy plante (socket Docker injoignable, image introuvable…), le scan est sauté, et le résumé Python ne tente pas de lire un rapport vide |
 | Résumé Python | Une ligne lisible dans le log, au lieu de 500 Ko de JSON |
 | `archiveArtifacts` | Le rapport brut reste attaché au build, même si DefectDojo est indisponible |
 | `reimport-scan` | Contrairement à `import-scan`, qui crée un nouveau test à chaque fois, il **met à jour** le même test : les vulnérabilités déjà connues sont reconnues, les nouvelles ajoutées |
@@ -239,7 +245,7 @@ En cinq épisodes, un serveur du placard est devenu une petite plateforme DevSec
 
 Les prochaines étapes naturelles :
 
-1. **Rendre le scan bloquant sur les CVE critiques**, maintenant que ce stock est traité : `--severity CRITICAL --exit-code 1`, en plus de l'envoi à DefectDojo.
+1. **Rendre le scan bloquant sur les CVE critiques**, maintenant que ce stock est traité : `--severity CRITICAL --exit-code 1`, en plus de l'envoi à DefectDojo. Une étape intermédiaire consiste à marquer le build **instable** (`unstable`) plutôt que de l'échouer. Dans les deux cas, il faudra distinguer le code 1 de Trivy (CVE trouvée) d'une panne de Trivy, que le `returnStatus` actuel traite pareil.
 2. **Ajouter les autres scanners** de l'[article sur la sécurité CI/CD](/blog/article/16-docker-cicd-securite) (Gitleaks, Opengrep…) : DefectDojo sait tous les importer.
 
 Mais le plus utile de ce lab n'est pas dans la liste des outils. Ce sont les pannes : un DNS qui répond une fois sur six, une sonde qui tue l'application qu'elle surveille, un pare-feu que deux outils contournent sans le dire. Aucune ne figurait dans les tutoriels de départ, et ce sont elles qui reviennent en production.

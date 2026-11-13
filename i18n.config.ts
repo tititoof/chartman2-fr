@@ -7,7 +7,7 @@ export default defineI18nConfig(() => ({
       },
       fr: {
         global: {
-            name: "chartman2.fr",
+            name: "chartman2-fr.ovh",
             charter: "Charte",
             disconnect: "Déconnexion",
             home: "Accueil",
@@ -18,7 +18,7 @@ export default defineI18nConfig(() => ({
         },
         legal_notices: {
           "title": "Mentions Légales",
-          "name": "EIRL chartman2.fr",
+          "name": "Christophe Hartmann EI — chartman2",
           "fields": {
             "name": "Nom",
             "address": "Adresse",
@@ -28,17 +28,17 @@ export default defineI18nConfig(() => ({
             "hosting": "Hébergement"
           },
           "texts": {
-            "name": "Christophe Hartmann",
+            "name": "Christophe Hartmann EI",
             "address1": "1 route de Cormery",
             "address2": "37320 Saint Branchs",
             "address3": "France",
-            "siren": "752 332 742 00028",
-            "website": "https://chartman2.fr",
+            "siren": "752 332 742 00044",
+            "website": "https://chartman2-fr.ovh",
             "contact": "chartman2.fr[at]gmail[dot]com",
-            "hosting": "OVHcloud - SAS",
-            "hosting_address": "2 rue Kellermann - 59100 Roubaix - France",
-            "hosting_website": "https://www.ovh.com",
-            "hosting_name": "OVH"
+            "hosting": "IKOULA NET",
+            "hosting_address": "2 Cité Paradis 75010 Paris",
+            "hosting_website": "https://www.ikoula.com",
+            "hosting_name": "IKOULA"
           }
         },
         articles: {

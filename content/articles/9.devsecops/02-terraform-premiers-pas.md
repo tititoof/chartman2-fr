@@ -172,6 +172,8 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
 > 💡 `plan -out=tfplan` puis `apply tfplan` garantit que **ce qui est appliqué est exactement ce qui a été relu**. Sans fichier de plan, `apply` recalcule tout, et la réalité a pu changer entre-temps. C'est la pratique à suivre en CI. Le fichier de plan peut contenir des valeurs sensibles : il est ignoré par git.
+>
+> Le fichier d'état aussi : `terraform.tfstate` garde **en clair** toutes les valeurs que Terraform manipule, mots de passe compris. En local, il reste hors de git (`*.tfstate*` dans le `.gitignore`), lisible par son seul propriétaire (`chmod 600`), et sauvegardé : le perdre, c'est perdre la mémoire de ce que Terraform gère. Dès qu'une CI ou une deuxième personne lance Terraform, il passe sur un **backend distant chiffré, avec verrouillage**. L'épisode 4 en tire la règle : aucun secret ne passe par Terraform.
 
 Vérification sur le serveur :
 

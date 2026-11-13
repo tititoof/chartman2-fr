@@ -55,7 +55,7 @@ export default defineNuxtConfig({
   },
   site: {
     url: process.env.APP_URL,
-    name: 'chartman2.fr',
+    name: 'chartman2-fr.ovh',
     description: 'Christophe Hartmann, développeur Ruby on Rails / Nuxt et DevOps : applications maintenables, CI/CD, Docker et infrastructure auto-hébergée. Articles et retours d\'expérience.',
     defaultLocale: 'fr', // not needed if you have @nuxtjs/i18n installed
     image: '/img/logo.png',
@@ -106,7 +106,7 @@ export default defineNuxtConfig({
   },
   // En-têtes de sécurité (alertes ZAP baseline du stage DAST). frame-ancestors
   // est ignoré en Report-Only, d'où X-Frame-Options. HSTS sans includeSubDomains :
-  // tous les sous-domaines de chartman2.fr ne sont pas forcément en HTTPS.
+  // tous les sous-domaines de chartman2-fr.ovh ne sont pas forcément en HTTPS.
   routeRules: {
     '/**': {
       headers: {
