@@ -118,7 +118,7 @@ spec:
 
 - **`podAntiAffinityType: required`** : deux instances sur le même nœud, c'est une seule panne pour deux instances. `required` refuse de les y mettre, quitte à laisser une instance en attente.
 - **`nodeAffinity` sur `control-plane`** : seulement sur les trois serveurs. L'agent, une machine de lab, peut redémarrer à tout moment.
-- **La réplication synchrone en quorum** (`any 1`) : chaque `COMMIT` attend qu'**au moins une** des deux répliques ait reçu l'écriture. Si le primaire meurt, aucune transaction validée n'est perdue. `dataDurability: preferred` assume un compromis : si les **deux** répliques sont absentes, le primaire continue seul plutôt que de bloquer toutes les écritures.
+- **La réplication synchrone en quorum** (`any 1`) : chaque `COMMIT` attend qu'**au moins une** des deux répliques ait reçu l'écriture. Si le primaire meurt, aucune transaction validée n'est perdue, **tant qu'une réplique l'avait acquittée**. `dataDurability: preferred` assume un compromis : si les **deux** répliques sont absentes, le primaire continue seul plutôt que de bloquer toutes les écritures.
 - **`pg_hba` fermé** : CloudNativePG ajoute toujours une dernière règle qui accepte tout le monde avec un mot de passe. La règle `reject` placée juste avant coupe tout ce qui n'a pas été autorisé plus haut.
 - **Pas de superutilisateur par mot de passe** : l'administration passe par `kubectl exec … psql`, une connexion **locale** dans le pod.
 

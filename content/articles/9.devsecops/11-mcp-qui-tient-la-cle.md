@@ -61,7 +61,7 @@ curl -s -o /dev/null -w '%{http_code}\n' -X POST https://mcp.homelab.example/mcp
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"audit","version":"0"}}}'
 ```
 
-Un serveur bien configuré répond **401**. Quatre ont répondu **200**. Pour mesurer la gravité sans rien casser, on enchaîne sur `tools/list` (quels outils sont proposés ?), puis sur **un seul outil en lecture**, sans effet : lister des projets, des jobs, des serveurs.
+Un serveur bien configuré refuse : en général **401**, mais un `403` ou une redirection vers une page de connexion valent aussi refus, selon la couche qui répond (proxy ou application). Quatre ont répondu **200**. Un refus sur `initialize` ne suffit pas à conclure : on refait le même appel en `GET` (le transport SSE ouvre un flux par là), et, pour mesurer la gravité sans rien casser, on enchaîne sur `tools/list` (quels outils sont proposés ?), puis sur **un seul outil en lecture**, sans effet : lister des projets, des jobs, des serveurs.
 
 - Deux serveurs ont renvoyé leurs données à un appelant anonyme.
 - Un troisième listait ses outils, mais l'API derrière refusait (« anonymous is missing the Overall/Read permission »). L'application elle-même tenait bon.
@@ -100,7 +100,7 @@ Un piège au passage : en zsh, `read -p` ne veut pas dire « prompt » mais « l
 ::tool-table
 | Test | Résultat attendu |
 |---|---|
-| Sans jeton | **401**, ou accès refusé par l'application |
+| Sans jeton, en `POST` et en `GET` | refus (**401** le plus souvent), ni outils listés ni données |
 | Avec un faux jeton | refus |
 | Avec le vrai jeton | ça marche |
 ::
@@ -176,7 +176,7 @@ Devant un serveur MCP, une seule question suffit : **qui tient la clé ?**
 - si c'est le client, l'adresse ne suffit plus ;
 - et si le client obtient sa clé par OAuth, avec des droits limités, c'est encore mieux.
 
-Le test qui le révèle tient en une ligne : un appel **sans** jeton. S'il répond autre chose que 401, la porte est ouverte.
+Le test qui le révèle tient en une ligne : un appel **sans** jeton. S'il obtient une session, une liste d'outils ou des données, la porte est ouverte.
 
 C'est le dernier épisode de cette série. Elle a commencé par un pare-feu sur un serveur de lab, et elle se termine sur la même idée qu'au premier jour : ne rien laisser ouvert par défaut, et le **vérifier**, plutôt que le supposer.
 
