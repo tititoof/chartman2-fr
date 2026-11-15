@@ -54,3 +54,6 @@ dd-response.json
 playwright-report/
 playwright-results.xml
 test-results/
+
+# SonarQube (Vitest sonar reporter)
+sonar-report.xml
