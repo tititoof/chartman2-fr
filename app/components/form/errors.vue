@@ -47,7 +47,7 @@
 const props = defineProps({
   fieldsName: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 })
 

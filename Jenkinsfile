@@ -159,6 +159,14 @@ pipeline {
                 }
             }
         }
+        // Bloquant sur les erreurs, pas sur les avertissements. Après le Build :
+        // la config ESLint étend .nuxt/eslint.config.mjs, généré par « nuxt prepare »
+        // (postinstall de pnpm install)
+        stage('Lint') {
+            steps {
+                sh 'pnpm run lint'
+            }
+        }
         stage('Test') {
             steps {
                 // Bloquant : un test en échec arrête le pipeline avant l'analyse Sonar,

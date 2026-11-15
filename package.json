@@ -8,6 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "lint": "eslint .",
     "test:dev": "vitest run --coverage",
     "test:ci-cd": "vitest run -c ./vitest.ci-cd.config.mjs --coverage"
   },

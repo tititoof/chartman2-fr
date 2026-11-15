@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     text: 'Nom : ' + body.name + '\n'
       + 'Email : ' + body.email + '\n'
       + 'Sujet : ' + body.subject + '\n'
-      + 'Message : ' + body.message + '\n'
+      + 'Message : ' + body.message + '\n',
   })
 
   return result

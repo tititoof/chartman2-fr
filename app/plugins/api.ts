@@ -1,9 +1,9 @@
 import { useCookies } from '@vueuse/integrations/useCookies'
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const cookies = useCookies(['refresh_token'])
   const config = useRuntimeConfig()
-  const baseUrl = "https://" + config.public.apiBaseUrl
+  const baseUrl = 'https://' + config.public.apiBaseUrl
 
   const apiErrors = ref<string[]>([])
 
@@ -13,18 +13,19 @@ export default defineNuxtPlugin((nuxtApp) => {
       if (response.status === 500) {
         console.log(response)
       //   await nuxtApp.runWithContext(() => navigateTo('/login'))
-      } else if (response.status === 401) { 
+      }
+      else if (response.status === 401) {
         try {
           const headers: { [key: string]: string } = {
-            Accept: 'application/json',
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${cookies.get('refresh_token') || ''}`
+            'Authorization': `Bearer ${cookies.get('refresh_token') || ''}`,
           }
 
           const { token: newToken, refresh_token: newRefreshToken } = await $fetch('/users/tokens/refresh', {
             method: 'POST',
             baseURL: baseUrl,
-            headers
+            headers,
           })
 
           // Stocker les nouveaux tokens
@@ -34,35 +35,41 @@ export default defineNuxtPlugin((nuxtApp) => {
           // Réessayer la requête originale avec le nouveau token
           options.headers = options.headers || {}
           options.headers.Authorization = `Bearer ${newToken}`
-          
+
+          // The resolved options of an ofetch hook are not typed as $fetch input options
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return await $fetch(request, options as any)
-        } catch (refreshError) {
+        }
+        catch (refreshError) {
           console.log(refreshError)
           // Le refresh a échoué => suppression des cookies + redirection
           cookies.remove('token')
           cookies.remove('refresh_token')
-          
+
+          // Route of the backend auth flow, not a page of this site
+          // eslint-disable-next-line link-checker/valid-route
           return navigateTo('/auth/sign-in')
         }
-      } else{
+      }
+      else {
         console.log(response)
         const errData = response._data
 
         if (errData) {
           apiErrors.value = errData
-
-        } else {
+        }
+        else {
           console.error('Erreur générale :', errData?.message || error.message)
         }
       }
-    }
+    },
   })
 
   // Expose to useNuxtApp().$api
   return {
     provide: {
       api,
-      apiErrors
-    }
+      apiErrors,
+    },
   }
 })

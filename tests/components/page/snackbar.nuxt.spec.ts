@@ -17,8 +17,8 @@ describe('Components - page/snackbar', async () => {
     const wrapper = await mountSuspended(TestResource, {
       shallow: true,
       global: {
-        plugins: [i18n]
-      }
+        plugins: [i18n],
+      },
     })
 
     expect(wrapper.vm).toBeTruthy()

@@ -11,9 +11,11 @@ export const setTheme = () => {
     return storeThemeDark.value === true
       ? 'chartman2frDarkTheme'
       : 'chartman2frLightTheme'
-  } else if (colorMode.value === true) {
+  }
+  else if (colorMode.value === true) {
     return 'chartman2frDarkTheme'
-  } else {
+  }
+  else {
     return 'chartman2frLightTheme'
   }
 }

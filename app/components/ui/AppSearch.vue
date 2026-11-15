@@ -1,8 +1,8 @@
 <script setup lang="ts">
 interface Props {
   modelValue: string
-  label?:     string
-  debounce?:  number
+  label?: string
+  debounce?: number
 }
 
 interface Emits {
@@ -10,13 +10,13 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label:    'Rechercher',
-  debounce: 300
+  label: 'Rechercher',
+  debounce: 300,
 })
 
-const emit    = defineEmits<Emits>()
-const local   = ref(props.modelValue)
-let   timer: ReturnType<typeof setTimeout>
+const emit = defineEmits<Emits>()
+const local = ref(props.modelValue)
+let timer: ReturnType<typeof setTimeout>
 
 watch(local, (val) => {
   clearTimeout(timer)

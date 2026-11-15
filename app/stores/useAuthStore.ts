@@ -2,19 +2,19 @@
 // Note: remplacer 'User' par le type réel de votre API d'authentification
 
 type User = {
-  id: number,
-  email: string,
+  id: number
+  email: string
   name?: string
 }
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as User | null
+    user: null as User | null,
   }),
 
   getters: {
     isAuthenticated: (state): boolean => !!state.user,
-    userId: (state): number | null => state.user?.id ?? null
+    userId: (state): number | null => state.user?.id ?? null,
   },
 
   actions: {
@@ -23,6 +23,6 @@ export const useAuthStore = defineStore('auth', {
     },
     logout() {
       this.user = null
-    }
-  }
+    },
+  },
 })

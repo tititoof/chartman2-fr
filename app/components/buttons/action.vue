@@ -29,7 +29,7 @@ const props = defineProps({
   },
   informations: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 })
 

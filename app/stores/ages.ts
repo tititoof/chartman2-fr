@@ -3,11 +3,11 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 export const useAgesStore = defineStore('agesStore', {
   state: () => ({
     searchFilters: null,
-    searchFields: [{"name":"name"},{"name":"minimum"},{"name":"maximum"}],
+    searchFields: [{ name: 'name' }, { name: 'minimum' }, { name: 'maximum' }],
     paginateFilters: {
       page: 1,
-      per: '15'
-    }
+      per: '15',
+    },
   }),
   getters: {
     getSearchFilters: state => state.searchFilters,
@@ -26,6 +26,5 @@ export const useAgesStore = defineStore('agesStore', {
 })
 
 if (Object.hasOwn(import.meta, 'hot')) {
-  // @ts-ignore
-  import.meta.hot.accept(acceptHMRUpdate(useAgesStore, import.meta.hot))
+  import.meta.hot?.accept(acceptHMRUpdate(useAgesStore, import.meta.hot))
 }

@@ -1,15 +1,15 @@
 import { ref } from 'vue'
 import type { ZodSchema } from 'zod'
 
-export function useFormValidator<T extends Record<string, any>>(formSchema: ZodSchema<T>) {
-  const errors = ref<Record<keyof T, string | null>>({} as any)
+export function useFormValidator<T extends Record<string, unknown>>(formSchema: ZodSchema<T>) {
+  const errors = ref<Record<keyof T, string | null>>({} as Record<keyof T, string | null>)
 
   const validate = (localData: T): boolean => {
     const result = formSchema.safeParse(localData)
 
     if (!result.success) {
       const formattedErrors = Object.fromEntries(
-        result.error.issues.map(err => [err.path[0], err.message])
+        result.error.issues.map(err => [err.path[0], err.message]),
       )
 
       // Assure que chaque champ a une valeur null ou une erreur
@@ -35,6 +35,6 @@ export function useFormValidator<T extends Record<string, any>>(formSchema: ZodS
 
   return {
     errors,
-    validate
+    validate,
   }
 }

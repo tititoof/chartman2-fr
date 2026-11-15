@@ -4,7 +4,7 @@ import type { SQLOperator } from '@nuxt/content'
 // La règle de base no-unused-vars (appliquée aux .ts, cf. eslint.config.mjs)
 // prend les noms de paramètres d'une signature de type pour des variables.
 interface Whereable<T> {
-  // eslint-disable-next-line no-unused-vars
+
   where(field: string, op: SQLOperator, value: unknown): T
 }
 

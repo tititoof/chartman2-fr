@@ -7,7 +7,10 @@
         icon="i-mdi:book-open-variant-outline"
       />
       <section class="py-12">
-        <v-responsive v-if="isPublished" class="text-left">
+        <v-responsive
+          v-if="isPublished"
+          class="text-left"
+        >
           <v-expansion-panels
             v-if="tocLinks.length >= 3"
             class="mb-4"
@@ -17,16 +20,28 @@
               bg-color="background"
             >
               <v-expansion-panel-title>
-                <v-icon icon="i-mdi:format-list-bulleted" class="mr-2" />
+                <v-icon
+                  icon="i-mdi:format-list-bulleted"
+                  class="mr-2"
+                />
                 <span class="font-weight-bold">Sommaire</span>
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <nav aria-label="Sommaire de l'article">
                   <ul class="toc-list">
-                    <li v-for="link in tocLinks" :key="link.id">
+                    <li
+                      v-for="link in tocLinks"
+                      :key="link.id"
+                    >
                       <a :href="`#${link.id}`">{{ link.text }}</a>
-                      <ul v-if="link.children?.length" class="toc-list">
-                        <li v-for="child in link.children" :key="child.id">
+                      <ul
+                        v-if="link.children?.length"
+                        class="toc-list"
+                      >
+                        <li
+                          v-for="child in link.children"
+                          :key="child.id"
+                        >
                           <a :href="`#${child.id}`">{{ child.text }}</a>
                         </li>
                       </ul>
@@ -60,7 +75,10 @@
             aria-label="Navigation entre les articles de la catégorie"
           >
             <v-row class="mt-6">
-              <v-col cols="12" sm="6">
+              <v-col
+                cols="12"
+                sm="6"
+              >
                 <v-card
                   v-if="previous"
                   :to="`/blog/article/${previous.article_id}`"
@@ -70,13 +88,21 @@
                 >
                   <v-card-text>
                     <p class="text-caption text-medium-emphasis">
-                      <v-icon icon="i-mdi:arrow-left" size="small" /> Article précédent
+                      <v-icon
+                        icon="i-mdi:arrow-left"
+                        size="small"
+                      /> Article précédent
                     </p>
-                    <p class="font-weight-bold">{{ previous.title }}</p>
+                    <p class="font-weight-bold">
+                      {{ previous.title }}
+                    </p>
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col cols="12" sm="6">
+              <v-col
+                cols="12"
+                sm="6"
+              >
                 <v-card
                   v-if="next"
                   :to="`/blog/article/${next.article_id}`"
@@ -86,9 +112,14 @@
                 >
                   <v-card-text>
                     <p class="text-caption text-medium-emphasis">
-                      Article suivant <v-icon icon="i-mdi:arrow-right" size="small" />
+                      Article suivant <v-icon
+                        icon="i-mdi:arrow-right"
+                        size="small"
+                      />
                     </p>
-                    <p class="font-weight-bold">{{ next.title }}</p>
+                    <p class="font-weight-bold">
+                      {{ next.title }}
+                    </p>
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -96,9 +127,20 @@
           </nav>
         </v-responsive>
 
-        <v-row v-else class="d-flex justify-center text-center py-8">
-          <v-col cols="12" sm="8" md="5">
-            <v-card flat color="transparent" class="d-flex flex-column align-center pa-8">
+        <v-row
+          v-else
+          class="d-flex justify-center text-center py-8"
+        >
+          <v-col
+            cols="12"
+            sm="8"
+            md="5"
+          >
+            <v-card
+              flat
+              color="transparent"
+              class="d-flex flex-column align-center pa-8"
+            >
               <v-icon
                 icon="i-mdi:rocket-launch-outline"
                 size="120"
@@ -120,6 +162,7 @@
     </div>
   </v-container>
 </template>
+
 <script setup lang="ts">
 const route = useRoute()
 
@@ -131,10 +174,10 @@ const today = new Date().toISOString().split('T')[0]
 
 const isPublished = computed(() => {
   if (!article.value) return false
-  if (process.dev) return true                          // dev → tout visible
-  if (article.value.draft) return false                 // brouillon → caché
-  if (!article.value.publishedAt) return true           // pas de date → visible
-  return article.value.publishedAt <= today             // date passée → visible
+  if (import.meta.dev) return true // dev → tout visible
+  if (article.value.draft) return false // brouillon → caché
+  if (!article.value.publishedAt) return true // pas de date → visible
+  return article.value.publishedAt <= today // date passée → visible
 })
 
 useSeoMeta({
@@ -157,15 +200,15 @@ const { data: siblings } = await useAsyncData('siblings-' + route.params.id, () 
       .where('stem', 'LIKE', `${categoryDir.value}/%`)
       .order('publishedAt', 'ASC')
       // Même départage que la page catégorie (dates identiques dans une série)
-      .order('stem', 'ASC')
+      .order('stem', 'ASC'),
   )
     .select('title', 'article_id')
     .all(),
-  { watch: [categoryDir] }
+{ watch: [categoryDir] },
 )
 
 const currentIndex = computed(() =>
-  siblings.value?.findIndex(({ article_id }) => article_id === route.params.id) ?? -1
+  siblings.value?.findIndex(({ article_id }) => article_id === route.params.id) ?? -1,
 )
 const previous = computed(() => currentIndex.value > 0 ? siblings.value![currentIndex.value - 1] : null)
 const next = computed(() => {

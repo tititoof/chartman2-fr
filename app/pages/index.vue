@@ -7,13 +7,24 @@
       scrim="rgb(var(--v-theme-background))"
       opacity="1"
     >
-      <v-progress-circular indeterminate color="primary" size="64" width="4" />
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        size="64"
+        width="4"
+      />
     </v-overlay>
     <partial-main-hero />
     <lazy-partial-main-case-studies />
     <lazy-partial-main-services />
-    <lazy-partial-main-about-me @addLoading="addLoading" @removeLoading="removeLoading" />
-    <lazy-partial-main-contact-me @addLoading="addLoading" @removeLoading="removeLoading" />
+    <lazy-partial-main-about-me
+      @add-loading="addLoading"
+      @remove-loading="removeLoading"
+    />
+    <lazy-partial-main-contact-me
+      @add-loading="addLoading"
+      @remove-loading="removeLoading"
+    />
   </v-responsive>
 </template>
 

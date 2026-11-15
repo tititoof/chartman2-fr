@@ -7,16 +7,22 @@
     prepend-icon="i-mdi:magnify"
     density="compact"
   >
-    <template v-slot:append>
-      <v-icon :icon="show ? 'i-mdi:chevron-up' : 'i-mdi:chevron-down'" @click="show = !show"/>
+    <template #append>
+      <v-icon
+        :icon="show ? 'i-mdi:chevron-up' : 'i-mdi:chevron-down'"
+        @click="show = !show"
+      />
     </template>
-    <template v-slot:title>
+    <template #title>
       <div class="d-flex justify-start">
         {{ $t('default.lists.search') }}
       </div>
     </template>
     <v-expand-transition>
-      <section v-show="show" class="pl-3">
+      <section
+        v-show="show"
+        class="pl-3"
+      >
         <v-row dense>
           <v-col
             v-for="field in fields"
@@ -70,10 +76,10 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   fields: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 })
 
