@@ -181,21 +181,21 @@ pipeline {
                     def scannerHome = tool 'sonarqube-scanner';
                     def sonarqubeBranch = 'frontend-chartman2-fr.ovh';
                     withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
-                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_CREDENTIALS')]) {
-                            withSonarQubeEnv() {
-                                if (env.BRANCH_NAME == 'main') {
-                                    sonarqubeBranch = 'frontend-chartman2-fr.ovh'
-                                }
-                                sh "${scannerHome}/bin/sonar-scanner \
-                                        -Dsonar.projectKey=$sonarqubeBranch \
-                                        -Dsonar.sources='app' \
-                                        -Dsonar.exclusions=public/**/* \
-                                        -Dsonar.host.url=$SONAR_URL \
-                                        -Dsonar.login=$SONAR_CREDENTIALS \
-                                        -Dsonar.testExecutionReportPaths=sonar-report.xml \
-                                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                                        -Dsonar.javascript.node.maxspace=4096"
+                        // Le jeton vient de withSonarQubeEnv() (variable SONAR_TOKEN, lue par le
+                        // scanner) : pas de sonar.login, déprécié et déjà ignoré quand SONAR_TOKEN
+                        // est défini. \$SONAR_URL est lu par le shell, jamais interpolé par Groovy
+                        withSonarQubeEnv() {
+                            if (env.BRANCH_NAME == 'main') {
+                                sonarqubeBranch = 'frontend-chartman2-fr.ovh'
                             }
+                            sh "${scannerHome}/bin/sonar-scanner \
+                                    -Dsonar.projectKey=${sonarqubeBranch} \
+                                    -Dsonar.sources='app' \
+                                    -Dsonar.exclusions=public/**/* \
+                                    -Dsonar.host.url=\$SONAR_URL \
+                                    -Dsonar.testExecutionReportPaths=sonar-report.xml \
+                                    -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                                    -Dsonar.javascript.node.maxspace=4096"
                         }
                     }
                 }
