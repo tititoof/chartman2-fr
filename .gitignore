@@ -49,3 +49,8 @@ opencode.jsonc
 gitleaks.json
 trivy-image.json
 dd-response.json
+
+# Playwright
+playwright-report/
+playwright-results.xml
+test-results/

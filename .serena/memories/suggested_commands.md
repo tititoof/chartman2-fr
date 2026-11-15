@@ -11,6 +11,9 @@ Host has no usable `node_modules` (`task up` deletes it; deps are installed insi
   - `pnpm run test:ci-cd` — what Jenkins runs (`vitest.ci-cd.config.mjs`, adds Sonar reporter + longer timeouts).
   - `pnpm exec eslint .` — lint (needs `.nuxt/eslint.config.mjs`, i.e. after `nuxt prepare`).
   - `pnpm build` — production build, also done by CI.
-- Playwright: `pnpm exec playwright test` with `PLAYWRIGHT_BASE_URL` (default `http://localhost:3000`).
+- Without the dev stack running: one-off CI-like run (host has Node 24 but the `node_modules` left by the container is musl-only, so host vitest fails with `Cannot find module '@rolldown/binding-...'`; corepack is absent from `node:lts`):
+  `docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -e CI=true -e npm_config_prefix=/tmp/npm -v "$PWD":/app -w /app node:lts-alpine sh -c 'npm i -g pnpm@10 --silent; export PATH=/tmp/npm/bin:$PATH; pnpm install --frozen-lockfile && pnpm run test:ci-cd'`
+- `pnpm run lint` — ESLint, blocking stage `Lint` in Jenkins (errors only). Needs `typescript` in devDependencies, otherwise @nuxt/eslint-config silently skips TS rules.
+- Playwright smoke tests (`tests/e2e/`, stage `E2E` on develop against staging, non-blocking, agent `agent_playwright` from lab-iac): run against a production build, not `nuxt dev` (Vite HMR websocket raises `WebSocket closed without opened.` page errors). `@playwright/test` is pinned exactly to the version of `var.playwright_image` in lab-iac: bump both together.
 - Git hooks: `git config core.hooksPath .githooks` once per clone (gitleaks pre-commit; false positives go in `.gitleaksignore`).
 - Shell is zsh: quote globs.

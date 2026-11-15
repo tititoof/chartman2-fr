@@ -338,6 +338,49 @@ pipeline {
                 }
             }
         }
+        // Smoke tests Playwright du staging, une fois la nouvelle version en ligne : les pages
+        // principales répondent sans erreur JS, Mermaid s'affiche, le formulaire de contact
+        // valide sans rien envoyer. Vitest monte les composants seuls et ne voit pas une page
+        // rendue par le serveur (500 de pinia, plugin cassé…). Non bloquant pour l'instant.
+        stage('E2E') {
+            // beforeAgent : ne pas démarrer le pod Playwright (image ≈ 2 Go) sur les autres branches
+            when {
+                beforeAgent true
+                branch 'develop'
+            }
+            agent { label 'agent_playwright' }
+            steps {
+                script {
+                    def version = (env.GIT_COMMIT ?: '').take(7)
+                    def target = 'https://staging-frontend.chartman2-fr.ovh'
+                    def status = 0
+                    container('playwright') {
+                        // Seul @playwright/test est installé, pas tout le projet. Sa version doit
+                        // être celle de l'image (lab-iac, var.playwright_image), sinon Playwright
+                        // ne trouve pas les navigateurs
+                        status = sh(returnStatus: true, script: """#!/bin/bash
+                            ok=0
+                            for i in \$(seq 1 60); do
+                                if curl -sf --max-time 10 ${target}/ | grep -q 'appVersion:"${version}"'; then ok=1; break; fi
+                                sleep 15
+                            done
+                            if [ \$ok != 1 ]; then echo "Le staging ne sert pas ${version} après 15 min"; exit 3; fi
+                            PW_VERSION=\$(node -p "require('./package.json').devDependencies['@playwright/test']")
+                            npm i --prefix /tmp/pw --no-save --no-package-lock --silent "@playwright/test@\$PW_VERSION" || exit 3
+                            ln -sfn /tmp/pw/node_modules node_modules
+                            CI=true PLAYWRIGHT_BASE_URL=${target} npx playwright test
+                        """)
+                    }
+                    if (status == 3) {
+                        echo "Playwright n'a pas pu tester le staging (code ${status}) : non bloquant"
+                    } else {
+                        echo status == 0 ? 'Smoke tests E2E OK' : "Smoke tests E2E en échec (code ${status}, non bloquant)"
+                        junit testResults: 'playwright-results.xml', allowEmptyResults: true, skipMarkingBuildUnstable: true
+                        archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+                    }
+                }
+            }
+        }
         // Scan DAST passif (ZAP baseline) du staging, une fois la nouvelle version en ligne :
         // ZAP parcourt le site et analyse les réponses (en-têtes, cookies, CSP…) sans rien
         // attaquer. Non bloquant pour l'instant : les alertes vont dans DefectDojo, les
