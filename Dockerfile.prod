@@ -1,4 +1,4 @@
-FROM node:lts AS build
+FROM node:26 AS build
 WORKDIR /app
 
 ARG API_BASE_URL 
@@ -38,7 +38,7 @@ ENV PATH="./node_modules/.bin/:$PATH"
 
 RUN pnpm run build
 
-FROM node:lts-slim
+FROM node:26-slim
 
 WORKDIR /app
 
