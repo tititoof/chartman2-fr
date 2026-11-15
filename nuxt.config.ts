@@ -252,9 +252,13 @@ export default defineNuxtConfig({
     langDir: './locales'
   },
   sentry: {
-    autoInjectServerSentry: 'experimental_dynamic-import',
-    // Pas d'envoi des sourcemaps pour l'instant (Bugsink sait les recevoir via sentry-cli)
-    sourceMapsUploadOptions: { enabled: false },
+    // Depuis Sentry 11, sentry.server.config est intégré au build Nitro et
+    // s'initialise au démarrage : plus d'autoInjectServerSentry ni d'import-in-the-middle.
+    // Pas d'envoi des sourcemaps pour l'instant, mais les debug IDs sont injectés
+    // pour pouvoir les envoyer plus tard à Bugsink (sentry-cli)
+    sourcemaps: { disable: 'disable-upload' },
+    // Le plugin de build envoie sinon sa télémétrie à sentry.io à chaque build
+    telemetry: false,
   },
   components: [
     '~/components', {
