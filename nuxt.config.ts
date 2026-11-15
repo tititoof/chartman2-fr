@@ -254,9 +254,11 @@ export default defineNuxtConfig({
   sentry: {
     // Depuis Sentry 11, sentry.server.config est intégré au build Nitro et
     // s'initialise au démarrage : plus d'autoInjectServerSentry ni d'import-in-the-middle.
-    // Pas d'envoi des sourcemaps pour l'instant, mais les debug IDs sont injectés
-    // pour pouvoir les envoyer plus tard à Bugsink (sentry-cli)
-    sourcemaps: { disable: 'disable-upload' },
+    // Aucune fonction de sourcemaps Sentry : 'disable-upload' (debug IDs injectés)
+    // ajoutait environ 770 Mo au build et dépassait les 4 Gi de buildkit en CI
+    // (OOMKilled, develop #132 et #133). À revoir le jour où on enverra les
+    // sourcemaps à Bugsink
+    sourcemaps: { disable: true },
     // Le plugin de build envoie sinon sa télémétrie à sentry.io à chaque build
     telemetry: false,
   },
