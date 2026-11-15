@@ -2,9 +2,9 @@
   <div class="mermaid-wrapper">
     <pre @click="openIfReady">
       <code
+        v-if="show"
         ref="mermaidEl"
         class="mermaid"
-        v-if="show"
       >
         <slot />
       </code>
@@ -44,8 +44,9 @@
     </v-dialog>
   </div>
 </template>
+
 <script lang="ts" setup>
-let show = ref(false);
+const show = ref(false)
 const mermaidEl = ref<HTMLElement | null>(null)
 const svgHtml = ref('')
 const open = ref(false)
@@ -53,22 +54,29 @@ const zoomed = ref(false)
 
 const { $mermaid } = useNuxtApp()
 
-onMounted( async() => {
+onMounted(async () => {
   show.value = true
-
-  $mermaid().initialize({ startOnLoad: true })
 
   await nextTick()
 
-  $mermaid().init({
+  const mermaid = $mermaid()
+  mermaid.initialize({
+    startOnLoad: false,
     theme: 'forest',
+    // Mermaid 12 defaults to the ELK layout and the "neo" look: keep the
+    // dagre/classic rendering the published diagrams were designed with.
+    layout: 'dagre',
+    look: 'classic',
     themeVariables: {
       lineColor: '#F8B229',
       secondaryColor: '#ec8d2a',
-      tertiaryColor: '#004c6c'
-    }
+      tertiaryColor: '#004c6c',
+    },
   })
 
+  if (mermaidEl.value) {
+    await mermaid.run({ nodes: [mermaidEl.value] })
+  }
 })
 
 const openIfReady = () => {
@@ -82,6 +90,7 @@ watch(open, (isOpen) => {
   if (!isOpen) zoomed.value = false
 })
 </script>
+
 <style>
 .mermaid:not([data-processed]) {
   color: transparent;
