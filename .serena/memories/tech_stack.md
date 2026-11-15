@@ -9,7 +9,7 @@
 - State: Pinia 4 + `@pinia/nuxt` 1 (0.11 broke every SSR page under Nuxt 4.6) + `pinia-plugin-persistedstate`. Utilities: VueUse, dayjs (fr, Europe/Paris).
 - i18n: `@nuxtjs/i18n`, single locale `fr`, no route prefix.
 - SEO: `@nuxtjs/seo` generates per-page meta; do not hand-add viewport/description/og tags in `app.head`.
-- Errors: `@sentry/nuxt` pointed at a self-hosted Bugsink; module only loaded when `SENTRY_DSN` is set at build (test it with a fake DSN build); 4xx are filtered out; v11: `sourcemaps.disable: 'disable-upload'`, `telemetry: false`, no `autoInjectServerSentry`.
+- Errors: `@sentry/nuxt` pointed at a self-hosted Bugsink; module only loaded when `SENTRY_DSN` is set at build (test it with a fake DSN build); 4xx are filtered out; v11: `sourcemaps.disable: true` (`'disable-upload'` adds ~770 MB to the build and got buildkit OOMKilled at 4Gi), `telemetry: false`, no `autoInjectServerSentry`. Image build peaks ~3.5 GB: buildkit limit is 6Gi in lab-iac.
 - Mail: `nuxt-resend` (contact form, `server/api`).
 - Cookies: `@dargmuesli/nuxt-cookie-control`, colours bound to Vuetify theme CSS vars.
 - Tests: Vitest 5 + `@nuxt/test-utils` (env `nuxt`, happy-dom), coverage v8/lcov, `vitest-sonar-reporter` in CI; Playwright for e2e.
