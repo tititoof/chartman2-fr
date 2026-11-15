@@ -120,6 +120,13 @@ pipeline {
         }
     }
 
+    // Un build à la fois par branche : deux pushes rapprochés lançaient deux builds
+    // en parallèle, qui redéployaient le staging pendant que E2E et DAST testaient
+    // l'autre version, et le second buildkitd ne démarrait pas (develop #130, #135)
+    options {
+        disableConcurrentBuilds()
+    }
+
     environment {
         FORGEJO_REPO = 'toofytroll/frontend-chartman2-fr.ovh'
     }
