@@ -40,6 +40,12 @@ RUN pnpm run build
 
 FROM node:26-slim
 
+# Les correctifs de sécurité Debian sortent avant la reconstruction de l'image
+# node (ex. zlib1g, CVE-2026-76844 et CVE-2026-85091) : on les applique ici
+RUN apt-get update \
+  && apt-get upgrade -y --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # .output est autonome : Nitro y embarque les seules dépendances utilisées à
