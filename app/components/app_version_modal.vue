@@ -15,7 +15,7 @@ const outdated = computed(() => store.getOutdated)
       <v-card
         prepend-icon="i-mdi:newspaper"
       >
-        <template v-slot:title>
+        <template #title>
           Nouvelle version disponible.
         </template>
         <v-card-item>
@@ -23,8 +23,8 @@ const outdated = computed(() => store.getOutdated)
             La version <strong>{{ store.getVersion }}</strong> de l’application est disponible.
           </v-card-text>
         </v-card-item>
-        <template v-slot:actions>
-          <v-spacer></v-spacer>
+        <template #actions>
+          <v-spacer />
 
           <v-btn @click="store.reload">
             Recharger

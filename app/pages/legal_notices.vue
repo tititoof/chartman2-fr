@@ -12,6 +12,7 @@
     </v-container>
   </v-row>
 </template>
+
 <script setup>
 useHead({
   charset: 'UTF-8',

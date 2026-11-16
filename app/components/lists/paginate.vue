@@ -1,10 +1,14 @@
 <template>
-  <v-sheet color="secondary-container" height="65" rounded="lg">
+  <v-sheet
+    color="secondary-container"
+    height="65"
+    rounded="lg"
+  >
     <v-row class="mt-1">
       <v-col cols="2">
         <v-select
-          class="ml-4"
           v-model="localData.numberPerPage"
+          class="ml-4"
           :items="numbersPerPage"
           density="compact"
           :label="$t('default.lists.per')"
@@ -15,8 +19,8 @@
         class="d-flex justify-end"
       >
         <v-pagination
-          class="pr-4"
           v-model="localData.pageNumber"
+          class="pr-4"
           :length="totalPages"
           :total-visible="totalPages"
           density="compact"
@@ -30,7 +34,7 @@
 <script setup lang="ts">
 const props = defineProps({
   numberPerPage: {
-    type: String,
+    type: Number,
     default: 15,
   },
   pageNumber: {
@@ -57,7 +61,7 @@ const handleChange = () => {
 watch(
   () => [localData.numberPerPage, localData.numberOfItems, localData.pageNumber],
   (
-    newValues: [number, number, number], oldValues: [number, number, number]
+    newValues: [number, number, number], oldValues: [number, number, number],
   ) => {
     const [newNumberPerPage, newNumberOfItems, newPageNumber] = newValues
     const [oldNumberPerPage, oldNumberOfItems, oldPageNumber] = oldValues || []
@@ -72,9 +76,9 @@ watch(
     }
 
     if (
-      newNumberPerPage !== oldNumberPerPage ||
-      newNumberOfItems !== oldNumberOfItems ||
-      newPageNumber !== oldPageNumber
+      newNumberPerPage !== oldNumberPerPage
+      || newNumberOfItems !== oldNumberOfItems
+      || newPageNumber !== oldPageNumber
     ) {
       handleChange()
     }
@@ -84,7 +88,7 @@ watch(
 
 watch(() => [props.numberPerPage, props.numberOfItems, props.pageNumber],
   (
-    newValues: [number, number, number]
+    newValues: [number, number, number],
   ) => {
     const [newNumberPerPage, newNumberOfItems] = newValues
 
@@ -93,5 +97,5 @@ watch(() => [props.numberPerPage, props.numberOfItems, props.pageNumber],
     if (localData.pageNumber > recalculatedTotalPages) {
       localData.pageNumber = 1
     }
-})
+  })
 </script>

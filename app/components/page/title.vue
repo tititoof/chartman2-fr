@@ -46,7 +46,7 @@ const props = defineProps({
   },
   links: {
     type: Array,
-    default: [],
+    default: () => ([]),
   },
 })
 

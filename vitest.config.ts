@@ -43,7 +43,7 @@ export default defineVitestConfig({
       {
         find: 'universal-cookie',
         replacement: '/tests/mocks/universal-cookie.ts',
-      }
-    ]
+      },
+    ],
   },
 })

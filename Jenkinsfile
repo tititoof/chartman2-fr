@@ -23,14 +23,62 @@ def scanImageToDefectDojo(String image) {
         echo "Trivy en échec (code ${status}) : scan de l'image sauté, non bloquant"
         return
     }
-    sh '''
-        python3 -c 'import json, collections
-d = json.load(open("trivy-image.json"))
-c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.get("Vulnerabilities") or [])
-print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
-    '''
+    printTrivySummary('trivy-image.json')
     archiveArtifacts artifacts: 'trivy-image.json', allowEmptyArchive: true
     sendToDefectDojo('trivy-image.json', 'Trivy Scan', 'Image Docker')
+}
+
+// Scan Trivy des dépendances déclarées dans pnpm-lock.yaml, non bloquant, envoyé à
+// DefectDojo. Complète le scan de l'image : une CVE d'un paquet npm y est visible
+// sur toutes les branches, alors que l'image n'est construite que pour develop et main.
+def scanDependenciesToDefectDojo() {
+    def status = 0
+    container('trivy') {
+        status = sh(returnStatus: true, script: '''
+            trivy fs \
+                --server http://trivy.trivy.svc:4954 \
+                --scanners vuln \
+                --skip-dirs node_modules \
+                --exit-code 0 \
+                --ignore-unfixed \
+                --no-progress \
+                --quiet \
+                --format json \
+                --output trivy-deps.json \
+                .
+        ''')
+    }
+    if (status != 0) {
+        echo "Trivy en échec (code ${status}) : scan des dépendances sauté, non bloquant"
+        return
+    }
+    printTrivySummary('trivy-deps.json')
+    archiveArtifacts artifacts: 'trivy-deps.json', allowEmptyArchive: true
+    sendToDefectDojo('trivy-deps.json', 'Trivy Scan', 'Dépendances (Trivy)')
+}
+
+def printTrivySummary(String report) {
+    withEnv(["TRIVY_REPORT=${report}"]) {
+        sh '''
+            python3 -c 'import json, collections, os
+d = json.load(open(os.environ["TRIVY_REPORT"]))
+c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.get("Vulnerabilities") or [])
+print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
+        '''
+    }
+}
+
+// Alertes ouvertes du projet SonarQube, envoyées à DefectDojo au format générique
+// (.ci/sonar-to-defectdojo.py). À appeler dans withSonarQubeEnv() et avec SONAR_URL,
+// une fois l'analyse traitée par SonarQube. Jamais bloquant.
+def sendSonarQubeToDefectDojo(String projectKey) {
+    def status = sh(returnStatus: true, script: "python3 .ci/sonar-to-defectdojo.py '${projectKey}' sonarqube-findings.json")
+    if (status != 0) {
+        echo "Export des alertes SonarQube échoué (code ${status}), non bloquant"
+        return
+    }
+    archiveArtifacts artifacts: 'sonarqube-findings.json', allowEmptyArchive: true
+    sendToDefectDojo('sonarqube-findings.json', 'Generic Findings Import', 'SonarQube')
 }
 
 // Envoie un rapport sur le même test à chaque build (reimport-scan) : DefectDojo
@@ -96,8 +144,11 @@ def buildAndPushImage(List<String> tags, String appVersion) {
                 BUILD_ARGS=\$(grep -vE '^[[:space:]]*#|^[[:space:]]*\$|^(APP_ENVIRONMENT|APP_VERSION)=' "\$ENV_FILE" | sed 's/^/--opt build-arg:/' | tr '\\n' ' ')
                 BUILD_ARGS="\$BUILD_ARGS --opt build-arg:APP_ENVIRONMENT=${appEnvironment} --opt build-arg:APP_VERSION=${appVersion}"
                 # container() transmet l'environnement de l'agent (HOME=/home/jenkins, absent
-                # de l'image BuildKit) : buildkitd sans root a besoin de son propre HOME
-                HOME=/home/user DOCKER_CONFIG="\$WORKSPACE_TMP/docker" buildctl-daemonless.sh build \
+                # de l'image BuildKit) : buildkitd sans root a besoin de son propre HOME.
+                # BUILDCTL_CONNECT_RETRIES_MAX : 10 par défaut, soit ~2 s d'attente (pause de
+                # 0,1 s + 0,02 s par essai), trop court au premier build sur un nœud
+                # (« could not connect … after 10 trials », develop #139) ; 60 laisse ~43 s
+                HOME=/home/user DOCKER_CONFIG="\$WORKSPACE_TMP/docker" BUILDCTL_CONNECT_RETRIES_MAX=60 buildctl-daemonless.sh build \
                     --frontend dockerfile.v0 \
                     --local context=. \
                     --local dockerfile=. \
@@ -118,6 +169,13 @@ pipeline {
         node {
             label 'agent_vuejs_1'
         }
+    }
+
+    // Un build à la fois par branche : deux pushes rapprochés lançaient deux builds
+    // en parallèle, qui redéployaient le staging pendant que E2E et DAST testaient
+    // l'autre version, et le second buildkitd ne démarrait pas (develop #130, #135)
+    options {
+        disableConcurrentBuilds()
     }
 
     environment {
@@ -146,6 +204,14 @@ pipeline {
                 }
             }
         }
+        // Dépendances (Trivy fs sur pnpm-lock.yaml), non bloquant
+        stage('Dependencies') {
+            steps {
+                script {
+                    scanDependenciesToDefectDojo()
+                }
+            }
+        }
         stage('Build') {
             steps {
                 script {
@@ -156,6 +222,26 @@ pipeline {
                         pnpm build
                     ''')
 
+                }
+            }
+        }
+        // Bloquant sur les erreurs, pas sur les avertissements. Après le Build :
+        // la config ESLint étend .nuxt/eslint.config.mjs, généré par « nuxt prepare »
+        // (postinstall de pnpm install)
+        // Le rapport JSON part dans DefectDojo (avertissements compris) ; en cas
+        // d'erreur, ESLint est relancé avec la sortie lisible avant d'arrêter le build.
+        stage('Lint') {
+            steps {
+                script {
+                    def status = sh(returnStatus: true, script: 'pnpm exec eslint . --format json --output-file eslint.json')
+                    archiveArtifacts artifacts: 'eslint.json', allowEmptyArchive: true
+                    if (fileExists('eslint.json')) {
+                        sendToDefectDojo('eslint.json', 'ESLint Scan', 'ESLint')
+                    }
+                    if (status != 0) {
+                        sh 'pnpm run lint'
+                        error("ESLint : code ${status}")
+                    }
                 }
             }
         }
@@ -173,21 +259,21 @@ pipeline {
                     def scannerHome = tool 'sonarqube-scanner';
                     def sonarqubeBranch = 'frontend-chartman2-fr.ovh';
                     withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
-                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_CREDENTIALS')]) {
-                            withSonarQubeEnv() {
-                                if (env.BRANCH_NAME == 'main') {
-                                    sonarqubeBranch = 'frontend-chartman2-fr.ovh'
-                                }
-                                sh "${scannerHome}/bin/sonar-scanner \
-                                        -Dsonar.projectKey=$sonarqubeBranch \
-                                        -Dsonar.sources='app' \
-                                        -Dsonar.exclusions=public/**/* \
-                                        -Dsonar.host.url=$SONAR_URL \
-                                        -Dsonar.login=$SONAR_CREDENTIALS \
-                                        -Dsonar.testExecutionReportPaths=sonar-report.xml \
-                                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                                        -Dsonar.javascript.node.maxspace=4096"
+                        // Le jeton vient de withSonarQubeEnv() (variable SONAR_TOKEN, lue par le
+                        // scanner) : pas de sonar.login, déprécié et déjà ignoré quand SONAR_TOKEN
+                        // est défini. \$SONAR_URL est lu par le shell, jamais interpolé par Groovy
+                        withSonarQubeEnv() {
+                            if (env.BRANCH_NAME == 'main') {
+                                sonarqubeBranch = 'frontend-chartman2-fr.ovh'
                             }
+                            sh "${scannerHome}/bin/sonar-scanner \
+                                    -Dsonar.projectKey=${sonarqubeBranch} \
+                                    -Dsonar.sources='app' \
+                                    -Dsonar.exclusions=public/**/* \
+                                    -Dsonar.host.url=\$SONAR_URL \
+                                    -Dsonar.testExecutionReportPaths=sonar-report.xml \
+                                    -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                                    -Dsonar.javascript.node.maxspace=4096"
                         }
                     }
                 }
@@ -200,6 +286,10 @@ pipeline {
                         sleep(10)
                         timeout(time: 1, unit: 'HOURS') {
                             def qualitygate = waitForQualityGate()
+                            // Avant le verdict : les alertes partent aussi quand la gate échoue
+                            withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
+                                sendSonarQubeToDefectDojo('frontend-chartman2-fr.ovh')
+                            }
                             if (qualitygate.status != "OK") {
                                 env.WORKSPACE = pwd()
                                 error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
@@ -327,6 +417,49 @@ pipeline {
             steps {
                 script {
                     echo calver("release ${env.APP_RELEASE}")
+                }
+            }
+        }
+        // Smoke tests Playwright du staging, une fois la nouvelle version en ligne : les pages
+        // principales répondent sans erreur JS, Mermaid s'affiche, le formulaire de contact
+        // valide sans rien envoyer. Vitest monte les composants seuls et ne voit pas une page
+        // rendue par le serveur (500 de pinia, plugin cassé…). Non bloquant pour l'instant.
+        stage('E2E') {
+            // beforeAgent : ne pas démarrer le pod Playwright (image ≈ 2 Go) sur les autres branches
+            when {
+                beforeAgent true
+                branch 'develop'
+            }
+            agent { label 'agent_playwright' }
+            steps {
+                script {
+                    def version = (env.GIT_COMMIT ?: '').take(7)
+                    def target = 'https://staging-frontend.chartman2-fr.ovh'
+                    def status = 0
+                    container('playwright') {
+                        // Seul @playwright/test est installé, pas tout le projet. Sa version doit
+                        // être celle de l'image (lab-iac, var.playwright_image), sinon Playwright
+                        // ne trouve pas les navigateurs
+                        status = sh(returnStatus: true, script: """#!/bin/bash
+                            ok=0
+                            for i in \$(seq 1 60); do
+                                if curl -sf --max-time 10 ${target}/ | grep -q 'appVersion:"${version}"'; then ok=1; break; fi
+                                sleep 15
+                            done
+                            if [ \$ok != 1 ]; then echo "Le staging ne sert pas ${version} après 15 min"; exit 3; fi
+                            PW_VERSION=\$(node -p "require('./package.json').devDependencies['@playwright/test']")
+                            npm i --prefix /tmp/pw --no-save --no-package-lock --silent "@playwright/test@\$PW_VERSION" || exit 3
+                            ln -sfn /tmp/pw/node_modules node_modules
+                            CI=true PLAYWRIGHT_BASE_URL=${target} npx playwright test
+                        """)
+                    }
+                    if (status == 3) {
+                        echo "Playwright n'a pas pu tester le staging (code ${status}) : non bloquant"
+                    } else {
+                        echo status == 0 ? 'Smoke tests E2E OK' : "Smoke tests E2E en échec (code ${status}, non bloquant)"
+                        junit testResults: 'playwright-results.xml', allowEmptyResults: true, skipMarkingBuildUnstable: true
+                        archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+                    }
                 }
             }
         }

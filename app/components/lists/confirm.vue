@@ -11,7 +11,7 @@
       :title="props.title"
     >
       <template #actions>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <buttons-action
           class="ms-auto"
           :color="props.cancelColor"
@@ -30,6 +30,7 @@
     </v-card>
   </v-dialog>
 </template>
+
 <script setup lang="ts">
 const props = defineProps({
   icon: {

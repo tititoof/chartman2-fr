@@ -11,7 +11,12 @@ const { state } = useNotification()
   >
     {{ state.message }}
     <template #actions>
-      <v-btn variant="text" @click="state.show = false">Fermer</v-btn>
+      <v-btn
+        variant="text"
+        @click="state.show = false"
+      >
+        Fermer
+      </v-btn>
     </template>
   </v-snackbar>
 </template>

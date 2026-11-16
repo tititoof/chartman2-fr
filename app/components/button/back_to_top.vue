@@ -18,7 +18,7 @@
 import { tryOnMounted, tryOnUnmounted } from '@vueuse/core'
 
 const showBackToTop = ref(false)
-const isClient = typeof window !== "undefined" && typeof document !== "undefined";
+const isClient = typeof window !== 'undefined' && typeof document !== 'undefined'
 
 const handleScroll = () => {
   const scrollTop = window.scrollY || document.documentElement.scrollTop
@@ -47,8 +47,8 @@ tryOnUnmounted(() => {
   }
 })
 </script>
-<style>
 
+<style>
 .mb-24 {
     margin-bottom: 96px !important;
 }

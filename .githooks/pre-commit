@@ -8,5 +8,14 @@ root=$(git rev-parse --show-toplevel)
 if command -v gitleaks >/dev/null 2>&1; then
     exec gitleaks git --staged --redact --no-banner "$root"
 fi
-exec docker run --rm -u "$(id -u):$(id -g)" -v "$root:/repo:ro" "$GITLEAKS_IMAGE" \
-    git --staged --redact --no-banner /repo
+# Mount the tree and the git common dir at their real paths: in a git worktree,
+# .git is a file pointing to <common-dir>/worktrees/<name>, outside the tree.
+common=$(cd "$(git rev-parse --git-common-dir)" && pwd)
+mounts="-v $root:$root:ro"
+case "$common" in
+    "$root"/*) ;;
+    *) mounts="$mounts -v $common:$common:ro" ;;
+esac
+# shellcheck disable=SC2086
+exec docker run --rm -u "$(id -u):$(id -g)" $mounts "$GITLEAKS_IMAGE" \
+    git --staged --redact --no-banner "$root"

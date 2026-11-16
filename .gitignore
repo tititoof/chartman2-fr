@@ -48,4 +48,15 @@ opencode.jsonc
 # Rapports de la CI : le stage « Github update » fait « git add . » vers le dépôt public
 gitleaks.json
 trivy-image.json
+trivy-deps.json
+eslint.json
+sonarqube-findings.json
 dd-response.json
+
+# Playwright
+playwright-report/
+playwright-results.xml
+test-results/
+
+# SonarQube (Vitest sonar reporter)
+sonar-report.xml

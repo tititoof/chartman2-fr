@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
@@ -25,7 +24,7 @@ describe('Store: User', () => {
     expect(store.getMessage).toEqual('')
     expect(store.getShow).toEqual(false)
   })
-  
+
   it('can change isPhone value', () => {
     expect(store.getIsPhone).toEqual(false)
 

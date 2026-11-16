@@ -6,10 +6,11 @@ Personal site + blog (French only) of a Rails/Nuxt/DevOps freelancer. Nuxt 4 SSR
 - `app/` — Nuxt 4 srcDir: `pages/` (index, cv, legal_notices, `blog/article/[id]`, `blog/category/[id]`), `components/`, `composables/`, `stores/` (Pinia), `plugins/`, `utils/`, `assets/css/tokens.css`.
 - `content/articles/<N>.<category>/NN-slug.md` — blog articles; collections declared in `content.config.ts`.
 - `server/` — only `api/` contact mail (Resend) and a Nitro plugin stripping `X-Powered-By`.
-- `i18n/locales/fr.json` — all UI copy; `en.json` kept but locale disabled on purpose.
-- `tests/` — Vitest (`*.nuxt.spec.ts`) mirroring `app/` paths, plus Playwright `tests/e2e/`.
+- `i18n/locales/fr.json` — all UI copy; `en.json` kept but locale disabled on purpose. Legal notices (SIRET, host) are duplicated in `en.json`, `i18n/i18n.config.js` and the root `i18n.config.ts` (apparently unused): keep all four aligned.
+- Domain: `chartman2.fr` is lost (NXDOMAIN since late Oct 2026); the site is `chartman2-fr.ovh`. `chartman2.fr` still appears on purpose as DefectDojo product name, Serena project name and the contact Gmail.
+- `tests/` — Vitest (`*.nuxt.spec.ts`) mirroring `app/` paths, plus Playwright smoke tests of the staging in `tests/e2e/smoke.spec.ts`.
 - `Jenkinsfile`, `.ci/calver.sh`, `.zap/`, `.githooks/` — CI/CD and security tooling.
-- `middlewares/`, `types/`, `tests/server/api/article`, `tests/e2e` auth/CRUD specs — leftovers of a members/CRUD area backed by an external Rails API (`useBackendApi`, `plugins/api.ts`, `useAuthStore`); no matching pages exist under `app/pages` today.
+- `middlewares/`, `types/` — leftovers of a members/CRUD area backed by an external Rails API (`useBackendApi`, `plugins/api.ts`, `useAuthStore`); no matching pages exist under `app/pages` today.
 
 ## Invariants
 - Article URL is `/blog/article/<article_id>` — resolved by frontmatter `article_id`, not by file path. Renaming a file is safe, changing `article_id` breaks links.

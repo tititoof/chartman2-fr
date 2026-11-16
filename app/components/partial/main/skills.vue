@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
 <template>
-  <v-card color="surface" variant="flat">
+  <v-card
+    color="surface"
+    variant="flat"
+  >
     <v-container
       id="features"
       class="text-center py-12"
@@ -45,8 +48,11 @@
                 size="72"
                 class="skill-avatar"
               >
-                <v-icon size="x-large" color="primary" :icon="src">
-                </v-icon>
+                <v-icon
+                  size="x-large"
+                  color="primary"
+                  :icon="src"
+                />
               </v-avatar>
               <v-avatar
                 v-else
@@ -74,7 +80,10 @@
           class="mx-auto"
           width="112"
         >
-          <v-divider color="border" class="mt-4" />
+          <v-divider
+            color="border"
+            class="mt-4"
+          />
 
         </v-responsive>
       </section>

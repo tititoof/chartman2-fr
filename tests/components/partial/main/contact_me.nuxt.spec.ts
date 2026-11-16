@@ -47,10 +47,10 @@ describe('Components - partial/main/contact_me', async () => {
 
   it('can send email', async () => {
     const wrapper = await mountSuspended(TestResource, {
-      shallow: true
+      shallow: true,
     })
 
-    const handler = vi.fn(async event => {
+    const handler = vi.fn(async (event) => {
       return { body: await readBody(event), error: null }
     })
     registerEndpoint('/api/email', { method: 'POST', handler })
@@ -69,7 +69,7 @@ describe('Components - partial/main/contact_me', async () => {
         name: 'test name',
         email: 'test@ŧest.com',
         subject: 'subject',
-        message: 'This is a message test'
+        message: 'This is a message test',
       },
       error: null,
     })

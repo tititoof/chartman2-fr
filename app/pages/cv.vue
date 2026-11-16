@@ -7,17 +7,44 @@
       icon="i-mdi:file-account-outline"
     />
 
-    <v-card class="cv-intro mt-8 mb-12" rounded="xl" elevation="0">
-      <v-row align="center" class="pa-6 pa-md-10" :no-gutters="true">
-        <v-col cols="12" md="3" class="text-center mb-6 mb-md-0">
-          <v-avatar size="160" class="cv-portrait">
-            <v-img src="/img/visage.webp" alt="Christophe Hartmann" />
+    <v-card
+      class="cv-intro mt-8 mb-12"
+      rounded="xl"
+      elevation="0"
+    >
+      <v-row
+        align="center"
+        class="pa-6 pa-md-10"
+        :no-gutters="true"
+      >
+        <v-col
+          cols="12"
+          md="3"
+          class="text-center mb-6 mb-md-0"
+        >
+          <v-avatar
+            size="160"
+            class="cv-portrait"
+          >
+            <v-img
+              src="/img/visage.webp"
+              alt="Christophe Hartmann"
+            />
           </v-avatar>
         </v-col>
-        <v-col cols="12" md="9">
-          <p class="cv-eyebrow mb-2">Développeur web full-stack & DevOps freelance</p>
-          <h1 class="cv-name mb-2">Christophe Hartmann</h1>
-          <p class="cv-role mb-5">Architecte DevOps / DevSecOps — automatisation & IA</p>
+        <v-col
+          cols="12"
+          md="9"
+        >
+          <p class="cv-eyebrow mb-2">
+            Développeur web full-stack & DevOps freelance
+          </p>
+          <h1 class="cv-name mb-2">
+            Christophe Hartmann
+          </h1>
+          <p class="cv-role mb-5">
+            Architecte DevOps / DevSecOps — automatisation & IA
+          </p>
           <p class="cv-summary mb-6">
             Plus de 20 ans d’expérience en conception d’applications métier et en industrialisation.
             J’accompagne les PME du développement au déploiement, avec une approche orientée
@@ -26,13 +53,32 @@
           </p>
 
           <div class="d-flex flex-wrap ga-3">
-            <v-btn color="primary" rounded="lg" prepend-icon="i-mdi:email-outline" href="mailto:contact@chartman2-fr.ovh">
+            <v-btn
+              color="primary"
+              rounded="lg"
+              prepend-icon="i-mdi:email-outline"
+              href="mailto:contact@chartman2-fr.ovh"
+            >
               Me contacter
             </v-btn>
-            <v-btn color="primary" variant="outlined" rounded="lg" prepend-icon="i-mdi:eye-outline" href="/cv-christophe-hartmann.pdf" target="_blank">
+            <v-btn
+              color="primary"
+              variant="outlined"
+              rounded="lg"
+              prepend-icon="i-mdi:eye-outline"
+              href="/cv-christophe-hartmann.pdf"
+              target="_blank"
+            >
               Voir le CV PDF
             </v-btn>
-            <v-btn color="primary" variant="text" rounded="lg" prepend-icon="i-mdi:download-outline" href="/cv-christophe-hartmann.pdf" download>
+            <v-btn
+              color="primary"
+              variant="text"
+              rounded="lg"
+              prepend-icon="i-mdi:download-outline"
+              href="/cv-christophe-hartmann.pdf"
+              download
+            >
               Télécharger
             </v-btn>
           </div>
@@ -42,23 +88,60 @@
       <div class="cv-contact d-flex flex-wrap justify-center ga-3 ga-md-8 px-5 py-4">
         <a href="tel:+33665711975"><v-icon icon="i-mdi:phone-outline" /> 06 65 71 19 75</a>
         <a href="mailto:contact@chartman2-fr.ovh"><v-icon icon="i-mdi:email-outline" /> contact@chartman2-fr.ovh</a>
-        <a href="https://www.linkedin.com/in/christophe-hartmann-3a297a42/" target="_blank" rel="noreferrer"><v-icon icon="i-mdi:linkedin" /> LinkedIn</a>
-        <a href="https://github.com/tititoof" target="_blank" rel="noreferrer"><v-icon icon="i-mdi:github" /> GitHub</a>
+        <a
+          href="https://www.linkedin.com/in/christophe-hartmann-3a297a42/"
+          target="_blank"
+          rel="noreferrer"
+        ><v-icon icon="i-mdi:linkedin" /> LinkedIn</a>
+        <a
+          href="https://github.com/tititoof"
+          target="_blank"
+          rel="noreferrer"
+        ><v-icon icon="i-mdi:github" /> GitHub</a>
       </div>
     </v-card>
 
-    <section class="cv-section mb-12" aria-labelledby="skills-title">
+    <section
+      class="cv-section mb-12"
+      aria-labelledby="skills-title"
+    >
       <div class="cv-section-heading mb-5">
-        <p class="cv-eyebrow">Savoir-faire</p>
-        <h2 id="skills-title">Compétences</h2>
+        <p class="cv-eyebrow">
+          Savoir-faire
+        </p>
+        <h2 id="skills-title">
+          Compétences
+        </h2>
       </div>
       <v-row>
-        <v-col v-for="group in skillGroups" :key="group.title" cols="12" md="4">
-          <v-card class="cv-skill-card h-100 pa-5" rounded="xl" elevation="0">
-            <v-icon :icon="group.icon" color="primary" size="28" class="mb-3" />
-            <h3 class="text-h6 font-weight-bold mb-3">{{ group.title }}</h3>
+        <v-col
+          v-for="group in skillGroups"
+          :key="group.title"
+          cols="12"
+          md="4"
+        >
+          <v-card
+            class="cv-skill-card h-100 pa-5"
+            rounded="xl"
+            elevation="0"
+          >
+            <v-icon
+              :icon="group.icon"
+              color="primary"
+              size="28"
+              class="mb-3"
+            />
+            <h3 class="text-h6 font-weight-bold mb-3">
+              {{ group.title }}
+            </h3>
             <div class="d-flex flex-wrap ga-2">
-              <v-chip v-for="skill in group.skills" :key="skill" size="small" variant="tonal" color="primary">
+              <v-chip
+                v-for="skill in group.skills"
+                :key="skill"
+                size="small"
+                variant="tonal"
+                color="primary"
+              >
                 {{ skill }}
               </v-chip>
             </div>
@@ -67,40 +150,104 @@
       </v-row>
     </section>
 
-    <section class="cv-section mb-12" aria-labelledby="experience-title">
+    <section
+      class="cv-section mb-12"
+      aria-labelledby="experience-title"
+    >
       <div class="cv-section-heading mb-5">
-        <p class="cv-eyebrow">Parcours</p>
-        <h2 id="experience-title">Expériences professionnelles</h2>
+        <p class="cv-eyebrow">
+          Parcours
+        </p>
+        <h2 id="experience-title">
+          Expériences professionnelles
+        </h2>
       </div>
       <div class="cv-timeline">
-        <article v-for="job in experiences" :key="job.company" class="cv-job">
-          <div class="cv-job-marker"><v-icon :icon="job.icon" size="18" /></div>
-          <v-card class="cv-job-card pa-5 pa-md-6" rounded="xl" elevation="0">
+        <article
+          v-for="job in experiences"
+          :key="job.company"
+          class="cv-job"
+        >
+          <div class="cv-job-marker">
+            <v-icon
+              :icon="job.icon"
+              size="18"
+            />
+          </div>
+          <v-card
+            class="cv-job-card pa-5 pa-md-6"
+            rounded="xl"
+            elevation="0"
+          >
             <div class="d-flex flex-wrap align-start justify-space-between ga-2 mb-3">
               <div>
-                <h3 class="text-h6 font-weight-bold">{{ job.role }}</h3>
-                <p class="text-primary font-weight-medium mb-0">{{ job.company }} <span class="text-medium-emphasis">· {{ job.place }}</span></p>
+                <h3 class="text-h6 font-weight-bold">
+                  {{ job.role }}
+                </h3>
+                <p class="text-primary font-weight-medium mb-0">
+                  {{ job.company }} <span class="text-medium-emphasis">· {{ job.place }}</span>
+                </p>
               </div>
-              <v-chip size="small" color="secondary" variant="tonal">{{ job.period }}</v-chip>
+              <v-chip
+                size="small"
+                color="secondary"
+                variant="tonal"
+              >
+                {{ job.period }}
+              </v-chip>
             </div>
-            <p class="text-body-2 text-medium-emphasis mb-0">{{ job.description }}</p>
+            <p class="text-body-2 text-medium-emphasis mb-0">
+              {{ job.description }}
+            </p>
           </v-card>
         </article>
       </div>
     </section>
 
-    <section class="cv-section mb-12" aria-labelledby="projects-title">
+    <section
+      class="cv-section mb-12"
+      aria-labelledby="projects-title"
+    >
       <div class="cv-section-heading mb-5">
-        <p class="cv-eyebrow">Concret</p>
-        <h2 id="projects-title">Démonstrateurs & publications</h2>
+        <p class="cv-eyebrow">
+          Concret
+        </p>
+        <h2 id="projects-title">
+          Démonstrateurs & publications
+        </h2>
       </div>
       <v-row>
-        <v-col v-for="project in projects" :key="project.title" cols="12" md="4">
-          <v-card class="cv-project-card h-100 pa-5" rounded="xl" elevation="0">
-            <v-icon :icon="project.icon" color="secondary" size="30" class="mb-3" />
-            <h3 class="text-h6 font-weight-bold mb-2">{{ project.title }}</h3>
-            <p class="text-body-2 text-medium-emphasis mb-4">{{ project.description }}</p>
-            <v-btn :href="project.href" target="_blank" rel="noreferrer" variant="text" color="primary" append-icon="i-mdi:arrow-top-right">
+        <v-col
+          v-for="project in projects"
+          :key="project.title"
+          cols="12"
+          md="4"
+        >
+          <v-card
+            class="cv-project-card h-100 pa-5"
+            rounded="xl"
+            elevation="0"
+          >
+            <v-icon
+              :icon="project.icon"
+              color="secondary"
+              size="30"
+              class="mb-3"
+            />
+            <h3 class="text-h6 font-weight-bold mb-2">
+              {{ project.title }}
+            </h3>
+            <p class="text-body-2 text-medium-emphasis mb-4">
+              {{ project.description }}
+            </p>
+            <v-btn
+              :href="project.href"
+              target="_blank"
+              rel="noreferrer"
+              variant="text"
+              color="primary"
+              append-icon="i-mdi:arrow-top-right"
+            >
               Découvrir
             </v-btn>
           </v-card>
@@ -109,47 +256,123 @@
     </section>
 
     <v-row class="mb-12">
-      <v-col cols="12" md="6">
-        <section class="cv-section h-100" aria-labelledby="education-title">
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <section
+          class="cv-section h-100"
+          aria-labelledby="education-title"
+        >
           <div class="cv-section-heading mb-5">
-            <p class="cv-eyebrow">Bases & apprentissage continu</p>
-            <h2 id="education-title">Formation & certifications</h2>
+            <p class="cv-eyebrow">
+              Bases & apprentissage continu
+            </p>
+            <h2 id="education-title">
+              Formation & certifications
+            </h2>
           </div>
-          <v-card class="cv-detail-card pa-5" rounded="xl" elevation="0">
-            <div v-for="item in education" :key="item.title" class="cv-detail-item">
-              <p class="font-weight-bold mb-1">{{ item.title }}</p>
-              <p class="text-body-2 text-medium-emphasis mb-0">{{ item.detail }}</p>
+          <v-card
+            class="cv-detail-card pa-5"
+            rounded="xl"
+            elevation="0"
+          >
+            <div
+              v-for="item in education"
+              :key="item.title"
+              class="cv-detail-item"
+            >
+              <p class="font-weight-bold mb-1">
+                {{ item.title }}
+              </p>
+              <p class="text-body-2 text-medium-emphasis mb-0">
+                {{ item.detail }}
+              </p>
             </div>
           </v-card>
         </section>
       </v-col>
-      <v-col cols="12" md="6">
-        <section class="cv-section h-100" aria-labelledby="approach-title">
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <section
+          class="cv-section h-100"
+          aria-labelledby="approach-title"
+        >
           <div class="cv-section-heading mb-5">
-            <p class="cv-eyebrow">Ma façon de travailler</p>
-            <h2 id="approach-title">Une approche de bout en bout</h2>
+            <p class="cv-eyebrow">
+              Ma façon de travailler
+            </p>
+            <h2 id="approach-title">
+              Une approche de bout en bout
+            </h2>
           </div>
-          <v-card class="cv-detail-card pa-5" rounded="xl" elevation="0">
-            <div v-for="step in approach" :key="step.title" class="d-flex ga-3 mb-4">
-              <v-icon :icon="step.icon" color="primary" class="mt-1" />
+          <v-card
+            class="cv-detail-card pa-5"
+            rounded="xl"
+            elevation="0"
+          >
+            <div
+              v-for="step in approach"
+              :key="step.title"
+              class="d-flex ga-3 mb-4"
+            >
+              <v-icon
+                :icon="step.icon"
+                color="primary"
+                class="mt-1"
+              />
               <div>
-                <p class="font-weight-bold mb-1">{{ step.title }}</p>
-                <p class="text-body-2 text-medium-emphasis mb-0">{{ step.description }}</p>
+                <p class="font-weight-bold mb-1">
+                  {{ step.title }}
+                </p>
+                <p class="text-body-2 text-medium-emphasis mb-0">
+                  {{ step.description }}
+                </p>
               </div>
             </div>
             <div class="d-flex flex-wrap ga-2 mt-5">
-              <v-chip v-for="language in languages" :key="language" size="small" variant="outlined">{{ language }}</v-chip>
+              <v-chip
+                v-for="language in languages"
+                :key="language"
+                size="small"
+                variant="outlined"
+              >
+                {{ language }}
+              </v-chip>
             </div>
           </v-card>
         </section>
       </v-col>
     </v-row>
 
-    <v-card class="cv-cta pa-6 pa-md-8 text-center" rounded="xl" elevation="0">
-      <v-icon icon="i-mdi:handshake-outline" color="primary" size="36" class="mb-2" />
-      <h2 class="text-h5 font-weight-bold mb-2">Un projet à faire avancer ?</h2>
-      <p class="text-body-1 text-medium-emphasis mb-5">Parlons de vos besoins en développement, DevOps ou automatisation.</p>
-      <v-btn color="primary" size="large" rounded="lg" prepend-icon="i-mdi:email-outline" href="mailto:contact@chartman2-fr.ovh">Échanger sur votre projet</v-btn>
+    <v-card
+      class="cv-cta pa-6 pa-md-8 text-center"
+      rounded="xl"
+      elevation="0"
+    >
+      <v-icon
+        icon="i-mdi:handshake-outline"
+        color="primary"
+        size="36"
+        class="mb-2"
+      />
+      <h2 class="text-h5 font-weight-bold mb-2">
+        Un projet à faire avancer ?
+      </h2>
+      <p class="text-body-1 text-medium-emphasis mb-5">
+        Parlons de vos besoins en développement, DevOps ou automatisation.
+      </p>
+      <v-btn
+        color="primary"
+        size="large"
+        rounded="lg"
+        prepend-icon="i-mdi:email-outline"
+        href="mailto:contact@chartman2-fr.ovh"
+      >
+        Échanger sur votre projet
+      </v-btn>
     </v-card>
   </v-container>
 </template>

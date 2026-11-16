@@ -5,18 +5,17 @@ export const useBackendApi = async (
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   params?: object,
   isAuthenticateNeeded: boolean = false) => {
-    
   const methods = ['GET', 'POST', 'PUT', 'DELETE']
-  
+
   const cookies = useCookies(['token'])
   useNuxtApp().$apiErrors.value = []
 
-  let headers: { [key: string]: string } = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json'
+  const headers: { [key: string]: string } = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
   }
 
-  if (! methods.includes(method)) {
+  if (!methods.includes(method)) {
     throw Object.assign(new Error('Unsupported HTTP method'), { reason: 503 })
   }
 
@@ -30,12 +29,13 @@ export const useBackendApi = async (
 
   const options = {
     method,
-    headers
+    headers,
   }
 
   if (method == 'GET') {
     options.query = params
-  } else {
+  }
+  else {
     options.body = params
   }
 

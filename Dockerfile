@@ -1,4 +1,4 @@
-FROM node:lts-slim
+FROM node:26-slim
 
 ENV PNPM_HOME="/home/node/.local/share/pnpm"
 ENV PATH="/home/node/.local/share/pnpm:$PATH"

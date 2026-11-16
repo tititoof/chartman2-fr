@@ -29,7 +29,6 @@ export const CLinks = [
   },
 ]
 
-
 export const CSkills = [
   {
     title: 'Frontend',
@@ -87,7 +86,6 @@ export const CSkills = [
   },
 ]
 
-
 export const CSkillsCICD = {
   title: 'CI/CD',
   text: 'L\'intégration continue (CI) est un ensemble de pratiques utilisées en génie logiciel consistant à vérifier à chaque modification de code source que le résultat des modifications ne produit pas de régression dans l’application développée. Le déploiement continu ou Continuous deployment (CD) en anglais, est une approche d\'ingénierie logicielle dans laquelle les fonctionnalités logicielles sont livrées fréquemment par le biais de déploiements automatisés.',
@@ -130,7 +128,6 @@ export const CSkillsCICD = {
     },
   ],
 }
-
 
 export const CStats = [
   {

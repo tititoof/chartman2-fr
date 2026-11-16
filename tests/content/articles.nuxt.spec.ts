@@ -20,7 +20,7 @@ describe('articles content', () => {
     expect(articleFiles.length).toBeGreaterThan(0)
   })
 
-  it.each(articleFiles.map((file) => [relative(process.cwd(), file), file]))(
+  it.each(articleFiles.map(file => [relative(process.cwd(), file), file]))(
     '%s has valid frontmatter and required metadata', (_relativePath, file) => {
       const source = readFileSync(file as string, 'utf8')
       const match = source.match(/^---\s*\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)
@@ -47,7 +47,7 @@ describe('articles content', () => {
       return { file: relative(process.cwd(), file), id: parse(match![1]).article_id as string }
     })
     const duplicates = ids
-      .filter(({ id }, index) => ids.findIndex((article) => article.id === id) !== index)
+      .filter(({ id }, index) => ids.findIndex(article => article.id === id) !== index)
       .map(({ file, id }) => `${id} (${file})`)
 
     expect(duplicates).toEqual([])

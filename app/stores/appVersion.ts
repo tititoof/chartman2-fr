@@ -7,7 +7,7 @@ export const useAppVersionStore = defineStore('appVersion', {
   }),
   getters: {
     getVersion: state => state.version,
-    getOutdated: state => state.outdated
+    getOutdated: state => state.outdated,
   },
   actions: {
     markOutdated(version: string) {
@@ -18,12 +18,11 @@ export const useAppVersionStore = defineStore('appVersion', {
     reload() {
       this.outdated = false
       window.location.reload()
-    }
+    },
   },
   persist: true,
 })
 
 if (Object.hasOwn(import.meta, 'hot')) {
-    // @ts-ignore
-    import.meta.hot.accept(acceptHMRUpdate(useAppVersionStore, import.meta.hot))
+  import.meta.hot?.accept(acceptHMRUpdate(useAppVersionStore, import.meta.hot))
 }

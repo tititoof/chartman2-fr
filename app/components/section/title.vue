@@ -17,7 +17,10 @@
     class="mx-auto mb-8"
     width="56"
   >
-    <v-divider color="border" class="mb-1" />
+    <v-divider
+      color="border"
+      class="mb-1"
+    />
 
     <v-divider color="border" />
   </v-responsive>
