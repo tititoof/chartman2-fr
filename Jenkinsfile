@@ -144,8 +144,11 @@ def buildAndPushImage(List<String> tags, String appVersion) {
                 BUILD_ARGS=\$(grep -vE '^[[:space:]]*#|^[[:space:]]*\$|^(APP_ENVIRONMENT|APP_VERSION)=' "\$ENV_FILE" | sed 's/^/--opt build-arg:/' | tr '\\n' ' ')
                 BUILD_ARGS="\$BUILD_ARGS --opt build-arg:APP_ENVIRONMENT=${appEnvironment} --opt build-arg:APP_VERSION=${appVersion}"
                 # container() transmet l'environnement de l'agent (HOME=/home/jenkins, absent
-                # de l'image BuildKit) : buildkitd sans root a besoin de son propre HOME
-                HOME=/home/user DOCKER_CONFIG="\$WORKSPACE_TMP/docker" buildctl-daemonless.sh build \
+                # de l'image BuildKit) : buildkitd sans root a besoin de son propre HOME.
+                # BUILDCTL_CONNECT_RETRIES_MAX : 10 par défaut, soit ~2 s d'attente (pause de
+                # 0,1 s + 0,02 s par essai), trop court au premier build sur un nœud
+                # (« could not connect … after 10 trials », develop #139) ; 60 laisse ~43 s
+                HOME=/home/user DOCKER_CONFIG="\$WORKSPACE_TMP/docker" BUILDCTL_CONNECT_RETRIES_MAX=60 buildctl-daemonless.sh build \
                     --frontend dockerfile.v0 \
                     --local context=. \
                     --local dockerfile=. \
