@@ -23,14 +23,62 @@ def scanImageToDefectDojo(String image) {
         echo "Trivy en échec (code ${status}) : scan de l'image sauté, non bloquant"
         return
     }
-    sh '''
-        python3 -c 'import json, collections
-d = json.load(open("trivy-image.json"))
-c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.get("Vulnerabilities") or [])
-print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
-    '''
+    printTrivySummary('trivy-image.json')
     archiveArtifacts artifacts: 'trivy-image.json', allowEmptyArchive: true
     sendToDefectDojo('trivy-image.json', 'Trivy Scan', 'Image Docker')
+}
+
+// Scan Trivy des dépendances déclarées dans pnpm-lock.yaml, non bloquant, envoyé à
+// DefectDojo. Complète le scan de l'image : une CVE d'un paquet npm y est visible
+// sur toutes les branches, alors que l'image n'est construite que pour develop et main.
+def scanDependenciesToDefectDojo() {
+    def status = 0
+    container('trivy') {
+        status = sh(returnStatus: true, script: '''
+            trivy fs \
+                --server http://trivy.trivy.svc:4954 \
+                --scanners vuln \
+                --skip-dirs node_modules \
+                --exit-code 0 \
+                --ignore-unfixed \
+                --no-progress \
+                --quiet \
+                --format json \
+                --output trivy-deps.json \
+                .
+        ''')
+    }
+    if (status != 0) {
+        echo "Trivy en échec (code ${status}) : scan des dépendances sauté, non bloquant"
+        return
+    }
+    printTrivySummary('trivy-deps.json')
+    archiveArtifacts artifacts: 'trivy-deps.json', allowEmptyArchive: true
+    sendToDefectDojo('trivy-deps.json', 'Trivy Scan', 'Dépendances (Trivy)')
+}
+
+def printTrivySummary(String report) {
+    withEnv(["TRIVY_REPORT=${report}"]) {
+        sh '''
+            python3 -c 'import json, collections, os
+d = json.load(open(os.environ["TRIVY_REPORT"]))
+c = collections.Counter(v["Severity"] for r in d.get("Results", []) for v in r.get("Vulnerabilities") or [])
+print("Trivy (CVE corrigeables) :", dict(c) or "aucune")'
+        '''
+    }
+}
+
+// Alertes ouvertes du projet SonarQube, envoyées à DefectDojo au format générique
+// (.ci/sonar-to-defectdojo.py). À appeler dans withSonarQubeEnv() et avec SONAR_URL,
+// une fois l'analyse traitée par SonarQube. Jamais bloquant.
+def sendSonarQubeToDefectDojo(String projectKey) {
+    def status = sh(returnStatus: true, script: "python3 .ci/sonar-to-defectdojo.py '${projectKey}' sonarqube-findings.json")
+    if (status != 0) {
+        echo "Export des alertes SonarQube échoué (code ${status}), non bloquant"
+        return
+    }
+    archiveArtifacts artifacts: 'sonarqube-findings.json', allowEmptyArchive: true
+    sendToDefectDojo('sonarqube-findings.json', 'Generic Findings Import', 'SonarQube')
 }
 
 // Envoie un rapport sur le même test à chaque build (reimport-scan) : DefectDojo
@@ -153,6 +201,14 @@ pipeline {
                 }
             }
         }
+        // Dépendances (Trivy fs sur pnpm-lock.yaml), non bloquant
+        stage('Dependencies') {
+            steps {
+                script {
+                    scanDependenciesToDefectDojo()
+                }
+            }
+        }
         stage('Build') {
             steps {
                 script {
@@ -169,9 +225,21 @@ pipeline {
         // Bloquant sur les erreurs, pas sur les avertissements. Après le Build :
         // la config ESLint étend .nuxt/eslint.config.mjs, généré par « nuxt prepare »
         // (postinstall de pnpm install)
+        // Le rapport JSON part dans DefectDojo (avertissements compris) ; en cas
+        // d'erreur, ESLint est relancé avec la sortie lisible avant d'arrêter le build.
         stage('Lint') {
             steps {
-                sh 'pnpm run lint'
+                script {
+                    def status = sh(returnStatus: true, script: 'pnpm exec eslint . --format json --output-file eslint.json')
+                    archiveArtifacts artifacts: 'eslint.json', allowEmptyArchive: true
+                    if (fileExists('eslint.json')) {
+                        sendToDefectDojo('eslint.json', 'ESLint Scan', 'ESLint')
+                    }
+                    if (status != 0) {
+                        sh 'pnpm run lint'
+                        error("ESLint : code ${status}")
+                    }
+                }
             }
         }
         stage('Test') {
@@ -215,6 +283,10 @@ pipeline {
                         sleep(10)
                         timeout(time: 1, unit: 'HOURS') {
                             def qualitygate = waitForQualityGate()
+                            // Avant le verdict : les alertes partent aussi quand la gate échoue
+                            withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
+                                sendSonarQubeToDefectDojo('frontend-chartman2-fr.ovh')
+                            }
                             if (qualitygate.status != "OK") {
                                 env.WORKSPACE = pwd()
                                 error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
