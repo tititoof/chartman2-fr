@@ -3,7 +3,6 @@ title: "Docker – Jenkins"
 description: "Découvrez comment installer et configurer Jenkins avec Docker : master, agents SSH, pipeline CI/CD, intégration Forgejo, SonarQube et déploiement automatisé."
 icon: "i-mdi:docker"
 article_id: "7-docker-jenkins-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

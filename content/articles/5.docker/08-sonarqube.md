@@ -3,7 +3,6 @@ title: "Docker – SonarQube"
 description: "Découvrez comment installer et configurer SonarQube avec Docker : analyse de qualité de code, Quality Gate, intégration Jenkins et base PostgreSQL pour une CI/CD automatisée."
 icon: "i-mdi:docker"
 article_id: "8-docker-sonarqube-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

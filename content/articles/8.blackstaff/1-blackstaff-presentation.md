@@ -3,7 +3,6 @@ title: "Blackstaff : du ticket au code relu avec n8n et un LLM"
 description: "Présentation de Blackstaff, mon générateur de code maison : un workflow n8n, une base de connaissances, des modèles cloud et locaux, et un agent qui orchestre le tout, du ticket au code testé."
 icon: "i-mdi:wizard-hat"
 article_id: "blackstaff-presentation"
-color: "purple"
 draft: true
 publishedAt: '2026-10-20'
 ---

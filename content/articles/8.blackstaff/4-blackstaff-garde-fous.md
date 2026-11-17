@@ -3,7 +3,6 @@ title: "Blackstaff : les garde-fous d'un générateur de code"
 description: "Exécuter des commandes sans donner le socket Docker à n8n, détecter les réponses vides, tronquées ou qui modifient du code existant sans le dire, et mesurer chaque changement de prompt : les garde-fous ajoutés à Blackstaff, un incident après l'autre."
 icon: "i-mdi:shield-alert-outline"
 article_id: "blackstaff-garde-fous"
-color: "purple"
 draft: true
 publishedAt: '2026-11-10'
 ---

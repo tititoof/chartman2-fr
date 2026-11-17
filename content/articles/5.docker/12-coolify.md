@@ -3,7 +3,6 @@ title: "Docker – Coolify"
 description: "Automatisez vos déploiements Docker avec Coolify : intégration Jenkins, API REST, registry privé et GHCR. Guide complet d'installation et configuration."
 icon: "i-mdi:docker"
 article_id: "12-docker-coolify-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

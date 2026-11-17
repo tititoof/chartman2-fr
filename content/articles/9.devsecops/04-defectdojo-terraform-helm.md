@@ -3,7 +3,6 @@ title: "Lab DevSecOps (4/11) : DefectDojo sur k3s avec Terraform, Helm et une ba
 description: "Déployer DefectDojo sur k3s : base créée par Ansible sur un PostgreSQL partagé, Secrets Kubernetes qui ne passent jamais par Terraform, chart Helm piloté par Terraform, et cinq pannes diagnostiquées une à une."
 icon: "i-mdi:shield-bug-outline"
 article_id: "04-devsecops-defectdojo-terraform-helm"
-color: "orange"
 draft: true
 publishedAt: '2026-10-26'
 ---

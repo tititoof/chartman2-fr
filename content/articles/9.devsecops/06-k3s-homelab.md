@@ -3,7 +3,6 @@ title: "Lab DevSecOps (6/11) : passer le homelab sous k3s, mesurer avant de migr
 description: "Trois vieux serveurs Dell, une quinzaine de stacks Docker Compose et des disques durs à plateaux : avant d'installer un cluster k3s à trois nœuds, on mesure. Ce que fio révèle des contrôleurs RAID, pourquoi trois serveurs etcd et pas quatre, le plan de migration du homelab, et ce que la réalité y a changé."
 icon: "i-mdi:server-network"
 article_id: "06-devsecops-k3s-homelab"
-color: "orange"
 draft: true
 publishedAt: '2026-10-28'
 ---

@@ -3,7 +3,6 @@ title: "Lab DevSecOps (2/11) : premiers pas avec Terraform, l'état et la dériv
 description: "Décrire des conteneurs Docker avec Terraform sur un serveur distant : plan, apply, détection de dérive, remplacement de ressource, import d'un conteneur créé à la main, et la démonstration que Docker contourne UFW."
 icon: "i-mdi:terraform"
 article_id: "02-devsecops-terraform-premiers-pas"
-color: "orange"
 draft: true
 publishedAt: '2026-10-26'
 ---

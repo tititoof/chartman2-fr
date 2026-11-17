@@ -3,7 +3,6 @@ title: "Blackstaff : donner du contexte à un LLM sans le noyer"
 description: "Configuration par projet, fiches de faits tirées des specs et de la documentation, conventions au format OKF : comment Blackstaff choisit ce qu'il envoie au modèle, et pourquoi tout ce qui peut être décidé une fois sort du prompt."
 icon: "i-mdi:book-open-variant"
 article_id: "blackstaff-connaissances"
-color: "purple"
 draft: true
 publishedAt: '2026-10-27'
 ---

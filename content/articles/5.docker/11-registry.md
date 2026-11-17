@@ -3,7 +3,6 @@ title: "Docker – Registry"
 description: "Découvrez comment installer et configurer un registry Docker privé avec Docker : stockage local d’images, intégration Jenkins et Coolify, interface web et push/pull sécurisés."
 icon: "i-mdi:docker"
 article_id: "11-docker-registry-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

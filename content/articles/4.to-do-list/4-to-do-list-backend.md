@@ -2,7 +2,6 @@
 title: 'Todo List — Backend : initialisation'
 description: 'Mise en place du projet Rails 8 API avec Docker et PostgreSQL'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
-color: 'secondary'
 article_id: '4-to-do-list-backend'
 draft: false
 publishedAt: '2026-07-01'

@@ -2,7 +2,6 @@
 title: 'Todo List — Backend : authentification'
 description: 'Devise, devise-api, User model, migrations et tests RSpec'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
-color: 'secondary'
 article_id: '5-to-do-list-backend-auth'
 draft: false
 publishedAt: '2026-07-01'

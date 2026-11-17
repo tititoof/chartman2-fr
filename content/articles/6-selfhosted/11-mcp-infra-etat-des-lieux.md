@@ -3,7 +3,6 @@ title: 'MCP — état des lieux de mon homelab'
 description: "Plusieurs semaines après avoir branché Ollama sur ma stack DevOps via MCP, voici ce qui tourne réellement : qui héberge quoi, comment chaque outil gère MCP différemment, et ce que j'ai découvert en l'auditant."
 icon: 'i-mdi:robot-industrial-outline'
 article_id: 'mcp-infra-etat-des-lieux'
-color: 'teal'
 draft: false
 publishedAt: '2026-09-08'
 ---

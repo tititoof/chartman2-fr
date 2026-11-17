@@ -3,7 +3,6 @@ title: 'Docker compose'
 description: 'Découvrez Docker Compose, l’outil simple et puissant pour définir, lancer et gérer plusieurs conteneurs Docker dans un seul fichier YAML.'
 icon: 'i-mdi:docker'
 article_id: '2-docker-compose-description'
-color: "blue"
 draft: false
 publishedAt: '2026-06-03'
 ---

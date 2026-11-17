@@ -3,7 +3,6 @@ title: "Lab DevSecOps (1/11) : préparer et durcir un serveur Debian avec Ansibl
 description: "Premier épisode d'un lab d'infrastructure as code sur un serveur du homelab : inventaire, rôles, durcissement SSH, UFW et fail2ban avec Ansible, et tout ce qui n'a pas marché du premier coup."
 icon: "i-mdi:ansible"
 article_id: "01-devsecops-ansible-durcissement"
-color: "orange"
 draft: true
 publishedAt: '2026-10-26'
 ---
