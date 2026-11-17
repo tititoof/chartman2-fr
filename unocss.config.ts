@@ -1,37 +1,17 @@
 import { defineConfig, presetIcons } from 'unocss'
 
 export default defineConfig({
+  // Icons stored as data, outside the .vue files UnoCSS scans by default: category icons
+  // (app/utils/*.ts) and article icons (content frontmatter, rendered dynamically).
+  content: {
+    filesystem: ['app/utils/**/*.ts', 'content/**/*.md'],
+  },
   safelist: [
-    'i-mdi:view-dashboard-outline',
-    'i-mdi:linkedin',
-    'i-mdi:language-ruby-on-rails',
-    'i-mdi:laravel',
-    'i-mdi:symfony',
-    'i-mdi:database',
-    'i-mdi:nuxt',
-    'i-mdi:vuetify',
-    'i-mdi:language-ruby-on-rails',
-    'i-mdi:vuejs',
-    'i-mdi:docker',
-    'i-mdi:file-account-outline',
-    'i-mdi:table-large',
-    'i-mdi:sitemap-outline',
-    'i-mdi:robot-outline',
     'i-mdi:content-copy',
-    'i-mdi:note-multiple-outline',
-    'i-mdi:link-variant',
-    'i-mdi:database-eye',
-    'i-mdi:book-open-page-variant',
-    'i-mdi:robot-industrial-outline',
-    'i-mdi:source-branch',
-    'i-mdi:palette-swatch-outline',
-    'i-mdi:book-open-variant',
-    'i-mdi:shield-alert-outline',
     'i-mdi:cloud-cog-outline',
     'i-mdi:karate',
     'i-mdi:school-outline',
     'i-mdi:server',
-    'i-mdi:server-network',
   ],
   presets: [
     presetIcons({
