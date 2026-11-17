@@ -4,6 +4,7 @@ description: "Utiliser les WeakMap et Enum en PHP moderne avec Laravel et Symfon
 icon: "i-mdi:language-php"
 color: "indigo"
 article_id: "1-php-weakmap-enum"
+publishedAt: '2026-06-08'
 ---
 
 #### 📌 WeakMap & Enum en PHP

@@ -3,7 +3,6 @@ title: "Docker – Sauvegardes"
 description: "Sauvegarder automatiquement vos bases de données PostgreSQL avec Postgresus et RustFS"
 icon: "i-mdi:docker"
 article_id: "13-docker-backup-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

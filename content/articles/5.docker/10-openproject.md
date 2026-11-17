@@ -3,7 +3,6 @@ title: "Docker – OpenProject"
 description: "Découvrez comment installer et configurer OpenProject avec Docker : plateforme de gestion de projets open-source, Kanban, roadmap, wiki et intégration Forgejo et Jenkins."
 icon: "i-mdi:docker"
 article_id: "10-docker-openproject-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

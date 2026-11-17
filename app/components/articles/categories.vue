@@ -60,72 +60,14 @@
 </template>
 
 <script setup lang="ts">
-const articles = reactive([
-  {
-    type: 'icon',
-    src: 'i-mdi:language-ruby',
-    color: 'red',
-    title: 'Ruby',
-    text: 'Ruby & Ruby on Rails.',
-    link: '/blog/category/ror',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:nuxt',
-    color: 'green',
-    title: 'Nuxt',
-    text: 'Framework Nuxt, Vuetify',
-    link: '/blog/category/nuxt',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:language-php',
-    color: 'secondary',
-    title: 'PHP',
-    text: 'Articles autour de PHP.',
-    link: '/blog/category/php',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:docker',
-    color: 'blue',
-    title: 'Docker',
-    text: 'Conteneurisation, Traefik, CI/CD et infrastructure 100% self-hosted.',
-    link: '/blog/category/docker',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:checkbox-marked-circle-plus-outline',
-    color: 'secondary',
-    title: 'To-do list',
-    text: 'Projet full-stack Nuxt 4 + Rails 8 : authentification BFF, API REST et tests.',
-    link: '/blog/category/todolist',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:shield-home',
-    color: 'teal',
-    title: 'Self-Hosted',
-    text: 'Divers services que l\'on peut auto-héberger.',
-    link: '/blog/category/selfhosted',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:wizard-hat',
-    color: 'purple',
-    title: 'Blackstaff',
-    text: 'Génération de code avec n8n, Ollama et un LLM local : architecture et retours de mesures.',
-    link: '/blog/category/blackstaff',
-  },
-  {
-    type: 'icon',
-    src: 'i-mdi:server-security',
-    color: 'orange',
-    title: 'Lab DevSecOps',
-    text: 'Ansible, Terraform, k3s, DefectDojo et CloudNativePG : un lab d\'infrastructure as code, puis la migration de tout le homelab sous Kubernetes.',
-    link: '/blog/category/devsecops',
-  },
-])
+const articles = categories.map(({ slug, icon, color, title, text }) => ({
+  type: 'icon',
+  src: icon,
+  color,
+  title,
+  text,
+  link: `/blog/category/${slug}`,
+}))
 </script>
 
 <style lang="css" scoped>

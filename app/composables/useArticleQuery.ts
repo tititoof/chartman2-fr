@@ -8,12 +8,17 @@ interface Whereable<T> {
   where(field: string, op: SQLOperator, value: unknown): T
 }
 
+const today = () => new Date().toISOString().split('T')[0]!
+
+// Une seule règle « publié », en SQL (listes) et en JS (page article) :
+// pas brouillon et publishedAt (obligatoire dans le schéma) déjà passé.
 export const useArticleQuery = ({ dev = import.meta.dev } = {}) => {
+  const isPublished = (article: { draft: boolean, publishedAt: string }) =>
+    dev || (!article.draft && article.publishedAt <= today())
+
   // Filtre standard à appliquer sur toutes les requêtes d'articles
   const applyPublishFilter = <T extends Whereable<T>>(query: T): T => {
     if (dev) return query // en dev, tout est visible
-
-    const today = new Date().toISOString().split('T')[0]
 
     // Uniquement des opérateurs de SQLOperator : Nuxt Content recopie l'opérateur
     // tel quel dans le SQL, et son contrôle (assertSafeQuery) refuse par exemple
@@ -21,8 +26,8 @@ export const useArticleQuery = ({ dev = import.meta.dev } = {}) => {
     // draft a false par défaut dans le schéma : jamais NULL.
     return query
       .where('draft', '=', false)
-      .where('publishedAt', '<=', today)
+      .where('publishedAt', '<=', today())
   }
 
-  return { applyPublishFilter }
+  return { applyPublishFilter, isPublished }
 }

@@ -3,7 +3,6 @@ title: "Lab DevSecOps (7/11) : le socle du cluster, trois serveurs et une seule 
 description: "Trois serveurs k3s et un agent installés par Ansible, un pare-feu entre nœuds, MetalLB qui partage une seule IP entre HTTPS et SSH, Longhorn pour le stockage, et un certificat wildcard renouvelé tout seul par cert-manager. Avec les pièges DNS qui ont coûté le plus de temps."
 icon: "i-mdi:server-network"
 article_id: "07-devsecops-k3s-socle"
-color: "orange"
 draft: true
 publishedAt: '2026-10-29'
 ---

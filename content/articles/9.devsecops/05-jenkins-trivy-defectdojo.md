@@ -3,7 +3,6 @@ title: "Lab DevSecOps (5/11) : envoyer les scans Trivy de Jenkins vers DefectDoj
 description: "Brancher un pipeline Jenkins sur DefectDojo : scan Trivy de l'image Docker en JSON, résumé dans le log, import automatique via l'API, sans jamais exposer le jeton. Et ce que révèle le premier scan."
 icon: "i-mdi:pipe"
 article_id: "05-devsecops-jenkins-trivy-defectdojo"
-color: "orange"
 draft: true
 publishedAt: '2026-10-26'
 ---

@@ -1,37 +1,24 @@
+import { globSync, readFileSync } from 'node:fs'
+
 import { defineConfig, presetIcons } from 'unocss'
 
 export default defineConfig({
+  // Icons stored as data, outside the .vue files UnoCSS scans by default.
+  content: {
+    // Article icons: content frontmatter, rendered dynamically.
+    filesystem: ['content/**/*.md'],
+    // Category, skill and link icons in app/utils. `filesystem` files still go
+    // through the pipeline filter, which drops .ts: `inline` is extracted as is.
+    // Read once at startup: restart the dev server after adding an icon there.
+    inline: globSync('app/utils/*.ts').map(file => readFileSync(file, 'utf8')),
+  },
+  // Icon names built at runtime only.
   safelist: [
-    'i-mdi:view-dashboard-outline',
-    'i-mdi:linkedin',
-    'i-mdi:language-ruby-on-rails',
-    'i-mdi:laravel',
-    'i-mdi:symfony',
-    'i-mdi:database',
-    'i-mdi:nuxt',
-    'i-mdi:vuetify',
-    'i-mdi:language-ruby-on-rails',
-    'i-mdi:vuejs',
-    'i-mdi:docker',
-    'i-mdi:file-account-outline',
-    'i-mdi:table-large',
-    'i-mdi:sitemap-outline',
-    'i-mdi:robot-outline',
     'i-mdi:content-copy',
-    'i-mdi:note-multiple-outline',
-    'i-mdi:link-variant',
-    'i-mdi:database-eye',
-    'i-mdi:book-open-page-variant',
-    'i-mdi:robot-industrial-outline',
-    'i-mdi:source-branch',
-    'i-mdi:palette-swatch-outline',
-    'i-mdi:book-open-variant',
-    'i-mdi:shield-alert-outline',
     'i-mdi:cloud-cog-outline',
     'i-mdi:karate',
     'i-mdi:school-outline',
     'i-mdi:server',
-    'i-mdi:server-network',
   ],
   presets: [
     presetIcons({

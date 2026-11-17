@@ -3,7 +3,6 @@ title: "Docker"
 description: "Apprenez Docker, la plateforme open source qui permet de créer, exécuter et déployer des applications dans des conteneurs légers, portables et reproductibles."
 icon: "i-mdi:docker"
 article_id: "1-docker-description"
-color: "blue"
 draft: false
 publishedAt: '2026-06-03'
 ---

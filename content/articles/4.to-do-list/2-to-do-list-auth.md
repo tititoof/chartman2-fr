@@ -2,7 +2,6 @@
 title: 'Todo List — Frontend : authentification'
 description: 'Sessions sécurisées avec nuxt-auth-utils, server routes BFF, login et inscription'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
-color: 'secondary'
 article_id: '2-to-do-list-auth'
 draft: false
 publishedAt: '2026-07-01'

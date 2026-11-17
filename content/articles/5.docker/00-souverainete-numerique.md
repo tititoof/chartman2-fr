@@ -3,7 +3,6 @@ title: "self-hosted"
 description: "Découvrez pourquoi héberger soi-même ses outils DevOps et ses données - souveraineté numérique, réduction de la dépendance aux SaaS, contrôle, réversibilité et apprentissage technique."
 icon: "i-mdi:docker"
 article_id: "0-pourquoi-heberger-soi-meme-souverainete-numerique-self-hosted"
-color: "blue"
 draft: false
 publishedAt: '2026-06-03'
 ---

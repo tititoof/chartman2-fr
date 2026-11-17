@@ -3,7 +3,6 @@ title: "Docker – Traefik : restreindre l'accès avec les middlewares"
 description: "Limiter un service Docker à votre réseau local avec le middleware ipAllowList de Traefik, comprendre pourquoi Docker masque parfois l'IP du client, et combiner redirection HTTPS et authentification."
 icon: "i-mdi:shield-lock-outline"
 article_id: "15-docker-traefik-middlewares"
-color: "blue"
 draft: true
 publishedAt: '2026-10-06'
 ---

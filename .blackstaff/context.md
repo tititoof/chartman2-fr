@@ -1,66 +1,48 @@
 ---
 type: ProjectContext
-project: mon-projet
+project: chartman2.fr
 # Ce fichier est injecté dans chaque prompt Blackstaff.
-# Il donne au modèle le vocabulaire métier du projet pour
-# que les noms générés soient cohérents avec l'existant.
-# Garder concis : 300-500 mots max.
+# Il donne au modèle le vocabulaire du site pour que les noms
+# générés soient cohérents avec l'existant. Garder concis.
 ---
 
-# Contexte métier — mon-projet
+# Contexte — chartman2.fr
 
 ## Domaine
 
-Application de gestion de commandes B2B permettant aux clients professionnels
-de passer des commandes, suivre leur livraison et gérer leur facturation.
+Site personnel et blog technique : tutoriels et retours d'expérience (Docker, self-hosted,
+DevSecOps, Ruby on Rails, Nuxt), CV et études de cas. Pas de backend ni de base de données
+applicative : les articles sont des fichiers Markdown lus par Nuxt Content.
 
-## Entités principales
+## Entités
 
-| Entité | Backend (Rails) | Frontend (Nuxt) | Description |
-|---|---|---|---|
-| Commande | `Order` | `Order` | Commande client avec lignes et paiement |
-| Ligne de commande | `OrderItem` | `OrderItem` | Produit + quantité + prix unitaire |
-| Client | `Customer` | `Customer` | Entreprise cliente avec contrat |
-| Produit | `Product` | `Product` | Référence catalogue avec stock |
-| Facture | `Invoice` | `Invoice` | Générée à la confirmation de commande |
-| Utilisateur | `User` | `User` | Compte avec rôle (admin, commercial, client) |
+| Entité | Où | Description |
+|---|---|---|
+| Article | `content/articles/<dossier>/*.md` | Frontmatter `title`, `description`, `icon`, `article_id` (clé d'URL, unique), `publishedAt` (obligatoire, `YYYY-MM-DD`), `draft`, `color` (optionnel) |
+| Catégorie | `app/utils/categories.ts` | Source unique : `slug` d'URL, `dirs` (dossiers d'articles), `icon`, `color`, texte de la carte |
+| Étude de cas | `app/components/partial/main/case_studies.vue` | Renvoie vers un article par son `article_id` |
 
-## Statuts de commande
+## Règles
 
-```
-draft → confirmed → processing → shipped → delivered
-                 ↘ cancelled
-```
+- Une seule collection Nuxt Content (`content`) ; une catégorie se filtre par préfixe de `stem`
+  (`articles/5.docker/…`).
+- Publié = pas `draft` et `publishedAt` passé : `useArticleQuery` (`applyPublishFilter` pour les
+  listes, `isPublished` pour une page).
+- La couleur d'un article vient de sa catégorie, sauf `color` dans son frontmatter.
+- Icônes `i-mdi:*` via UnoCSS : une icône écrite dans un article (`content.filesystem`) ou dans
+  `app/utils/*.ts` (`content.inline`) est lue automatiquement ; la safelist ne sert qu'aux noms
+  construits à l'exécution.
+- Textes d'interface via i18n ; code, identifiants et commentaires en anglais.
 
 ## Conventions de nommage
 
-- Services backend : `app/services/{domain}/` (ex: `app/services/orders/`)
-- Jobs : `app/jobs/{action}_{entity}_job.rb` (ex: `process_payment_job.rb`)
-- Composables frontend : `use{Entity}` (ex: `useOrders`, `useCart`)
-- Stores Pinia : `use{Entity}Store` (ex: `useOrderStore`)
-- API routes : `/api/v1/{entities}` (pluriel snake_case)
+- Composants par dossier : `app/components/<dossier>/<nom>.vue` (ex. `articles/categories.vue`).
+- Composables `use<Nom>` dans `app/composables/`, utilitaires dans `app/utils/` (auto-importés).
+- Tests Vitest dans `tests/`, en miroir de `app/` ; e2e Playwright dans `tests/e2e/`.
 
-## Relations clés
-
-- `Customer` has_many `Orders`
-- `Order` has_many `OrderItems`
-- `OrderItem` belongs_to `Product`
-- `Order` has_one `Invoice` (créée à la confirmation)
-- `User` belongs_to `Customer` (sauf rôle admin)
-
-## Règles métier importantes
-
-- Un `Order` en statut `shipped` ou `delivered` ne peut pas être annulé
-- Le stock `Product` est réservé à la confirmation, libéré à l'annulation
-- Les prix sont en euros (centimes en base, euros dans l'API et le frontend)
-- Les `Invoice` sont numérotées `FACT-YYYY-NNNN` (année + séquence)
-- Tout changement de statut d'`Order` déclenche une notification multi-canal
-
-## Stack technique détaillée
+## Stack
 
 ```
-Backend  : Rails 8.1 + PostgreSQL + Sidekiq + Redis
-Frontend : Nuxt 4.4 + Pinia + Vuetify 3 + TypeScript
-Auth     : Devise + JWT (backend) / cookie httpOnly (frontend)
-API      : JSON REST, snake_case, pagination Kaminari
+Nuxt 4 + Vuetify + TypeScript + Nuxt Content (SQLite au build) + UnoCSS (presetIcons)
+Tests : Vitest (@nuxt/test-utils), Playwright ; CI Jenkins, staging depuis develop
 ```
