@@ -3,7 +3,6 @@ title: "Docker - Forgejo"
 description: "Découvrez Forgejo avec Docker : forge Git self-hosted complète pour gérer vos dépôts, pull requests, issues et projets, sans dépendre de GitHub ou GitLab."
 icon: "i-mdi:docker"
 article_id: "6-docker-forgejo-init"
-color: "blue"
 draft: false
 publishedAt: '2026-07-08'
 ---

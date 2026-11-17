@@ -3,7 +3,6 @@ title: "CI/CD : ajouter la sécurité au pipeline Jenkins pour PHP, Ruby et JS"
 description: "Secrets, failles dans le code, dépendances vulnérables, scan de l'application en ligne : comment ajouter Gitleaks, Opengrep, Brakeman, Trivy et Nuclei au pipeline Jenkins et centraliser les résultats dans SonarQube."
 icon: "i-mdi:shield-check-outline"
 article_id: "16-docker-cicd-securite"
-color: "blue"
 draft: true
 publishedAt: '2026-10-13'
 ---

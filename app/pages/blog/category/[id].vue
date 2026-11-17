@@ -31,7 +31,7 @@
                 class="mx-auto mt-2"
                 size="88"
                 :icon="icon"
-                :color="color"
+                :color="color ?? category.color"
               />
               <p class="article-card-cat text-wrap">
                 {{ title }}
@@ -99,9 +99,17 @@
 const { applyPublishFilter } = useArticleQuery()
 const route = useRoute()
 
-const { data: articles } = await useAsyncData('content', () =>
+const category = findCategory(route.params.id as string)
+if (!category) {
+  throw createError({ statusCode: 404, statusMessage: 'Category not found', fatal: true })
+}
+
+// Key per category: a shared key would let client-side navigation reuse the previous list
+const { data: articles } = await useAsyncData(`category-${category.slug}`, () =>
   applyPublishFilter(
-    queryCollection(route.params.id as string)
+    queryCollection('content')
+      .orWhere(group => categoryStemPrefixes(category).reduce(
+        (query, prefix) => query.where('stem', 'LIKE', `${prefix}%`), group))
       .order('publishedAt', 'ASC')
       // Plusieurs articles d'une série partagent la même date : le nom de fichier
       // (préfixe 01-, 02-…) départage, sinon l'ordre n'est pas garanti

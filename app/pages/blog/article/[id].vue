@@ -170,15 +170,9 @@ const { data: article } = await useAsyncData('content-' + route.params.id, () =>
   .where('article_id', '=', route.params.id)
   .first())
 
-const today = new Date().toISOString().split('T')[0]
+const { applyPublishFilter, isPublished: isArticlePublished } = useArticleQuery()
 
-const isPublished = computed(() => {
-  if (!article.value) return false
-  if (import.meta.dev) return true // dev → tout visible
-  if (article.value.draft) return false // brouillon → caché
-  if (!article.value.publishedAt) return true // pas de date → visible
-  return article.value.publishedAt <= today // date passée → visible
-})
+const isPublished = computed(() => !!article.value && isArticlePublished(article.value))
 
 useSeoMeta({
   title: () => article.value?.title,
@@ -191,7 +185,6 @@ useSeoMeta({
 const tocLinks = computed(() => article.value?.body?.toc?.links ?? [])
 
 // Articles du même dossier, dans le même ordre que la page catégorie
-const { applyPublishFilter } = useArticleQuery()
 const categoryDir = computed(() => article.value?.stem?.split('/').slice(0, -1).join('/'))
 
 const { data: siblings } = await useAsyncData('siblings-' + route.params.id, () =>

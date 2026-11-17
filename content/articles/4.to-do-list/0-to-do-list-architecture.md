@@ -2,7 +2,6 @@
 title: 'Todo List — Nuxt & Ruby on Rails'
 description: 'Architecture, stack technique et plan de la série'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
-color: 'secondary'
 article_id: '0-to-do-list-architecture'
 draft: false
 publishedAt: '2026-07-01'

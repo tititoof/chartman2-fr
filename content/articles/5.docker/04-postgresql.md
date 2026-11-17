@@ -3,7 +3,6 @@ title: "Docker - PostgreSQL"
 description: "Découvrez comment installer et configurer PostgreSQL avec Docker : volumes persistants, healthcheck, variables d’environnement et scripts d’initialisation."
 icon: "i-mdi:docker"
 article_id: "4-docker-postgresql-init"
-color: "blue"
 draft: false
 publishedAt: '2026-06-03'
 ---

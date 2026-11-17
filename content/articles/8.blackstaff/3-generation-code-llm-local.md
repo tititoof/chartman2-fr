@@ -3,7 +3,6 @@ title: "Blackstaff : ce que 13 vrais tickets m'ont appris sur la génération de
 description: "Blackstaff, n8n, Ollama et qwen2.5-coder:7b sur une carte graphique de 4 Go : j'ai rejoué de vrais commits de mon projet Rails et noté chaque génération avec les vraies specs. Ce qui marche, ce qui ne marche pas, et pourquoi le problème n'est presque jamais le code lui-même."
 icon: "i-mdi:robot-outline"
 article_id: "generation-code-llm-local"
-color: "purple"
 draft: true
 publishedAt: '2026-11-03'
 ---

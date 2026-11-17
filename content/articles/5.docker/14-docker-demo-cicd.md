@@ -3,7 +3,6 @@ title: "De Git à OpenProject : une CI/CD complète avec Forgejo, Jenkins et Son
 description: "Après la théorie, la pratique : une démo complète où un simple push déclenche Jenkins, les tests, SonarQube, le Quality Gate et un commentaire dans OpenProject. Architecture, pièges rencontrés et code réel consultable."
 icon: "i-mdi:docker"
 article_id: "14-docker-demo-cicd"
-color: "blue"
 draft: false
 publishedAt: '2026-09-21'
 ---

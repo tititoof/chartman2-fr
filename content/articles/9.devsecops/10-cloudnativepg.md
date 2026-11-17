@@ -3,7 +3,6 @@ title: "Lab DevSecOps (10/11) : PostgreSQL dans le cluster avec CloudNativePG"
 description: "Remplacer le PostgreSQL partagé en Docker par trois instances répliquées dans k3s : réplication synchrone en quorum, sauvegardes continues hors du cluster, un test de restauration qui prouve quelque chose, des pannes chronométrées, puis la bascule de six bases, une par une. Avec le client invisible trouvé au dernier moment."
 icon: "i-mdi:database-sync-outline"
 article_id: "10-devsecops-cloudnativepg"
-color: "orange"
 draft: true
 publishedAt: '2026-10-29'
 ---

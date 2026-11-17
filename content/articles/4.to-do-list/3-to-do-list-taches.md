@@ -2,7 +2,6 @@
 title: 'Todo List — Frontend : tâches & scopes'
 description: 'Composants, store Pinia et persistance locale — sans backend'
 icon: 'i-mdi:checkbox-marked-circle-plus-outline'
-color: 'secondary'
 article_id: '3-to-do-list-taches'
 draft: false
 publishedAt: '2026-07-01'

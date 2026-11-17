@@ -3,7 +3,6 @@ title: "Docker - Traefik"
 description: "Découvrez comment configurer Traefik avec Docker : reverse proxy, routage automatique, HTTPS et certificats Let's Encrypt pour vos conteneurs."
 icon: "i-mdi:docker"
 article_id: "3-docker-traefik-introduction"
-color: "blue"
 draft: false
 publishedAt: '2026-06-03'
 ---

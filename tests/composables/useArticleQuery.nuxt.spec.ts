@@ -32,4 +32,13 @@ describe('Composable: useArticleQuery', () => {
     useArticleQuery({ dev: true }).applyPublishFilter(query)
     expect(query.conditions).toHaveLength(0)
   })
+
+  it('applique la même règle « publié » à une page article', () => {
+    const { isPublished } = useArticleQuery({ dev: false })
+
+    expect(isPublished({ draft: false, publishedAt: '2024-04-11' })).toBe(true)
+    expect(isPublished({ draft: true, publishedAt: '2024-04-11' })).toBe(false)
+    expect(isPublished({ draft: false, publishedAt: '2999-01-01' })).toBe(false)
+    expect(useArticleQuery({ dev: true }).isPublished({ draft: true, publishedAt: '2999-01-01' })).toBe(true)
+  })
 })

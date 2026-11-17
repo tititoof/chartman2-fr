@@ -3,7 +3,6 @@ title: "Lab DevSecOps (9/11) : Jenkins dans Kubernetes, des agents en pods et de
 description: "Déplacer Jenkins de Docker Compose vers k3s : retrouver la version qui tournait vraiment, copier le JENKINS_HOME avec ses secrets, des agents éphémères en pods, BuildKit sans root à la place du docker.sock, et les pièges des premiers builds (HOME, mémoire de SonarQube, tag latest, déploiement qui ne déployait rien)."
 icon: "i-mdi:robot-industrial-outline"
 article_id: "09-devsecops-jenkins-kubernetes"
-color: "orange"
 draft: true
 publishedAt: '2026-10-29'
 ---

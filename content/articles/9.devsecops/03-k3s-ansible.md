@@ -3,7 +3,6 @@ title: "Lab DevSecOps (3/11) : un cluster Kubernetes avec k3s, installé par Ans
 description: "Installer k3s avec un rôle Ansible sur un serveur durci : version figée, pare-feu, kubeconfig récupéré sans fuite de secret, premiers objets Kubernetes, auto-réparation, et un manifeste vérifié par Trivy."
 icon: "i-mdi:kubernetes"
 article_id: "03-devsecops-k3s-ansible"
-color: "orange"
 draft: true
 publishedAt: '2026-10-26'
 ---
