@@ -29,8 +29,9 @@ applicative : les articles sont des fichiers Markdown lus par Nuxt Content.
 - Publié = pas `draft` et `publishedAt` passé : `useArticleQuery` (`applyPublishFilter` pour les
   listes, `isPublished` pour une page).
 - La couleur d'un article vient de sa catégorie, sauf `color` dans son frontmatter.
-- Icônes `i-mdi:*` via UnoCSS : une icône écrite dans `app/utils/*.ts` ou un article est lue
-  automatiquement ; la safelist ne sert qu'aux noms construits à l'exécution.
+- Icônes `i-mdi:*` via UnoCSS : une icône écrite dans un article (`content.filesystem`) ou dans
+  `app/utils/*.ts` (`content.inline`) est lue automatiquement ; la safelist ne sert qu'aux noms
+  construits à l'exécution.
 - Textes d'interface via i18n ; code, identifiants et commentaires en anglais.
 
 ## Conventions de nommage
