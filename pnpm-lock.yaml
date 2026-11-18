@@ -41,9 +41,6 @@ importers:
       nuxt:
         specifier: ^4.6.4
         version: 4.6.4(64bb49f52b5cb4118ea1f8dc2b37d477)
-      nuxt-snackbar:
-        specifier: ^1.4.0
-        version: 1.4.0(@nuxt/schema@4.6.4)(confbox@0.3.2)(dotenv@18.0.10)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.139.0)(rolldown@1.2.19)(unplugin@3.7.0(@rollup/wasm-node@4.68.3)(esbuild@0.28.2)(rolldown@1.2.19)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.33))(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33)))(vue@3.5.45(typescript@5.9.3))
       pinia:
         specifier: ^4.1.0
         version: 4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.45(typescript@5.9.3))
@@ -6213,9 +6210,6 @@ packages:
       pusher-js:
         optional: true
 
-  nuxt-snackbar@1.4.0:
-    resolution: {integrity: sha512-kHvfrLNG9GnXoLm1AfR9Inqhi8UAVRFNdK/oC0akwZUMsxPqPiMNXRs28CYMb1ffO8Ni3D3UNHPIXzuMsIUtfg==}
-
   nuxt3-aos@1.0.19:
     resolution: {integrity: sha512-ewnYPmmG9q1Aq4z4uBOIuP0CKBjbr4ZmYyLpiOucMS/nV3+k5wfA91Yd60IlU/9WYxYrQcgiSSzfAVUkVSxC3g==}
 
@@ -7115,9 +7109,6 @@ packages:
     resolution: {integrity: sha512-75voc/9G4rDIJleOo4jPvN4/YC4GRZrY8yy1uU4lwrB3XEQbWve8zXoO5No4eFrGcTAMYyoY67p8jRQdtA1HbA==}
     engines: {node: '>=12'}
 
-  tiny-emitter@2.1.0:
-    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
-
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
@@ -7773,16 +7764,6 @@ packages:
         optional: true
       vite:
         optional: true
-
-  vue3-icon@3.0.3:
-    resolution: {integrity: sha512-B9/f/nwbVBUsBQVSNp7nFIsD/uM/M9MbK38FQFXs8IMSClrEG0gXWtyViQN28na25zpsoKH8Blrzcn/LbUV76Q==}
-    peerDependencies:
-      vue: ^3.0.0
-
-  vue3-snackbar@2.6.0:
-    resolution: {integrity: sha512-p56mAVU35lDsZVGYtcq5PWyBNMf0gGex8Sc1n5alKIsmORZlq4CFZ/Pt3f9i8pblhlzRF5iTkyvWqpOtcUPEwQ==}
-    peerDependencies:
-      vue: ^3.0.0
 
   vue@3.5.45:
     resolution: {integrity: sha512-3cvsib8m9c0vB24+MDKsgcW4+Da4xaBl9Z/5Tbm2pmSIsRPxcil4cdXjXlVsmJ2g64XJo5h+IRd7rsdGT9pZaw==}
@@ -15199,24 +15180,6 @@ snapshots:
       - vue
       - zod
 
-  nuxt-snackbar@1.4.0(@nuxt/schema@4.6.4)(confbox@0.3.2)(dotenv@18.0.10)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.139.0)(rolldown@1.2.19)(unplugin@3.7.0(@rollup/wasm-node@4.68.3)(esbuild@0.28.2)(rolldown@1.2.19)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.33))(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33)))(vue@3.5.45(typescript@5.9.3)):
-    dependencies:
-      '@nuxt/kit': 4.6.4(@nuxt/schema@4.6.4)(confbox@0.3.2)(dotenv@18.0.10)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.139.0)(rolldown@1.2.19)(unplugin@3.7.0(@rollup/wasm-node@4.68.3)(esbuild@0.28.2)(rolldown@1.2.19)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.108.2)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.33))(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33)))
-      defu: 6.1.7
-      vue3-snackbar: 2.6.0(vue@3.5.45(typescript@5.9.3))
-    transitivePeerDependencies:
-      - '@nuxt/schema'
-      - confbox
-      - dotenv
-      - giget
-      - jiti
-      - magic-string
-      - mlly
-      - oxc-parser
-      - rolldown
-      - unplugin
-      - vue
-
   nuxt3-aos@1.0.19(magicast@0.5.5):
     dependencies:
       '@nuxt/kit': 3.21.11(magicast@0.5.5)
@@ -16473,8 +16436,6 @@ snapshots:
     dependencies:
       convert-hrtime: 5.0.0
 
-  tiny-emitter@2.1.0: {}
-
   tiny-invariant@1.3.3: {}
 
   tinybench@6.2.3: {}
@@ -17166,16 +17127,6 @@ snapshots:
       - rollup
       - unloader
       - webpack
-
-  vue3-icon@3.0.3(vue@3.5.45(typescript@5.9.3)):
-    dependencies:
-      vue: 3.5.45(typescript@5.9.3)
-
-  vue3-snackbar@2.6.0(vue@3.5.45(typescript@5.9.3)):
-    dependencies:
-      tiny-emitter: 2.1.0
-      vue: 3.5.45(typescript@5.9.3)
-      vue3-icon: 3.0.3(vue@3.5.45(typescript@5.9.3))
 
   vue@3.5.45(typescript@5.9.3):
     dependencies:

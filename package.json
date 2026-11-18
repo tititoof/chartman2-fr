@@ -23,7 +23,6 @@
     "dotenv": "^18.0.0",
     "mermaid": "^12.3.0",
     "nuxt": "^4.6.4",
-    "nuxt-snackbar": "^1.4.0",
     "pinia": "^4.1.0",
     "pinia-plugin-persistedstate": "^4.7.1",
     "playwright": "^1.65.1",
