@@ -43,7 +43,6 @@ export default defineNuxtConfig({
     'nuxt3-aos',
     '@dargmuesli/nuxt-cookie-control',
     'nuxt-resend',
-    'nuxt-snackbar',
     // Staging et prod (DSN fourni au build) ; rien en local sans DSN
     !!process.env.SENTRY_DSN && '@sentry/nuxt/module',
   ],
