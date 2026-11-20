@@ -258,6 +258,10 @@ pipeline {
                 script {
                     def scannerHome = tool 'sonarqube-scanner';
                     def sonarqubeBranch = 'frontend-chartman2-fr.ovh';
+                    // Dernière release CalVer : en mode « Previous version », le nouveau
+                    // code de SonarQube part de la dernière release (sans version, il
+                    // n'avait pas de référence et tout app/ pouvait compter comme nouveau)
+                    def sonarqubeVersion = calver('current');
                     withCredentials([string(credentialsId: 'sonarqube-server', variable: 'SONAR_URL')]) {
                         // Le jeton vient de withSonarQubeEnv() (variable SONAR_TOKEN, lue par le
                         // scanner) : pas de sonar.login, déprécié et déjà ignoré quand SONAR_TOKEN
@@ -268,6 +272,7 @@ pipeline {
                             }
                             sh "${scannerHome}/bin/sonar-scanner \
                                     -Dsonar.projectKey=${sonarqubeBranch} \
+                                    -Dsonar.projectVersion=${sonarqubeVersion} \
                                     -Dsonar.sources='app' \
                                     -Dsonar.exclusions=public/**/* \
                                     -Dsonar.host.url=\$SONAR_URL \

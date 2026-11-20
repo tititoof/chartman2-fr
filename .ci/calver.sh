@@ -7,6 +7,7 @@
 # de version. Script identique dans chartman2.fr, candlekeep-backend et
 # candlekeep-frontend (voir lab-iac, PLAN-k3s-homelab.md).
 #
+#   calver.sh current           affiche la dernière version publiée (vide sans tag)
 #   calver.sh next              affiche la prochaine version
 #   calver.sh release VERSION   crée le tag et la release VERSION sur $GIT_COMMIT
 #
@@ -33,6 +34,12 @@ calver_tags() {
         | sed 's#.*refs/tags/##' \
         | { grep -E '^[0-9]{4}\.[0-9]{1,2}\.[0-9]+$' || true; } \
         | sort -t. -k1,1n -k2,2n -k3,3n
+}
+
+# Dernière version publiée : sert de sonar.projectVersion, pour que le « nouveau
+# code » de SonarQube (mode Previous version) parte de la dernière release
+current_version() {
+    calver_tags | tail -n1
 }
 
 next_version() {
@@ -83,7 +90,8 @@ release() {
 }
 
 case "${1:-}" in
+    current) current_version ;;
     next) next_version ;;
     release) release "${2:?usage : calver.sh release VERSION}" ;;
-    *) echo "usage : calver.sh next | release VERSION" >&2; exit 2 ;;
+    *) echo "usage : calver.sh current | next | release VERSION" >&2; exit 2 ;;
 esac
